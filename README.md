@@ -140,6 +140,43 @@ Cada novo usuário recebe automaticamente algumas despesas de exemplo:
 
 Você pode excluir esses dados e adicionar suas próprias despesas a qualquer momento.
 
+## 📚 Documentação Técnica
+
+O projeto possui documentação técnica completa na pasta `doc/`:
+
+### 📋 Especificações
+- **[Especificações Técnicas](doc/especificacoes-tecnicas.md)**: Requisitos funcionais, regras de negócio, critérios de aceitação e arquitetura do sistema
+- **[Casos de Uso](doc/casos-de-uso.md)**: Fluxos detalhados de todas as funcionalidades com cenários principais e alternativos
+- **[User Stories](doc/user-stories.md)**: Histórias de usuário organizadas por épicos com critérios de aceitação e mapeamento
+- **[Matriz de Rastreabilidade](doc/matriz-rastreabilidade.md)**: Mapeamento entre requisitos, implementação e testes
+
+### 🎯 User Stories
+
+#### 🔐 Autenticação
+- **Como** usuário novo, **quero** criar uma conta **para** gerenciar minhas despesas pessoais
+- **Como** usuário registrado, **quero** fazer login **para** acessar meus dados salvos
+- **Como** usuário logado, **quero** fazer logout **para** proteger minha privacidade
+- **Como** usuário que esqueceu a senha, **quero** recuperá-la **para** acessar minha conta novamente
+
+#### 💰 Gerenciamento de Despesas
+- **Como** usuário, **quero** adicionar uma nova despesa **para** controlar meus gastos recorrentes
+- **Como** usuário, **quero** visualizar todas minhas despesas **para** ter uma visão geral dos meus gastos
+- **Como** usuário, **quero** editar uma despesa **para** manter as informações atualizadas
+- **Como** usuário, **quero** excluir uma despesa **para** remover gastos que não tenho mais
+- **Como** usuário, **quero** ativar/desativar despesas **para** controlar quais contam nos cálculos
+- **Como** usuário, **quero** filtrar despesas por categoria **para** encontrar gastos específicos
+
+#### 📊 Dashboard e Relatórios
+- **Como** usuário, **quero** ver o total de gastos mensais **para** controlar meu orçamento
+- **Como** usuário, **quero** ver o total de gastos anuais **para** planejar minhas finanças
+- **Como** usuário, **quero** ver próximos pagamentos **para** me preparar financeiramente
+- **Como** usuário, **quero** visualizar gastos por categoria **para** identificar onde gasto mais
+
+#### 📅 Calendário
+- **Como** usuário, **quero** ver um calendário mensal **para** visualizar quando tenho pagamentos
+- **Como** usuário, **quero** navegar entre meses **para** planejar pagamentos futuros
+- **Como** usuário, **quero** ver dias destacados **para** identificar rapidamente dias de pagamento
+
 ## 🌟 Próximas Funcionalidades
 
 ### 🔐 Autenticação
