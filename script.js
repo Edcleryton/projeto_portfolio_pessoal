@@ -1,4 +1,4 @@
-// Gerenciador de Assinaturas - JavaScript Vanilla
+// Gerenciador de Despesas - JavaScript Vanilla
 
 // Classe para gerenciar autenticação
 class AuthManager {
@@ -164,7 +164,7 @@ class AuthManager {
         document.getElementById('app-container').style.display = 'block';
         document.getElementById('user-name').textContent = this.currentUser.name;
         
-        // Inicializar o gerenciador de assinaturas
+        // Inicializar o gerenciador de despesas
         if (!window.subscriptionManager) {
             window.subscriptionManager = new SubscriptionManager();
         }
@@ -301,11 +301,11 @@ class SubscriptionManager {
         const title = document.getElementById('modal-title');
 
         if (subscription) {
-            title.textContent = 'Editar Assinatura';
+            title.textContent = 'Editar Despesa';
             this.editingId = subscription.id;
             this.populateForm(subscription);
         } else {
-            title.textContent = 'Adicionar Assinatura';
+            title.textContent = 'Adicionar Despesa';
             this.editingId = null;
             form.reset();
             // Set default next payment date to today
@@ -341,21 +341,21 @@ class SubscriptionManager {
         };
 
         if (this.editingId) {
-            // Edit existing subscription
+            // Edit existing expense
             const index = this.subscriptions.findIndex(sub => sub.id === this.editingId);
             if (index !== -1) {
                 this.subscriptions[index] = { ...formData, id: this.editingId };
-                this.showToast('Assinatura atualizada com sucesso!', 'success');
+                this.showToast('Despesa atualizada com sucesso!', 'success');
             }
         } else {
-            // Add new subscription
+            // Add new expense
             const newSubscription = {
                 ...formData,
                 id: Date.now().toString(),
                 createdAt: new Date().toISOString()
             };
             this.subscriptions.push(newSubscription);
-            this.showToast('Assinatura adicionada com sucesso!', 'success');
+            this.showToast('Despesa adicionada com sucesso!', 'success');
         }
 
         this.saveToStorage();
@@ -366,13 +366,13 @@ class SubscriptionManager {
     }
 
     deleteSubscription(id) {
-        if (confirm('Tem certeza que deseja excluir esta assinatura?')) {
+        if (confirm('Tem certeza que deseja excluir esta despesa?')) {
             this.subscriptions = this.subscriptions.filter(sub => sub.id !== id);
             this.saveToStorage();
             this.renderDashboard();
             this.renderSubscriptions();
             this.renderCalendar();
-            this.showToast('Assinatura excluída com sucesso!', 'success');
+            this.showToast('Despesa excluída com sucesso!', 'success');
         }
     }
 
@@ -383,7 +383,7 @@ class SubscriptionManager {
             this.saveToStorage();
             this.renderDashboard();
             this.renderSubscriptions();
-            this.showToast(`Assinatura ${subscription.status === 'active' ? 'ativada' : 'desativada'}!`, 'success');
+            this.showToast(`Despesa ${subscription.status === 'active' ? 'ativada' : 'desativada'}!`, 'success');
         }
     }
 
@@ -487,7 +487,7 @@ class SubscriptionManager {
         const activeSubscriptions = this.subscriptions.filter(sub => sub.status === 'active');
         
         if (activeSubscriptions.length === 0) {
-            categoryChart.innerHTML = '<p class="empty-state">Adicione assinaturas para ver o gráfico</p>';
+            categoryChart.innerHTML = '<p class="empty-state">Adicione despesas para ver o gráfico</p>';
             return;
         }
         
@@ -535,7 +535,7 @@ class SubscriptionManager {
         }
         
         if (filteredSubscriptions.length === 0) {
-            subscriptionsList.innerHTML = '<p class="empty-state">Nenhuma assinatura encontrada. Adicione sua primeira assinatura!</p>';
+            subscriptionsList.innerHTML = '<p class="empty-state">Nenhuma despesa encontrada. Adicione sua primeira despesa!</p>';
             return;
         }
         

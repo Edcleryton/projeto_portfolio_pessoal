@@ -1,6 +1,6 @@
-# SubsManager - Gerenciador de Assinaturas
+# SubsManager - Gerenciador de Despesas
 
-Um aplicativo web completo e moderno para gerenciar suas assinaturas mensais e anuais, com sistema de autenticação integrado, desenvolvido com HTML, CSS e JavaScript vanilla.
+Um aplicativo web completo e moderno para gerenciar suas despesas mensais e anuais, com sistema de autenticação integrado, desenvolvido com HTML, CSS e JavaScript vanilla.
 
 ## 🚀 Funcionalidades
 
@@ -11,11 +11,11 @@ Um aplicativo web completo e moderno para gerenciar suas assinaturas mensais e a
 - **Sessão Persistente**: Mantenha-se logado entre as sessões
 - **Dados Isolados**: Cada usuário tem seus próprios dados
 
-### 📊 Gerenciamento de Assinaturas
+### 📊 Gerenciamento de Despesas
 - **Dashboard**: Visão geral dos gastos mensais, anuais e próximos pagamentos
-- **Gerenciamento Completo**: Adicionar, editar, excluir e ativar/desativar assinaturas
+- **Gerenciamento Completo**: Adicionar, editar, excluir e ativar/desativar despesas
 - **Calendário**: Visualizar pagamentos em um calendário mensal
-- **Filtros Avançados**: Filtrar assinaturas por categoria e status
+- **Filtros Avançados**: Filtrar despesas por categoria e status
 - **Categorias**: Streaming, Software, Música, Fitness, Notícias e Outros
 - **Armazenamento Seguro**: Dados salvos no localStorage com isolamento por usuário
 - **Design Responsivo**: Funciona perfeitamente em desktop e mobile
@@ -58,13 +58,13 @@ http-server
 
 3. **Após o Login**: Use a navegação no topo para alternar entre as seções:
    - **Dashboard**: Veja o resumo dos seus gastos
-   - **Assinaturas**: Gerencie suas assinaturas
+   - **Despesas**: Gerencie suas despesas
    - **Calendário**: Visualize os pagamentos no calendário
 
-### Adicionando uma Assinatura
+### Adicionando uma Despesa
 
-1. Vá para a seção "Assinaturas"
-2. Clique em "Adicionar Assinatura"
+1. Vá para a seção "Despesas"
+2. Clique em "Adicionar Despesa"
 3. Preencha os dados:
    - Nome do serviço
    - Preço
@@ -74,9 +74,9 @@ http-server
    - Status (ativo ou inativo)
 4. Clique em "Salvar"
 
-### Editando uma Assinatura
+### Editando uma Despesa
 
-1. Na lista de assinaturas, clique no ícone de edição (lápis)
+1. Na lista de despesas, clique no ícone de edição (lápis)
 2. Modifique os dados desejados
 3. Clique em "Salvar"
 
@@ -108,7 +108,7 @@ Todos os dados são armazenados localmente no navegador usando localStorage com 
 ### 📁 Estrutura de Dados
 - **Usuários**: `users` - Lista de usuários registrados
 - **Sessão**: `currentUser` - Usuário atualmente logado
-- **Assinaturas**: `subscriptions_{userId}` - Assinaturas específicas do usuário
+- **Despesas**: `subscriptions_{userId}` - Despesas específicas do usuário
 
 ### 💡 Vantagens
 - Privacidade total dos dados
@@ -132,13 +132,13 @@ Todos os dados são armazenados localmente no navegador usando localStorage com 
 - **Email**: `demo@subsmanager.com`
 - **Senha**: `123456`
 
-### 💳 Assinaturas de Exemplo
-Cada novo usuário recebe automaticamente algumas assinaturas de exemplo:
+### 💳 Despesas de Exemplo
+Cada novo usuário recebe automaticamente algumas despesas de exemplo:
 - **Netflix** (R$ 29,90/mês) - Streaming
 - **Spotify** (R$ 19,90/mês) - Música  
 - **Adobe Creative Cloud** (R$ 239,88/ano) - Software
 
-Você pode excluir esses dados e adicionar suas próprias assinaturas a qualquer momento.
+Você pode excluir esses dados e adicionar suas próprias despesas a qualquer momento.
 
 ## 🌟 Próximas Funcionalidades
 
@@ -155,7 +155,7 @@ Você pode excluir esses dados e adicionar suas próprias assinaturas a qualquer
 - Múltiplas moedas
 - Temas personalizáveis
 - Backup na nuvem
-- Compartilhamento de assinaturas familiares
+- Compartilhamento de despesas familiares
 
 ---
 

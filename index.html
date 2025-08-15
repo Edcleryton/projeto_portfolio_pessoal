@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de Assinaturas</title>
+    <title>Gerenciador de Despesas</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -20,7 +20,7 @@
                         <h1>SubsManager</h1>
                     </div>
                     <h2>Entrar na sua conta</h2>
-                    <p>Gerencie suas assinaturas de forma inteligente</p>
+                    <p>Gerencie suas despesas de forma inteligente</p>
                 </div>
                 <form id="login-form-element">
                     <div class="form-group">
@@ -49,7 +49,7 @@
                         <h1>SubsManager</h1>
                     </div>
                     <h2>Criar nova conta</h2>
-                    <p>Comece a gerenciar suas assinaturas hoje</p>
+                    <p>Comece a gerenciar suas despesas hoje</p>
                 </div>
                 <form id="register-form-element">
                     <div class="form-group">
@@ -118,7 +118,7 @@
                         </a>
                         <a href="#subscriptions" class="nav-link" data-section="subscriptions">
                             <i class="fas fa-list"></i>
-                            Assinaturas
+                            Despesas
                         </a>
                         <a href="#calendar" class="nav-link" data-section="calendar">
                             <i class="fas fa-calendar"></i>
@@ -143,7 +143,7 @@
             <section id="dashboard" class="section active">
                 <div class="section-header">
                     <h2>Dashboard</h2>
-                    <p>Visão geral das suas assinaturas</p>
+                    <p>Visão geral das suas despesas</p>
                 </div>
 
                 <div class="stats-grid">
@@ -171,7 +171,7 @@
                         </div>
                         <div class="stat-content">
                             <h3 id="active-subs">0</h3>
-                            <p>Assinaturas Ativas</p>
+                            <p>Despesas Ativas</p>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -203,7 +203,7 @@
                         </div>
                         <div class="card-content">
                             <div id="category-chart" class="category-chart">
-                                <p class="empty-state">Adicione assinaturas para ver o gráfico</p>
+                                <p class="empty-state">Adicione despesas para ver o gráfico</p>
                             </div>
                         </div>
                     </div>
@@ -213,10 +213,10 @@
             <!-- Subscriptions Section -->
             <section id="subscriptions" class="section">
                 <div class="section-header">
-                    <h2>Minhas Assinaturas</h2>
+                    <h2>Minhas Despesas</h2>
                     <button class="btn btn-primary" id="add-subscription-btn">
                         <i class="fas fa-plus"></i>
-                        Adicionar Assinatura
+                        Adicionar Despesa
                     </button>
                 </div>
 
@@ -244,7 +244,7 @@
                 </div>
 
                 <div id="subscriptions-list" class="subscriptions-list">
-                    <p class="empty-state">Nenhuma assinatura encontrada. Adicione sua primeira assinatura!</p>
+                    <p class="empty-state">Nenhuma despesa encontrada. Adicione sua primeira despesa!</p>
                 </div>
             </section>
 
@@ -252,7 +252,7 @@
             <section id="calendar" class="section">
                 <div class="section-header">
                     <h2>Calendário de Pagamentos</h2>
-                    <p>Visualize quando suas assinaturas serão cobradas</p>
+                    <p>Visualize quando suas despesas serão cobradas</p>
                 </div>
 
                 <div class="calendar-container">
@@ -274,10 +274,10 @@
     </main>
 
     <!-- Modal for Adding/Editing Subscription -->
-    <div id="subscription-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-title">Adicionar Assinatura</h3>
+        <div id="subscription-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">Adicionar Despesa</h3>
                 <button class="modal-close" id="close-modal">
                     <i class="fas fa-times"></i>
                 </button>
