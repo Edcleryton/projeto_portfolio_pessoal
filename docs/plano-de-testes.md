@@ -1,4 +1,7 @@
 # Plano e Estratégia de Testes
+
+> 📚 **[← Voltar para Wiki](README.md)** | **[User Stories ←](user-stories.md)** | **[Regras de Negócio →](regras-de-negocio.md)** | **[Configuração →](configuracao-desenvolvimento.md)**
+
 Baseado na ISO-29119-3.
 
 ## 1. Épico e Estimativa Geral de Esforço em Testes

@@ -1,5 +1,7 @@
 # Gerir.me - Configuração de Desenvolvimento
 
+> 📚 **[← Voltar para Wiki](README.md)** | **[Regras de Negócio ←](regras-de-negocio.md)** | **[Especificações ←](especificacoes-tecnicas.md)** | **[Casos de Uso →](casos-de-uso.md)**
+
 ## 📋 Visão Geral
 
 Este documento detalha como configurar o ambiente de desenvolvimento para o projeto Gerir.me, incluindo instalação de dependências, execução do servidor local e configurações de desenvolvimento.

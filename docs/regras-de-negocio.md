@@ -1,5 +1,7 @@
 # Regras de Negócio - Gerir.me
 
+> 📚 **[← Voltar para Wiki](README.md)** | **[Especificações ←](especificacoes-tecnicas.md)** | **[Plano de Testes ←](plano-de-testes.md)** | **[Configuração →](configuracao-desenvolvimento.md)**
+
 **Projeto:** Gerir.me - Gerenciador de Despesas  
 **Versão:** 1.0  
 **Data:** Dezembro 2024  

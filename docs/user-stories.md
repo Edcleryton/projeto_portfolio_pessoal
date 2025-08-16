@@ -1,5 +1,7 @@
 # Gerir.me - User Stories em Gherkin
 
+> 📚 **[← Voltar para Wiki](README.md)** | **[Casos de Uso ←](casos-de-uso.md)** | **[Plano de Testes →](plano-de-testes.md)** | **[Regras de Negócio →](regras-de-negocio.md)**
+
 ## 📋 Visão Geral
 
 Este documento contém todas as user stories do sistema Gerir.me escritas em formato Gherkin, organizadas por épicos e features. O formato Gherkin utiliza a sintaxe Given-When-Then para criar cenários de teste estruturados e legíveis.

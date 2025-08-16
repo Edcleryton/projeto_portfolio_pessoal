@@ -1,5 +1,7 @@
 # Gerir.me - Casos de Uso
 
+> 📚 **[← Voltar para Wiki](README.md)** | **[Especificações ←](especificacoes-tecnicas.md)** | **[User Stories →](user-stories.md)** | **[Regras de Negócio →](regras-de-negocio.md)**
+
 ## 📋 Visão Geral
 
 Este documento detalha os casos de uso do sistema Gerir.me, descrevendo as interações entre os usuários e o sistema para cada funcionalidade principal.

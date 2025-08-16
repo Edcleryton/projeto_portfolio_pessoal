@@ -1,5 +1,7 @@
 # Gerir.me - Especificações Técnicas
 
+> 📚 **[← Voltar para Wiki](README.md)** | **[Casos de Uso →](casos-de-uso.md)** | **[User Stories →](user-stories.md)** | **[Regras de Negócio →](regras-de-negocio.md)**
+
 ## 📋 Visão Geral do Sistema
 
 ### 🎯 Propósito
