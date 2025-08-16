@@ -4,18 +4,9 @@
   "description": "Gerenciador de Despesas Recorrentes",
   "scripts": {
     "start": "npx http-server . -p 8080 -a localhost -o",
-    "dev": "npx http-server . -p 8080 -a localhost -o",
-    "test": "cypress open",
-    "test:run": "cypress run",
-    "test:report": "cypress run --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true",
-    "test:defects": "cypress run && echo Relatórios de defeitos gerados automaticamente!",
-    "serve:reports": "npx http-server docs -p 8081 -o"
+    "dev": "npx http-server . -p 8080 -a localhost -o"
   },
   "devDependencies": {
-    "cypress": "^14.5.4",
-    "http-server": "^14.1.1",
-    "mochawesome": "^7.1.3",
-    "mochawesome-merge": "^4.3.0",
-    "mochawesome-report-generator": "^6.2.0"
+    "http-server": "^14.1.1"
   }
 }

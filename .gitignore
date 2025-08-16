@@ -50,17 +50,10 @@ Thumbs.db
 *.tmp
 *.temp
 
-# Cypress artifacts
-cypress/videos/
-cypress/screenshots/
-cypress/downloads/
-cypress/reports/
-
 # Test reports and evidence
 reports/
 evidence/
 test-results/
-mochawesome-report/
 
 # Package lock files (keep only one)
 yarn.lock

@@ -396,13 +396,13 @@ Cada cenário possui tags para rastreabilidade:
 ### 📋 Comandos de Teste por Tags
 ```bash
 # Executar cenários críticos
-npx cypress run --env tags="@alta"
+
 
 # Executar por feature
-npx cypress run --env tags="@RF005,@RF006,@RF007"
+
 
 # Executar casos de uso específicos
-npx cypress run --env tags="@UC001,@UC002"
+
 ```
 
 ### 📚 Documentos Relacionados

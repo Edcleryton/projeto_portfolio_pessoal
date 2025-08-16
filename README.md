@@ -125,7 +125,7 @@ gerir-me/
 ├── src/                     # Código fonte da aplicação
 │   ├── script.js           # Lógica principal da aplicação
 │   └── styles.css          # Estilos CSS
-├── cypress/                # Testes E2E automatizados
+
 │   ├── e2e/               # Testes end-to-end
 │   ├── support/           # Comandos e configurações
 │   └── README.md          # Documentação dos testes
@@ -136,7 +136,7 @@ gerir-me/
 │   └── configuracao-desenvolvimento.md
 ├── index.html             # Página principal
 ├── package.json           # Dependências e scripts
-├── cypress.config.js      # Configuração do Cypress
+
 └── README.md              # Este arquivo
 ```
 
@@ -148,7 +148,7 @@ gerir-me/
 - **Font Awesome**: Ícones
 - **Google Fonts**: Tipografia (Inter)
 - **LocalStorage**: Armazenamento de dados
-- **Cypress**: Testes E2E automatizados
+
 
 ## 📊 Dados de Exemplo
 
