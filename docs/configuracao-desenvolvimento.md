@@ -104,8 +104,9 @@ projeto_portfolio_pessoal/
 ├── docs/                    # Documentação técnica
 ├── cypress/                 # Testes E2E
 ├── index.html              # Página principal
-├── script.js               # Lógica da aplicação
-├── styles.css              # Estilos CSS
+├── src/                    # Código fonte da aplicação
+│   ├── script.js           # Lógica da aplicação
+│   └── styles.css          # Estilos CSS
 ├── package.json            # Configurações NPM
 ├── package-lock.json       # Lock de dependências
 ├── cypress.config.js       # Configuração Cypress
@@ -170,8 +171,8 @@ npm install
 O `http-server` exibe logs de todas as requisições:
 ```
 [2024-01-01T12:00:00.000Z] "GET /" "Mozilla/5.0..."
-[2024-01-01T12:00:00.001Z] "GET /styles.css" "Mozilla/5.0..."
-[2024-01-01T12:00:00.002Z] "GET /script.js" "Mozilla/5.0..."
+[2024-01-01T12:00:00.001Z] "GET /src/styles.css" "Mozilla/5.0..."
+[2024-01-01T12:00:00.002Z] "GET /src/script.js" "Mozilla/5.0..."
 ```
 
 ### Debug no Navegador

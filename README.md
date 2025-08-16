@@ -49,7 +49,7 @@ npm start
 ### 🚀 Primeiro Acesso
 
 1. **Conta Demo**: Use as credenciais pré-configuradas:
-   - **Email**: `demo@gerir.me`
+   - **Email**: `email@teste.com`
    - **Senha**: `123456`
 
 2. **Criar Nova Conta**: Clique em "Criar conta" e preencha:
@@ -118,6 +118,28 @@ Todos os dados são armazenados localmente no navegador usando localStorage com 
 - Dados persistem entre as sessões
 - Portabilidade completa
 
+## 📁 Estrutura do Projeto
+
+```
+gerir-me/
+├── src/                     # Código fonte da aplicação
+│   ├── script.js           # Lógica principal da aplicação
+│   └── styles.css          # Estilos CSS
+├── cypress/                # Testes E2E automatizados
+│   ├── e2e/               # Testes end-to-end
+│   ├── support/           # Comandos e configurações
+│   └── README.md          # Documentação dos testes
+├── docs/                   # Documentação técnica
+│   ├── especificacoes-tecnicas.md
+│   ├── user-stories.md
+│   ├── plano-de-testes.md
+│   └── configuracao-desenvolvimento.md
+├── index.html             # Página principal
+├── package.json           # Dependências e scripts
+├── cypress.config.js      # Configuração do Cypress
+└── README.md              # Este arquivo
+```
+
 ## 🔧 Tecnologias Utilizadas
 
 - **HTML5**: Estrutura da aplicação
@@ -126,11 +148,12 @@ Todos os dados são armazenados localmente no navegador usando localStorage com 
 - **Font Awesome**: Ícones
 - **Google Fonts**: Tipografia (Inter)
 - **LocalStorage**: Armazenamento de dados
+- **Cypress**: Testes E2E automatizados
 
 ## 📊 Dados de Exemplo
 
 ### 👤 Conta Demo
-- **Email**: `demo@subsmanager.com`
+- **Email**: `email@teste.com`
 - **Senha**: `123456`
 
 ### 💳 Despesas de Exemplo

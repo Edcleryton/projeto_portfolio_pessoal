@@ -49,3 +49,35 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Cypress artifacts
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+cypress/reports/
+
+# Test reports and evidence
+reports/
+evidence/
+test-results/
+mochawesome-report/
+
+# Package lock files (keep only one)
+yarn.lock
+
+# Cache directories
+.cache/
+.parcel-cache/
+.npm/
+.yarn/
+
+# Editor backup files
+*.bak
+*.orig
+*.rej
+
+# System files
+*.log
+*.pid
+*.seed
+*.pid.lock
