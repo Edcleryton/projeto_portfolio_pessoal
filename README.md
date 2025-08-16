@@ -27,7 +27,7 @@ Um aplicativo web completo e moderno para gerenciar suas despesas mensais e anua
 **Opção 1: Servidor Local (Recomendado)**
 ```bash
 # Clonar o repositório
-git clone <url-do-repositorio>
+git clone [<https://github.com/Edcleryton/projeto_portfolio_pessoal>]
 cd projeto_portfolio_pessoal
 
 # Instalar dependências
