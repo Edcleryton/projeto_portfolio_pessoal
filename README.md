@@ -1,6 +1,6 @@
 # SubsManager - Gerenciador de Despesas
 
-Um aplicativo web completo e moderno para gerenciar suas despesas mensais e anuais, com sistema de autenticação integrado, desenvolvido com HTML, CSS e JavaScript vanilla.
+Um aplicativo web completo e moderno para gerenciar suas despesas mensais e anuais, com sistema de autenticação integrado, desenvolvido com HTML, CSS e JavaScript.
 
 ## 🚀 Funcionalidades
 
