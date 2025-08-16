@@ -706,7 +706,7 @@ if (authManager.users.length === 0) {
     const sampleUser = {
         id: '1',
         name: 'Usuário Demo',
-        email: 'demo@subsmanager.com',
+        email: 'demo@gerir.me',
         password: '123456',
         createdAt: new Date().toISOString()
     };

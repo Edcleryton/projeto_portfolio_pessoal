@@ -145,10 +145,11 @@ Você pode excluir esses dados e adicionar suas próprias despesas a qualquer mo
 O projeto possui documentação técnica completa na pasta `doc/`:
 
 ### 📋 Especificações
-- **[Especificações Técnicas](doc/especificacoes-tecnicas.md)**: Requisitos funcionais, regras de negócio, critérios de aceitação e arquitetura do sistema
-- **[Casos de Uso](doc/casos-de-uso.md)**: Fluxos detalhados de todas as funcionalidades com cenários principais e alternativos
-- **[User Stories](doc/user-stories.md)**: Histórias de usuário organizadas por épicos com critérios de aceitação e mapeamento
-- **[Matriz de Rastreabilidade](doc/matriz-rastreabilidade.md)**: Mapeamento entre requisitos, implementação e testes
+- **[Especificações Técnicas](docs/especificacoes-tecnicas.md)**: Requisitos funcionais, regras de negócio, critérios de aceitação e arquitetura do sistema
+- **[Casos de Uso](docs/casos-de-uso.md)**: Fluxos detalhados de todas as funcionalidades com cenários principais e alternativos
+- **[Definição da Homepage](docs/homepage-definicao.md)**: Especificação detalhada da página inicial do sistema
+- **[User Stories](docs/user-stories.md)**: Histórias de usuário organizadas por épicos com critérios de aceitação e mapeamento
+- **[Matriz de Rastreabilidade](docs/matriz-rastreabilidade.md)**: Mapeamento entre requisitos, implementação e testes
 
 ### 🎯 User Stories
 
