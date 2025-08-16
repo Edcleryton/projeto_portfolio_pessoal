@@ -3,7 +3,8 @@ const { defineConfig } = require("cypress");
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+      // Plugin para geração automática de relatórios de defeitos
+      require('./cypress/plugins/defect-reporter')(on, config);
     },
     baseUrl: 'http://localhost:8080',
     viewportWidth: 1280,

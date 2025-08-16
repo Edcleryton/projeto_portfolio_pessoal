@@ -7,7 +7,9 @@
     "dev": "npx http-server . -p 8080 -a localhost -o",
     "test": "cypress open",
     "test:run": "cypress run",
-    "test:report": "cypress run --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true"
+    "test:report": "cypress run --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true",
+    "test:defects": "cypress run && echo Relatórios de defeitos gerados automaticamente!",
+    "serve:reports": "npx http-server docs -p 8081 -o"
   },
   "devDependencies": {
     "cypress": "^14.5.4",
