@@ -53,6 +53,20 @@ Este é o índice principal da wiki do projeto, onde você encontrará toda a do
 - Missões de teste exploratório
 - Testes não-funcionais
 
+### 🧪 [Testes Cypress](../cypress/README.md)
+**Testes automatizados end-to-end com gravação de vídeo e relatórios visuais**
+- 6 testes implementados cobrindo todas as funcionalidades principais
+- Gravação automática de vídeos e screenshots
+- Relatórios visuais com Mochawesome
+- Cobertura: Login, Registro, Dashboard, Gerenciamento de Assinaturas
+
+### 🐛 [Relatório de Defeitos](relatorio-defeitos.md)
+**Documentação de defeitos encontrados baseada na ISO-29119-3**
+- 6 defeitos identificados nos testes automatizados
+- Classificação por severidade e prioridade
+- Evidências com vídeos e screenshots
+- Rastreabilidade com User Stories
+
 ### 🔗 Matriz de Rastreabilidade
 **Mapeamento completo entre requisitos, implementação e testes**
 - Rastreabilidade bidirecional integrada nos documentos
@@ -103,7 +117,7 @@ O **Gerir.me** é um sistema web para gerenciamento de despesas recorrentes, per
 |-----------|------------|----------|
 | **📋 Especificações** | [Técnicas](especificacoes-tecnicas.md) • [Regras](regras-de-negocio.md) | Requisitos e regras do sistema |
 | **🎯 Casos de Uso** | [Casos de Uso](casos-de-uso.md) • [User Stories](user-stories.md) | Funcionalidades e cenários |
-| **🧪 Testes** | [Plano](plano-de-testes.md) | Estratégia e rastreabilidade |
+| **🧪 Testes** | [Plano](plano-de-testes.md) • [Cypress](../cypress/README.md) • [Defeitos](relatorio-defeitos.md) | Estratégia, automação e gestão de defeitos |
 | **⚙️ Configuração** | [Desenvolvimento](configuracao-desenvolvimento.md) | Setup e configurações |
 
 ---
