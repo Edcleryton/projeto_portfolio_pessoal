@@ -1,0 +1,14 @@
+{
+  "name": "gerir-me",
+  "version": "1.0.0",
+  "description": "Gerenciador de Despesas Recorrentes",
+  "scripts": {
+    "start": "npx http-server . -p 8080 -a localhost -o",
+    "dev": "npx http-server . -p 8080 -a localhost -o",
+    "test": "cypress open"
+  },
+  "devDependencies": {
+    "cypress": "^14.5.4",
+    "http-server": "^14.1.1"
+  }
+}

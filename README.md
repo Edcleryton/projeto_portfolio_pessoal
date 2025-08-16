@@ -1,4 +1,4 @@
-# SubsManager - Gerenciador de Despesas
+# Gerir.me - Gerenciador de Despesas
 
 Um aplicativo web completo e moderno para gerenciar suas despesas mensais e anuais, com sistema de autenticação integrado, desenvolvido com HTML, CSS e JavaScript.
 
@@ -24,31 +24,32 @@ Um aplicativo web completo e moderno para gerenciar suas despesas mensais e anua
 
 ### 🔧 Instalação
 
-**Opção 1: Abrir Diretamente (Recomendado)**
+**Opção 1: Servidor Local (Recomendado)**
+```bash
+# Clonar o repositório
+git clone <url-do-repositorio>
+cd projeto_portfolio_pessoal
+
+# Instalar dependências
+npm install
+
+# Iniciar servidor de desenvolvimento
+npm start
+
+# Acessar http://localhost:8080
+```
+
+**Opção 2: Abrir Diretamente**
 1. Baixe ou clone este repositório
 2. Abra o arquivo `index.html` diretamente no seu navegador:
    - Duplo clique no arquivo
    - Ou arraste e solte no navegador
    - Ou clique com botão direito → "Abrir com" → Navegador
 
-**Opção 2: Servidor Local (Opcional)**
-```bash
-# Instalar http-server globalmente
-npm install -g http-server
-
-# Navegar até a pasta do projeto
-cd projeto_portfolio_pessoal
-
-# Iniciar servidor local
-http-server
-
-# Acessar http://localhost:8080
-```
-
 ### 🚀 Primeiro Acesso
 
 1. **Conta Demo**: Use as credenciais pré-configuradas:
-   - **Email**: `demo@subsmanager.com`
+   - **Email**: `demo@gerir.me`
    - **Senha**: `123456`
 
 2. **Criar Nova Conta**: Clique em "Criar conta" e preencha:
@@ -150,6 +151,7 @@ O projeto possui documentação técnica completa na pasta `doc/`:
 - **[Definição da Homepage](docs/homepage-definicao.md)**: Especificação detalhada da página inicial do sistema
 - **[User Stories](docs/user-stories.md)**: Histórias de usuário organizadas por épicos com critérios de aceitação e mapeamento
 - **[Matriz de Rastreabilidade](docs/matriz-rastreabilidade.md)**: Mapeamento entre requisitos, implementação e testes
+- **[Plano de Testes](docs/plano-de-testes.md)**: Estratégia e plano de testes baseado na ISO-29119-3
 
 ### 🎯 User Stories
 

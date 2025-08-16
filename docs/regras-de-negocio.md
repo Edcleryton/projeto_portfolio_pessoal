@@ -22,8 +22,8 @@ Este documento define as regras de negócio essenciais que governam o funcioname
 
 ### RN-USU-002: Política de Senha
 **Descrição:** A senha do usuário deve atender critérios mínimos de segurança.  
-**Regra:** Senha deve conter no mínimo 8 caracteres, incluindo pelo menos uma letra e um número.  
-**Implementação:** Validação client-side com regex e feedback visual ao usuário.
+**Regra:** Senha deve conter no mínimo 6 caracteres.  
+**Implementação:** Validação client-side com atributo minlength e feedback visual ao usuário.
 
 ### RN-USU-003: Autenticação Obrigatória
 **Descrição:** Controle de acesso às funcionalidades do sistema.  

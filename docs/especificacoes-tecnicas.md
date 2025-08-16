@@ -11,6 +11,34 @@ O **Gerir.me** é uma aplicação web para gerenciamento de despesas mensais e a
 - **Armazenamento**: LocalStorage
 - **Padrão**: MVC 
 - **Responsividade**: Mobile-first design
+- **Servidor**: http-server (desenvolvimento)
+- **Porta**: 8080 (localhost)
+
+### 📦 Dependências
+
+#### Dependências de Produção
+- **Nenhuma**: Aplicação frontend pura
+- **CDNs Externos**:
+  - Google Fonts (Inter)
+  - Font Awesome 6.0.0
+
+#### Dependências de Desenvolvimento
+- **http-server**: Servidor HTTP estático para desenvolvimento
+- **cypress**: Framework de testes end-to-end
+
+### 🚀 Configuração de Desenvolvimento
+
+#### Scripts Disponíveis
+```bash
+npm start    # Inicia servidor em http://localhost:8080
+npm run dev  # Alias para npm start
+npm test     # Abre interface do Cypress
+```
+
+#### Requisitos do Sistema
+- **Node.js**: 14.0.0 ou superior
+- **NPM**: 6.0.0 ou superior
+- **Navegador**: Chrome, Firefox, Safari ou Edge (versões recentes)
 
 ---
 
