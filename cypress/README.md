@@ -1,45 +1,45 @@
-# 🧪 Testes Cypress - Gerir.me
+# Cypress E2E Tests
 
-## 📹 Gravação de Vídeo e Screenshots
+Este diretório contém os testes end-to-end (E2E) para o projeto de controle de despesas.
 
-### Configurações Ativadas:
-- ✅ **Vídeos automáticos** para todos os testes
-- ✅ **Screenshots** em pontos importantes
-- ✅ **Screenshots automáticos** em falhas
-- ✅ **Relatórios visuais** com Mochawesome
+## Configuração da Aplicação
 
-### Como Executar:
+### URL Base
+- **Aplicação**: http://localhost:8080/
+- Configurada em `cypress.config.js` como `baseUrl`
+
+### Credenciais de Teste
+- **Email**: email@teste.com
+- **Senha**: 123456
+- Configuradas nas variáveis de ambiente do Cypress
+
+## Estrutura dos Testes
+
+- `e2e/login/` - Testes de autenticação
+- `e2e/register/` - Testes de registro e CRUD de despesas
+- `e2e/dashboard/` - Testes de visualização e dashboard
+
+## Como Executar
 
 ```bash
-# Abrir interface do Cypress
-npm test
+# Executar todos os testes
+npx cypress run
 
-# Executar testes em modo headless (gera vídeos)
-npm run test:run
+# Executar testes específicos
+npx cypress run --spec "cypress/e2e/login/*.cy.js"
 
-# Executar com relatório visual completo
-npm run test:report
+# Abrir interface gráfica
+npx cypress open
 ```
 
-### 📁 Arquivos Gerados:
+## Comandos Personalizados
 
-- **Vídeos**: `cypress/videos/`
-- **Screenshots**: `cypress/screenshots/`
-- **Relatórios**: `cypress/reports/`
+- `cy.loginAsTestUser()` - Login rápido com credenciais de teste
+- `cy.takeScreenshot()` - Screenshot otimizado
 
-### 🎬 Screenshots nos Testes:
+## Configurações
 
-Cada teste inclui screenshots em momentos importantes:
-- Tela inicial
-- Dados preenchidos
-- Ações realizadas
-- Resultados finais
-
-### 📊 Relatório Visual:
-
-O relatório Mochawesome gera:
-- Dashboard com estatísticas
-- Screenshots integrados
-- Detalhes de cada teste
-- Tempo de execução
-- Status de aprovação/falha
+- **Vídeos**: MP4 salvos em `cypress/videos/`
+- **Screenshots**: PNG salvos em `cypress/screenshots/`
+- **Relatórios**: Gerados automaticamente para defeitos
+- **Variáveis de ambiente**: Configuradas em `cypress.config.js`

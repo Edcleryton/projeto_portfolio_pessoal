@@ -1,16 +1,14 @@
 describe('dashboard', () => {
-  it('deve visualizar dashboard com estatísticas', () => {
+  it('mostra dashboard com estatísticas após login válido', () => {
     cy.visit('/')
     cy.get('#login-email').type('email@teste.com')
     cy.get('#login-password').type('123456')
     cy.get('#login-form-element').submit()
-    cy.screenshot('01-login-realizado')
+    cy.get('#app-container').should('be.visible')
     cy.get('[data-section="dashboard"]').click()
-    cy.screenshot('02-dashboard-carregado')
     cy.get('#total-monthly').should('be.visible')
     cy.get('#total-yearly').should('be.visible')
     cy.get('#active-subs').should('be.visible')
     cy.get('#upcoming-payments').should('be.visible')
-    cy.screenshot('03-estatisticas-visiveis')
   })
 })

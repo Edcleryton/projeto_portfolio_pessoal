@@ -1,9 +1,10 @@
-describe('remover assinatura', () => {
-  it('deve remover assinatura com sucesso', () => {
-    cy.visit('http://localhost:8080/')
+describe('remover despesa', () => {
+  it('remove despesa com sucesso', () => {
+    cy.visit('/')
     cy.get('#login-email').type('email@teste.com')
     cy.get('#login-password').type('123456')
     cy.get('#login-form-element').submit()
+    cy.get('#app-container').should('be.visible')
     cy.get('[data-section="subscriptions"]').click()
     cy.get('#add-subscription-btn').click()
     cy.get('#service-name').type('Spotify')

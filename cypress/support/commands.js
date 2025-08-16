@@ -23,3 +23,23 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+// Comando personalizado para login rápido
+Cypress.Commands.add('loginAsTestUser', () => {
+  cy.visit('/');
+  cy.get('#login-email').type(Cypress.env('testUser').email);
+  cy.get('#login-password').type(Cypress.env('testUser').password);
+  cy.get('#login-form-element').submit();
+  cy.get('#app-container').should('be.visible');
+});
+
+// Comando para screenshots com configurações otimizadas
+Cypress.Commands.add('takeScreenshot', (name, options = {}) => {
+  const defaultOptions = {
+    capture: 'viewport',
+    disableTimersAndAnimations: true,
+    ...options
+  };
+  
+  return cy.screenshot(name, defaultOptions);
+});

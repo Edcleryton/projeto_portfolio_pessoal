@@ -1,14 +1,42 @@
 describe('tela de login', () => {
-  it('deve fazer login com sucesso', () => {
+  beforeEach(() => {
     cy.visit('/')
-    cy.screenshot('01-tela-inicial')
-    cy.get('#login-email').click()
+  })
+
+  it('faz login com sucesso', () => {
     cy.get('#login-email').type('email@teste.com')
-    cy.get('#login-password').click()
     cy.get('#login-password').type('123456')
-    cy.screenshot('02-dados-preenchidos')
     cy.get('#login-form-element').submit()
-    cy.get('#app-container').should('be.visible')
-    cy.screenshot('03-login-sucesso')
+    cy.url().should('include', '/dashboard')
+  })
+
+  it('mostra erro quando email é inválido', () => {
+    cy.get('#login-email').type('email-invalido')
+    cy.get('#login-password').type('123456')
+    cy.get('#login-form-element').submit()
+    cy.get('.error-message').should('be.visible')
+    cy.get('.error-message').should('contain', 'Email inválido')
+  })
+
+  it('mostra erro quando senha é muito curta', () => {
+    cy.get('#login-email').type('email@teste.com')
+    cy.get('#login-password').type('123')
+    cy.get('#login-form-element').submit()
+    cy.get('.error-message').should('be.visible')
+    cy.get('.error-message').should('contain', 'A senha deve ter pelo menos 6 caracteres')
+  })
+
+  it('mostra erro quando credenciais estão incorretas', () => {
+    cy.get('#login-email').type('email@teste.com')
+    cy.get('#login-password').type('senhaerrada')
+    cy.get('#login-form-element').submit()
+    cy.get('.error-message').should('be.visible')
+    cy.get('.error-message').should('contain', 'Email ou senha incorretos')
+  })
+
+  it('mostra erro quando campos estão vazios', () => {
+    cy.get('#login-form-element').submit()
+    cy.get('.error-message').should('be.visible')
+    cy.get('.error-message').should('contain', 'Preencha todos os campos')
   })
 })

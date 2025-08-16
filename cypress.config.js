@@ -12,7 +12,23 @@ module.exports = defineConfig({
     video: true,
     videoCompression: 32,
     videosFolder: 'cypress/videos',
+    videoUploadOnPasses: false,
     screenshotOnRunFailure: true,
-    screenshotsFolder: 'cypress/screenshots'
+    screenshotsFolder: 'cypress/screenshots',
+    // Configurações de formato
+    trashAssetsBeforeRuns: true,
+    // Vídeos em MP4 (padrão do Cypress)
+    // Screenshots em PNG (padrão, mas com alta qualidade)
+    defaultCommandTimeout: 10000,
+    requestTimeout: 10000,
+    responseTimeout: 10000,
+    // Variáveis de ambiente
+    env: {
+      baseUrl: 'http://localhost:8080/',
+      testUser: {
+        email: 'email@teste.com',
+        password: '123456'
+      }
+    }
   },
 });
