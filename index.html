@@ -3,131 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de Despesas</title>
+    <title>Gerir.me - Controle Financeiro Pessoal</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Auth Container -->
+    <!-- Tela de Autenticação -->
     <div id="auth-container" class="auth-container">
-        <!-- Login Form -->
-        <div id="login-form" class="auth-form active">
-            <div class="auth-card">
-                <div class="auth-header">
-                    <div class="logo">
-                        <i class="fas fa-credit-card"></i>
-                        <h1>Gerir.me</h1>
-                    </div>
-                    <h2>Entrar na sua conta</h2>
-                    <p>Gerencie suas despesas de forma inteligente</p>
-                </div>
-                <form id="login-form-element">
-                    <div class="form-group">
-                        <label for="login-email">E-mail</label>
-                        <input type="email" id="login-email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="login-password">Senha</label>
-                        <input type="password" id="login-password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-full">Entrar</button>
-                </form>
-                <div class="auth-links">
-                    <a href="#" id="show-register">Criar conta</a>
-                    <a href="#" id="show-forgot">Esqueci minha senha</a>
-                </div>
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="logo">Gerir.me</h1>
+                <p class="tagline">Controle suas finanças com inteligência</p>
             </div>
-        </div>
-
-        <!-- Register Form -->
-        <div id="register-form" class="auth-form">
-            <div class="auth-card">
-                <div class="auth-header">
-                    <div class="logo">
-                        <i class="fas fa-credit-card"></i>
-                        <h1>SubsManager</h1>
-                    </div>
-                    <h2>Criar nova conta</h2>
-                    <p>Comece a gerenciar suas despesas hoje</p>
-                </div>
-                <form id="register-form-element">
+            
+            <!-- Formulário de Login -->
+            <div id="login-form" class="auth-form active">
+                <h2>Entrar na sua conta</h2>
+                <form id="loginForm">
                     <div class="form-group">
-                        <label for="register-name">Nome completo</label>
-                        <input type="text" id="register-name" required>
+                        <label for="loginEmail">E-mail</label>
+                        <input type="email" id="loginEmail" required>
+                        <span class="error-message" id="loginEmailError"></span>
                     </div>
                     <div class="form-group">
-                        <label for="register-email">E-mail</label>
-                        <input type="email" id="register-email" required>
+                        <label for="loginPassword">Senha</label>
+                        <div class="password-input">
+                            <input type="password" id="loginPassword" required>
+                            <button type="button" class="toggle-password" data-target="loginPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <span class="error-message" id="loginPasswordError"></span>
                     </div>
-                    <div class="form-group">
-                        <label for="register-password">Senha</label>
-                        <input type="password" id="register-password" required minlength="6">
-                    </div>
-                    <div class="form-group">
-                        <label for="register-confirm-password">Confirmar senha</label>
-                        <input type="password" id="register-confirm-password" required minlength="6">
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-full">Criar conta</button>
+                    <button type="submit" class="btn-primary">Entrar</button>
                 </form>
-                <div class="auth-links">
-                    <a href="#" id="show-login">Já tenho conta</a>
-                </div>
+                <p class="auth-switch">
+                    Não tem uma conta? 
+                    <a href="#" id="showRegister">Cadastre-se</a>
+                </p>
             </div>
-        </div>
-
-        <!-- Forgot Password Form -->
-        <div id="forgot-form" class="auth-form">
-            <div class="auth-card">
-                <div class="auth-header">
-                    <div class="logo">
-                        <i class="fas fa-credit-card"></i>
-                        <h1>SubsManager</h1>
-                    </div>
-                    <h2>Recuperar senha</h2>
-                    <p>Digite seu e-mail para receber as instruções</p>
-                </div>
-                <form id="forgot-form-element">
+            
+            <!-- Formulário de Cadastro -->
+            <div id="register-form" class="auth-form">
+                <h2>Criar nova conta</h2>
+                <form id="registerForm">
                     <div class="form-group">
-                        <label for="forgot-email">E-mail</label>
-                        <input type="email" id="forgot-email" required>
+                        <label for="registerName">Nome completo</label>
+                        <input type="text" id="registerName" required>
+                        <span class="error-message" id="registerNameError"></span>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-full">Enviar instruções</button>
+                    <div class="form-group">
+                        <label for="registerEmail">E-mail</label>
+                        <input type="email" id="registerEmail" required>
+                        <span class="error-message" id="registerEmailError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Senha</label>
+                        <div class="password-input">
+                            <input type="password" id="registerPassword" required>
+                            <button type="button" class="toggle-password" data-target="registerPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-requirements">
+                            <small>Mínimo 8 caracteres, com letras maiúsculas, minúsculas, números e símbolos</small>
+                        </div>
+                        <span class="error-message" id="registerPasswordError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirmar senha</label>
+                        <div class="password-input">
+                            <input type="password" id="confirmPassword" required>
+                            <button type="button" class="toggle-password" data-target="confirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <span class="error-message" id="confirmPasswordError"></span>
+                    </div>
+                    <button type="submit" class="btn-primary">Criar conta</button>
                 </form>
-                <div class="auth-links">
-                    <a href="#" id="back-to-login">Voltar ao login</a>
-                </div>
+                <p class="auth-switch">
+                    Já tem uma conta? 
+                    <a href="#" id="showLogin">Faça login</a>
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- Main App Container -->
-    <div id="app-container" class="app-container" style="display: none;">
+    <!-- Dashboard Principal -->
+    <div id="dashboard-container" class="dashboard-container hidden">
         <!-- Header -->
-        <header class="header">
-            <div class="container">
-                <div class="header-content">
-                    <div class="logo">
-                        <i class="fas fa-credit-card"></i>
-                        <h1>SubsManager</h1>
-                    </div>
-                    <nav class="nav">
-                        <a href="#dashboard" class="nav-link active" data-section="dashboard">
-                            <i class="fas fa-chart-line"></i>
-                            Dashboard
-                        </a>
-                        <a href="#subscriptions" class="nav-link" data-section="subscriptions">
-                            <i class="fas fa-list"></i>
-                            Despesas
-                        </a>
-                        <a href="#calendar" class="nav-link" data-section="calendar">
-                            <i class="fas fa-calendar"></i>
-                            Calendário
-                        </a>
-                    </nav>
-                    <div class="user-menu">
-                        <span id="user-name">Usuário</span>
-                        <button id="logout-btn" class="btn btn-outline">
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h1 class="dashboard-logo">Gerir.me</h1>
+            </div>
+            <div class="header-right">
+                <button id="theme-toggle" class="btn-icon" title="Alternar tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="user-menu">
+                    <button class="user-avatar" id="userMenuBtn">
+                        <i class="fas fa-user"></i>
+                        <span id="userName">Usuário</span>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <button id="logoutBtn" class="dropdown-item">
                             <i class="fas fa-sign-out-alt"></i>
                             Sair
                         </button>
@@ -136,202 +117,269 @@
             </div>
         </header>
 
-    <!-- Main Content -->
-    <main class="main">
-        <div class="container">
-            <!-- Dashboard Section -->
-            <section id="dashboard" class="section active">
-                <div class="section-header">
-                    <h2>Dashboard</h2>
-                    <p>Visão geral das suas despesas</p>
-                </div>
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <nav class="sidebar-nav">
+                    <a href="#" class="nav-item active" data-section="overview">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Visão Geral</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="expenses">
+                        <i class="fas fa-receipt"></i>
+                        <span>Despesas</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="calendar">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Calendário</span>
+                    </a>
+                </nav>
+            </aside>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3 id="total-monthly">R$ 0,00</h3>
-                            <p>Gasto Mensal</p>
-                        </div>
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Overview Section -->
+                <section id="overview-section" class="content-section active">
+                    <div class="section-header">
+                        <h2>Visão Geral</h2>
+                        <p>Acompanhe seus gastos mensais</p>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-calendar-year"></i>
+                    
+                    <!-- Cards de Resumo -->
+                    <div class="summary-cards">
+                        <div class="summary-card primary">
+                            <div class="card-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Gasto Mensal</h3>
+                                <p class="card-value" id="monthlyTotal">R$ 0,00</p>
+                                <small class="card-subtitle">Total do mês atual</small>
+                            </div>
                         </div>
-                        <div class="stat-content">
-                            <h3 id="total-yearly">R$ 0,00</h3>
-                            <p>Gasto Anual</p>
+                        
+                        <div class="summary-card">
+                            <div class="card-icon">
+                                <i class="fas fa-repeat"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Despesas Recorrentes</h3>
+                                <p class="card-value" id="recurringTotal">R$ 0,00</p>
+                                <small class="card-subtitle">Mensais + Anuais</small>
+                            </div>
                         </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-play-circle"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3 id="active-subs">0</h3>
-                            <p>Despesas Ativas</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-bell"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3 id="upcoming-payments">0</h3>
-                            <p>Próximos Pagamentos</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dashboard-grid">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Próximos Pagamentos</h3>
-                        </div>
-                        <div class="card-content">
-                            <div id="upcoming-list" class="upcoming-list">
-                                <p class="empty-state">Nenhum pagamento próximo</p>
+                        
+                        <div class="summary-card">
+                            <div class="card-icon">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Despesas Únicas</h3>
+                                <p class="card-value" id="uniqueTotal">R$ 0,00</p>
+                                <small class="card-subtitle">Apenas este mês</small>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Gastos por Categoria</h3>
-                        </div>
-                        <div class="card-content">
-                            <div id="category-chart" class="category-chart">
-                                <p class="empty-state">Adicione despesas para ver o gráfico</p>
+                    <!-- Próximos Pagamentos -->
+                    <div class="upcoming-payments">
+                        <h3>Próximos Pagamentos</h3>
+                        <div class="payments-list" id="upcomingPayments">
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-check"></i>
+                                <p>Nenhum pagamento próximo</p>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Subscriptions Section -->
-            <section id="subscriptions" class="section">
-                <div class="section-header">
-                    <h2>Minhas Despesas</h2>
-                    <button class="btn btn-primary" id="add-subscription-btn">
-                        <i class="fas fa-plus"></i>
-                        Adicionar Despesa
-                    </button>
-                </div>
-
-                <div class="filters">
-                    <div class="filter-group">
-                        <label for="category-filter">Categoria:</label>
-                        <select id="category-filter">
-                            <option value="">Todas</option>
-                            <option value="streaming">Streaming</option>
-                            <option value="software">Software</option>
-                            <option value="music">Música</option>
-                            <option value="fitness">Fitness</option>
-                            <option value="news">Notícias</option>
-                            <option value="other">Outros</option>
-                        </select>
+                <!-- Expenses Section -->
+                <section id="expenses-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Gerenciar Despesas</h2>
+                        <div class="section-actions">
+                            <select id="categoryFilter" class="filter-select">
+                                <option value="">Todas as categorias</option>
+                                <option value="Alimentação">Alimentação</option>
+                                <option value="Transporte">Transporte</option>
+                                <option value="Moradia">Moradia</option>
+                                <option value="Saúde">Saúde</option>
+                                <option value="Educação">Educação</option>
+                                <option value="Lazer">Lazer</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                            <button id="addExpenseBtn" class="btn-primary">
+                                <i class="fas fa-plus"></i>
+                                Nova Despesa
+                            </button>
+                        </div>
                     </div>
-                    <div class="filter-group">
-                        <label for="status-filter">Status:</label>
-                        <select id="status-filter">
-                            <option value="">Todos</option>
-                            <option value="active">Ativo</option>
-                            <option value="inactive">Inativo</option>
-                        </select>
+                    
+                    <!-- Lista de Despesas -->
+                    <div class="expenses-table-container">
+                        <table class="expenses-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Valor</th>
+                                    <th>Categoria</th>
+                                    <th>Tipo</th>
+                                    <th>Data/Próxima Cobrança</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expensesTableBody">
+                                <tr class="empty-row">
+                                    <td colspan="6">
+                                        <div class="empty-state">
+                                            <i class="fas fa-receipt"></i>
+                                            <p>Nenhuma despesa cadastrada</p>
+                                            <small>Clique em "Nova Despesa" para começar</small>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
+                </section>
 
-                <div id="subscriptions-list" class="subscriptions-list">
-                    <p class="empty-state">Nenhuma despesa encontrada. Adicione sua primeira despesa!</p>
-                </div>
-            </section>
-
-            <!-- Calendar Section -->
-            <section id="calendar" class="section">
-                <div class="section-header">
-                    <h2>Calendário de Pagamentos</h2>
-                    <p>Visualize quando suas despesas serão cobradas</p>
-                </div>
-
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <button id="prev-month" class="btn btn-secondary">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <h3 id="current-month"></h3>
-                        <button id="next-month" class="btn btn-secondary">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
+                <!-- Calendar Section -->
+                <section id="calendar-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Calendário de Pagamentos</h2>
+                        <p>Visualize suas despesas recorrentes</p>
                     </div>
-                    <div id="calendar-grid" class="calendar-grid">
-                        <!-- Calendar will be generated by JavaScript -->
+                    
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button id="prevMonth" class="btn-icon">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <h3 id="currentMonth">Janeiro 2025</h3>
+                            <button id="nextMonth" class="btn-icon">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="calendar-grid" id="calendarGrid">
+                            <!-- Calendar will be generated by JavaScript -->
+                        </div>
+                        
+                        <div class="calendar-legend">
+                            <div class="legend-item">
+                                <div class="legend-color has-payment"></div>
+                                <span>Dias com pagamentos</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </section>
-        </div>
-    </main>
+                </section>
+            </div>
+        </main>
+    </div>
 
-    <!-- Modal for Adding/Editing Subscription -->
-        <div id="subscription-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 id="modal-title">Adicionar Despesa</h3>
-                <button class="modal-close" id="close-modal">
+    <!-- Modal para Adicionar/Editar Despesa -->
+    <div id="expenseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Nova Despesa</h3>
+                <button class="modal-close" id="closeModal">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <form id="subscription-form">
+            
+            <form id="expenseForm" class="modal-body">
                 <div class="form-group">
-                    <label for="service-name">Nome do Serviço</label>
-                    <input type="text" id="service-name" required>
+                    <label for="expenseName">Nome da despesa</label>
+                    <input type="text" id="expenseName" required>
+                    <span class="error-message" id="expenseNameError"></span>
                 </div>
+                
                 <div class="form-group">
-                    <label for="service-price">Preço (R$)</label>
-                    <input type="number" id="service-price" step="0.01" required>
+                    <label for="expenseValue">Valor</label>
+                    <input type="number" id="expenseValue" step="0.01" min="0.01" required>
+                    <span class="error-message" id="expenseValueError"></span>
                 </div>
+                
                 <div class="form-group">
-                    <label for="service-category">Categoria</label>
-                    <select id="service-category" required>
+                    <label for="expenseCategory">Categoria</label>
+                    <select id="expenseCategory" required>
                         <option value="">Selecione uma categoria</option>
-                        <option value="streaming">Streaming</option>
-                        <option value="software">Software</option>
-                        <option value="music">Música</option>
-                        <option value="fitness">Fitness</option>
-                        <option value="news">Notícias</option>
-                        <option value="other">Outros</option>
+                        <option value="Alimentação">Alimentação</option>
+                        <option value="Transporte">Transporte</option>
+                        <option value="Moradia">Moradia</option>
+                        <option value="Saúde">Saúde</option>
+                        <option value="Educação">Educação</option>
+                        <option value="Lazer">Lazer</option>
+                        <option value="Outros">Outros</option>
                     </select>
+                    <span class="error-message" id="expenseCategoryError"></span>
                 </div>
+                
                 <div class="form-group">
-                    <label for="billing-cycle">Ciclo de Cobrança</label>
-                    <select id="billing-cycle" required>
-                        <option value="monthly">Mensal</option>
-                        <option value="yearly">Anual</option>
+                    <label for="expenseType">Tipo</label>
+                    <select id="expenseType" required>
+                        <option value="">Selecione o tipo</option>
+                        <option value="unique">Única</option>
+                        <option value="recurring">Recorrente</option>
                     </select>
+                    <span class="error-message" id="expenseTypeError"></span>
                 </div>
-                <div class="form-group">
-                    <label for="next-payment">Próximo Pagamento</label>
-                    <input type="date" id="next-payment" required>
+                
+                <!-- Campos condicionais para despesa única -->
+                <div id="uniqueFields" class="conditional-fields">
+                    <div class="form-group">
+                        <label for="expenseDate">Data da despesa</label>
+                        <input type="date" id="expenseDate">
+                        <span class="error-message" id="expenseDateError"></span>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="service-status">Status</label>
-                    <select id="service-status">
-                        <option value="active">Ativo</option>
-                        <option value="inactive">Inativo</option>
-                    </select>
+                
+                <!-- Campos condicionais para despesa recorrente -->
+                <div id="recurringFields" class="conditional-fields">
+                    <div class="form-group">
+                        <label for="expenseCycle">Ciclo de cobrança</label>
+                        <select id="expenseCycle">
+                            <option value="">Selecione o ciclo</option>
+                            <option value="monthly">Mensal</option>
+                            <option value="yearly">Anual</option>
+                        </select>
+                        <span class="error-message" id="expenseCycleError"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nextPayment">Próxima data de cobrança</label>
+                        <input type="date" id="nextPayment">
+                        <span class="error-message" id="nextPaymentError"></span>
+                    </div>
                 </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancel-btn">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Cancelar</button>
+                    <button type="submit" class="btn-primary" id="saveBtn">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
-        <!-- Toast Notifications -->
-        <div id="toast-container" class="toast-container"></div>
+    <!-- Modal de Confirmação -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h3>Confirmar ação</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Tem certeza que deseja realizar esta ação?</p>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="confirmCancel">Cancelar</button>
+                    <button type="button" class="btn-danger" id="confirmOk">Confirmar</button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
 
     <script src="script.js"></script>
 </body>

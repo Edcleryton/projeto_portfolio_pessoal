@@ -1,4 +1,4 @@
-# Backlog de Histórias de Usuário: Meu Gerenciador de Despesas
+# Backlog de Histórias de Usuário: Gerir.me
 
 ## Épico: Gerenciamento de Contas de Usuário
 
@@ -79,18 +79,49 @@
 - Ao clicar ou passar o mouse sobre um dia marcado, os nomes das despesas correspondentes devem ser exibidos
 - Deve ser possível navegar entre os meses
 
+### HU09: Filtrar Despesas por Categoria
+**Eu, como** um usuário logado, **quero** filtrar minhas despesas por categoria, **para que** eu possa analisar gastos específicos de cada área.
+
+**Critérios de Aceite:**
+- Deve haver um filtro dropdown com todas as categorias disponíveis
+- Ao selecionar uma categoria, apenas despesas dessa categoria devem ser exibidas
+- Deve haver uma opção "Todas" para remover o filtro
+- O filtro deve funcionar tanto para despesas únicas quanto recorrentes
+
+### HU10: Notificações de Vencimento
+**Eu, como** um usuário logado, **quero** receber notificações sobre despesas que vencem em breve, **para que** eu não esqueça de realizar os pagamentos.
+
+**Critérios de Aceite:**
+- O sistema deve notificar sobre despesas com vencimento em até 3 dias
+- As notificações devem aparecer automaticamente quando eu acessar o sistema
+- Deve funcionar tanto para despesas únicas quanto recorrentes
+- O usuário deve poder permitir ou negar notificações do navegador
+
+### HU11: Alternância entre Modo Claro e Escuro
+**Eu, como** um usuário, **quero** alternar entre modo claro e escuro na interface, **para que** eu possa usar o aplicativo confortavelmente em diferentes ambientes de iluminação.
+
+**Critérios de Aceite:**
+- Deve haver um botão de alternância visível no cabeçalho da aplicação
+- O botão deve mostrar o ícone apropriado (lua para modo escuro, sol para modo claro)
+- A mudança deve ser aplicada imediatamente em toda a interface
+- A preferência do usuário deve ser salva e mantida entre sessões
+- Deve haver feedback visual (notificação) ao trocar de tema
+
 ---
 
 ## Status de Implementação
 
 - ✅ HU01: Cadastro de Novo Usuário
 - ✅ HU02: Login de Usuário
-- 🔄 HU03: Adicionar Nova Despesa (Única ou Recorrente)
-- 🔄 HU04: Visualizar Lista de Despesas
-- 🔄 HU05: Editar uma Despesa Existente
-- 🔄 HU06: Remover uma Despesa
-- 🔄 HU07: Dashboard de Gasto Mensal
-- 🔄 HU08: Calendário de Pagamentos Futuros
+- ✅ HU03: Adicionar Nova Despesa (Única ou Recorrente)
+- ✅ HU04: Visualizar Lista de Despesas
+- ✅ HU05: Editar uma Despesa Existente
+- ✅ HU06: Remover uma Despesa
+- ✅ HU07: Dashboard de Gasto Mensal
+- ✅ HU08: Calendário de Pagamentos Futuros
+- 🔄 HU09: Filtrar Despesas por Categoria
+- ✅ HU10: Notificações de Vencimento
+- ✅ HU11: Alternância entre Modo Claro e Escuro
 
 **Legenda:**
 - ✅ Implementado
@@ -99,6 +130,6 @@
 
 ---
 
-**Versão:** 2.0  
+**Versão:** 3.0  
 **Última atualização:** Janeiro 2025  
 **Responsável:** Equipe de Desenvolvimento

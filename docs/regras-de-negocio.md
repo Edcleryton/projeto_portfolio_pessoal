@@ -1,8 +1,8 @@
-# Regras de Negócio: Meu Gerenciador de Despesas
+# Regras de Negócio: Gerir.me
 
 ## Visão Geral
 
-Este documento define as regras de negócio para o sistema "Meu Gerenciador de Despesas", uma aplicação web para controle financeiro pessoal que permite o gerenciamento de despesas únicas e recorrentes.
+Este documento define as regras de negócio para o sistema "Gerir.me", uma aplicação web para controle financeiro pessoal que permite o gerenciamento de despesas únicas e recorrentes.
 
 ---
 
@@ -15,15 +15,20 @@ Este documento define as regras de negócio para o sistema "Meu Gerenciador de D
 
 ### RN-USU-002: Política de Senha
 **Descrição:** As senhas devem atender aos critérios mínimos de segurança.
-**Regra:** A senha deve ter no mínimo 8 caracteres, contendo pelo menos uma letra e um número.
+**Regra:** A senha deve ter no mínimo 8 caracteres, contendo pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial.
 **Implementação:** Validação no frontend e backend com mensagem de erro específica.
 
-### RN-USU-003: Autenticação Obrigatória
+### RN-USU-003: Bloqueio por Tentativas de Login
+**Descrição:** O sistema deve proteger contra ataques de força bruta.
+**Regra:** Após 3 tentativas de login incorretas, a conta deve ser bloqueada por 15 minutos.
+**Implementação:** Controle de tentativas com timestamp de bloqueio armazenado localmente.
+
+### RN-USU-004: Autenticação Obrigatória
 **Descrição:** Todas as funcionalidades do sistema requerem autenticação.
 **Regra:** Usuários não autenticados devem ser redirecionados para a tela de login.
 **Implementação:** Verificação de sessão em todas as páginas protegidas.
 
-### RN-USU-004: Segregação de Dados
+### RN-USU-005: Segregação de Dados
 **Descrição:** Cada usuário só pode acessar seus próprios dados.
 **Regra:** O sistema deve filtrar todas as consultas pelo ID do usuário logado.
 **Implementação:** Filtro automático em todas as operações de dados.
@@ -51,6 +56,11 @@ Este documento define as regras de negócio para o sistema "Meu Gerenciador de D
 **Descrição:** Despesas únicas devem ter uma data específica de ocorrência.
 **Regra:** Quando o tipo "Única" for selecionado, o campo "Data da Despesa" torna-se obrigatório.
 **Implementação:** Validação condicional baseada no tipo selecionado.
+
+### RN-DES-004A: Validação de Data Passada
+**Descrição:** Despesas únicas não podem ser cadastradas com datas no passado.
+**Regra:** Para despesas do tipo "Única", a data selecionada deve ser igual ou posterior à data atual.
+**Implementação:** Validação de data com mensagem de erro específica para datas passadas.
 
 ### RN-DES-005: Ciclo e Data para Despesas Recorrentes
 **Descrição:** Despesas recorrentes devem ter periodicidade e próxima data definidas.
@@ -95,6 +105,35 @@ Este documento define as regras de negócio para o sistema "Meu Gerenciador de D
 **Regra:** Despesas recorrentes com vencimento em até 7 dias devem ser destacadas no dashboard.
 **Implementação:** Seção "Próximos Pagamentos" com lista ordenada por data.
 
+### RN-NOT-002: Notificações Push
+**Descrição:** O sistema deve enviar notificações push para despesas próximas ao vencimento.
+**Regra:** Despesas com vencimento em até 3 dias devem gerar notificações push no navegador.
+**Implementação:** Solicitação de permissão de notificação e verificação automática a cada 30 minutos.
+
+### RN-NOT-003: Controle de Duplicação
+**Descrição:** Evitar notificações duplicadas para a mesma despesa.
+**Regra:** Cada despesa deve gerar apenas uma notificação por dia.
+**Implementação:** Controle de notificações já enviadas com base na data atual.
+
+---
+
+## RN-INT: Interface e Experiência do Usuário
+
+### RN-INT-001: Alternância de Tema
+**Descrição:** O sistema deve permitir alternância entre modo claro e escuro.
+**Regra:** O usuário deve poder alternar entre os temas através de um botão no cabeçalho.
+**Implementação:** Botão de alternância com ícones apropriados e aplicação imediata do tema.
+
+### RN-INT-002: Persistência de Tema
+**Descrição:** A preferência de tema deve ser mantida entre sessões.
+**Regra:** A escolha do tema deve ser salva localmente e aplicada automaticamente no próximo acesso.
+**Implementação:** Armazenamento da preferência no localStorage com inicialização automática.
+
+### RN-INT-003: Feedback Visual de Tema
+**Descrição:** O usuário deve receber feedback ao trocar de tema.
+**Regra:** Uma notificação toast deve ser exibida confirmando a mudança de tema.
+**Implementação:** Notificação temporária com mensagem de confirmação.
+
 ---
 
 ## Status de Implementação
@@ -102,25 +141,34 @@ Este documento define as regras de negócio para o sistema "Meu Gerenciador de D
 ### Regras de Usuário
 - ✅ RN-USU-001: Unicidade de E-mail
 - ✅ RN-USU-002: Política de Senha
-- ✅ RN-USU-003: Autenticação Obrigatória
-- ✅ RN-USU-004: Segregação de Dados
+- ✅ RN-USU-003: Bloqueio por Tentativas de Login
+- ✅ RN-USU-004: Autenticação Obrigatória
+- ✅ RN-USU-005: Segregação de Dados
 
 ### Regras de Despesas
-- 🔄 RN-DES-001: Classificação de Despesas
-- 🔄 RN-DES-002: Campos Obrigatórios
-- 🔄 RN-DES-003: Validação de Valor
-- 🔄 RN-DES-004: Data para Despesas Únicas
-- 🔄 RN-DES-005: Ciclo e Data para Despesas Recorrentes
-- ❌ RN-DES-006: Atualização de Recorrência
-- 🔄 RN-DES-007: Confirmação de Exclusão
+- ✅ RN-DES-001: Classificação de Despesas
+- ✅ RN-DES-002: Campos Obrigatórios
+- ✅ RN-DES-003: Validação de Valor
+- ✅ RN-DES-004: Data para Despesas Únicas
+- ✅ RN-DES-004A: Validação de Data Passada
+- ✅ RN-DES-005: Ciclo e Data para Despesas Recorrentes
+- ✅ RN-DES-006: Atualização de Recorrência
+- ✅ RN-DES-007: Confirmação de Exclusão
 
 ### Regras de Cálculo
-- 🔄 RN-CAL-001: Fórmula de Gasto Mensal
+- ✅ RN-CAL-001: Fórmula de Gasto Mensal
 - ✅ RN-CAL-002: Padrão Monetário
-- 🔄 RN-CAL-003: Calendário para Despesas Recorrentes
+- ✅ RN-CAL-003: Calendário para Despesas Recorrentes
 
 ### Regras de Notificação
-- 🔄 RN-NOT-001: Lembretes de Vencimento
+- ✅ RN-NOT-001: Lembretes de Vencimento
+- ✅ RN-NOT-002: Notificações Push
+- ✅ RN-NOT-003: Controle de Duplicação
+
+### Regras de Interface
+- ✅ RN-INT-001: Alternância de Tema
+- ✅ RN-INT-002: Persistência de Tema
+- ✅ RN-INT-003: Feedback Visual de Tema
 
 **Legenda:**
 - ✅ Implementado
@@ -154,7 +202,7 @@ Este documento define as regras de negócio para o sistema "Meu Gerenciador de D
 
 ---
 
-**Versão:** 2.0  
+**Versão:** 3.0  
 **Última atualização:** Janeiro 2025  
 **Responsável:** Equipe de Desenvolvimento  
-**Status:** Regras Definidas - Implementação em Andamento
+**Status:** Regras Definidas - Implementação Concluída

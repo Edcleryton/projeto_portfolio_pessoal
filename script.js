@@ -1,716 +1,1078 @@
-// Gerenciador de Despesas - JavaScript Vanilla
-
-// Classe para gerenciar autenticação
-class AuthManager {
+class GerirMe {
     constructor() {
-        this.users = JSON.parse(localStorage.getItem('users')) || [];
-        this.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        this.currentUser = null;
+        this.expenses = [];
+        this.currentExpenseId = null;
+        this.currentDate = new Date();
+        this.loginAttempts = {};
+        this.notificationsSent = {};
+        
         this.init();
     }
 
     init() {
-        this.bindAuthEvents();
-        this.checkAuthState();
+        this.loadUserData();
+        this.initTheme();
+        this.setupEventListeners();
+        this.checkAuthentication();
+        this.requestNotificationPermission();
+        this.startNotificationCheck();
     }
 
-    bindAuthEvents() {
-        // Login form
-        document.getElementById('login-form-element').addEventListener('submit', (e) => {
+    // ==================== AUTENTICAÇÃO ====================
+    
+    setupEventListeners() {
+        // Auth form toggles
+        document.getElementById('showRegister')?.addEventListener('click', (e) => {
             e.preventDefault();
-            this.handleLogin();
+            this.showRegisterForm();
         });
-
-        // Register form
-        document.getElementById('register-form-element').addEventListener('submit', (e) => {
+        
+        document.getElementById('showLogin')?.addEventListener('click', (e) => {
             e.preventDefault();
-            this.handleRegister();
+            this.showLoginForm();
         });
-
-        // Forgot password form
-        document.getElementById('forgot-form-element').addEventListener('submit', (e) => {
+        
+        // Auth forms
+        document.getElementById('loginForm')?.addEventListener('submit', (e) => {
             e.preventDefault();
-            this.handleForgotPassword();
+            this.handleLogin(e);
         });
-
-        // Auth navigation links
-        document.getElementById('show-register').addEventListener('click', (e) => {
+        
+        document.getElementById('registerForm')?.addEventListener('submit', (e) => {
             e.preventDefault();
-            this.showAuthForm('register');
+            this.handleRegister(e);
         });
-
-        document.getElementById('show-login').addEventListener('click', (e) => {
+        
+        // Password toggles
+        document.querySelectorAll('.toggle-password').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.togglePasswordVisibility(btn.dataset.target);
+            });
+        });
+        
+        // Dashboard navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.showSection(item.dataset.section);
+            });
+        });
+        
+        // User menu
+        document.getElementById('userMenuBtn')?.addEventListener('click', () => {
+            this.toggleUserMenu();
+        });
+        
+        document.getElementById('logoutBtn')?.addEventListener('click', () => {
+            this.logout();
+        });
+        
+        // Theme toggle
+        document.getElementById('theme-toggle')?.addEventListener('click', () => {
+            this.toggleTheme();
+        });
+        
+        // Expense management
+        document.getElementById('addExpenseBtn')?.addEventListener('click', () => {
+            this.showExpenseModal();
+        });
+        
+        document.getElementById('expenseForm')?.addEventListener('submit', (e) => {
             e.preventDefault();
-            this.showAuthForm('login');
+            this.handleExpenseSubmit(e);
         });
-
-        document.getElementById('show-forgot').addEventListener('click', (e) => {
-            e.preventDefault();
-            this.showAuthForm('forgot');
+        
+        document.getElementById('expenseType')?.addEventListener('change', (e) => {
+            this.toggleExpenseFields(e.target.value);
         });
-
-        document.getElementById('back-to-login').addEventListener('click', (e) => {
-            e.preventDefault();
-            this.showAuthForm('login');
+        
+        // Modal controls
+        document.getElementById('closeModal')?.addEventListener('click', () => {
+            this.hideExpenseModal();
         });
-
-        // Logout button
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            this.handleLogout();
+        
+        document.getElementById('cancelBtn')?.addEventListener('click', () => {
+            this.hideExpenseModal();
+        });
+        
+        // Category filter
+        document.getElementById('categoryFilter')?.addEventListener('change', (e) => {
+            this.filterExpensesByCategory(e.target.value);
+        });
+        
+        // Calendar navigation
+        document.getElementById('prevMonth')?.addEventListener('click', () => {
+            this.navigateMonth(-1);
+        });
+        
+        document.getElementById('nextMonth')?.addEventListener('click', () => {
+            this.navigateMonth(1);
+        });
+        
+        // Confirmation modal
+        document.getElementById('confirmOk')?.addEventListener('click', () => {
+            this.executeConfirmedAction();
+        });
+        
+        document.getElementById('confirmCancel')?.addEventListener('click', () => {
+            this.hideConfirmModal();
+        });
+        
+        // Close modals on backdrop click
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                if (e.target.id === 'expenseModal') {
+                    this.hideExpenseModal();
+                } else if (e.target.id === 'confirmModal') {
+                    this.hideConfirmModal();
+                }
+            }
+        });
+        
+        // Close user menu on outside click
+        document.addEventListener('click', (e) => {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('userDropdown');
+            if (userMenu && !userMenu.contains(e.target)) {
+                dropdown?.classList.remove('show');
+            }
         });
     }
-
-    showAuthForm(formType) {
-        document.querySelectorAll('.auth-form').forEach(form => {
-            form.classList.remove('active');
-        });
-        document.getElementById(`${formType}-form`).classList.add('active');
+    
+    showRegisterForm() {
+        document.getElementById('login-form').classList.remove('active');
+        document.getElementById('register-form').classList.add('active');
+        this.clearFormErrors();
     }
-
-    handleLogin() {
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-
-        const user = this.users.find(u => u.email === email && u.password === password);
+    
+    showLoginForm() {
+        document.getElementById('register-form').classList.remove('active');
+        document.getElementById('login-form').classList.add('active');
+        this.clearFormErrors();
+    }
+    
+    togglePasswordVisibility(targetId) {
+        const input = document.getElementById(targetId);
+        const button = document.querySelector(`[data-target="${targetId}"]`);
+        const icon = button.querySelector('i');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+    
+    handleLogin(e) {
+        const formData = new FormData(e.target);
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        
+        this.clearFormErrors();
+        
+        // Verificar bloqueio por tentativas (RN-USU-003)
+        if (this.isAccountBlocked(email)) {
+            this.showError('loginEmailError', 'Conta bloqueada por 15 minutos devido a tentativas excessivas.');
+            return;
+        }
+        
+        // Validações básicas
+        if (!email || !password) {
+            if (!email) this.showError('loginEmailError', 'E-mail é obrigatório.');
+            if (!password) this.showError('loginPasswordError', 'Senha é obrigatória.');
+            return;
+        }
+        
+        if (!this.isValidEmail(email)) {
+            this.showError('loginEmailError', 'E-mail inválido.');
+            return;
+        }
+        
+        // Verificar credenciais
+        const users = this.getUsers();
+        const user = users.find(u => u.email === email && u.password === password);
         
         if (user) {
+            // Login bem-sucedido
             this.currentUser = user;
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            this.showApp();
-            this.showToast('Login realizado com sucesso!', 'success');
+            this.saveUserSession();
+            this.resetLoginAttempts(email);
+            this.showDashboard();
+            this.showToast('success', 'Login realizado', 'Bem-vindo de volta!');
         } else {
-            this.showToast('E-mail ou senha incorretos!', 'error');
+            // Login falhou
+            this.incrementLoginAttempts(email);
+            const attempts = this.getLoginAttempts(email);
+            
+            if (attempts >= 3) {
+                this.blockAccount(email);
+                this.showError('loginPasswordError', 'Conta bloqueada por 15 minutos devido a tentativas excessivas.');
+            } else {
+                this.showError('loginPasswordError', `Credenciais inválidas. Tentativas restantes: ${3 - attempts}`);
+            }
         }
     }
-
-    handleRegister() {
-        const name = document.getElementById('register-name').value;
-        const email = document.getElementById('register-email').value;
-        const password = document.getElementById('register-password').value;
-        const confirmPassword = document.getElementById('register-confirm-password').value;
-
-        // Validações
-        if (password !== confirmPassword) {
-            this.showToast('As senhas não coincidem!', 'error');
-            return;
+    
+    handleRegister(e) {
+        const name = document.getElementById('registerName').value.trim();
+        const email = document.getElementById('registerEmail').value.trim();
+        const password = document.getElementById('registerPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        this.clearFormErrors();
+        
+        // Validações (RN-USU-001, RN-USU-002)
+        let hasErrors = false;
+        
+        if (!name) {
+            this.showError('registerNameError', 'Nome é obrigatório.');
+            hasErrors = true;
         }
-
-        if (password.length < 6) {
-            this.showToast('A senha deve ter pelo menos 6 caracteres!', 'error');
-            return;
+        
+        if (!email) {
+            this.showError('registerEmailError', 'E-mail é obrigatório.');
+            hasErrors = true;
+        } else if (!this.isValidEmail(email)) {
+            this.showError('registerEmailError', 'E-mail inválido.');
+            hasErrors = true;
+        } else if (this.emailExists(email)) {
+            this.showError('registerEmailError', 'E-mail já cadastrado.');
+            hasErrors = true;
         }
-
-        if (this.users.find(u => u.email === email)) {
-            this.showToast('Este e-mail já está cadastrado!', 'error');
-            return;
+        
+        if (!password) {
+            this.showError('registerPasswordError', 'Senha é obrigatória.');
+            hasErrors = true;
+        } else if (!this.isValidPassword(password)) {
+            this.showError('registerPasswordError', 'Senha deve ter no mínimo 8 caracteres, com letras maiúsculas, minúsculas, números e símbolos.');
+            hasErrors = true;
         }
-
-        // Criar novo usuário
-        const newUser = {
+        
+        if (!confirmPassword) {
+            this.showError('confirmPasswordError', 'Confirmação de senha é obrigatória.');
+            hasErrors = true;
+        } else if (password !== confirmPassword) {
+            this.showError('confirmPasswordError', 'Senhas não coincidem.');
+            hasErrors = true;
+        }
+        
+        if (hasErrors) return;
+        
+        // Criar usuário
+        const user = {
             id: Date.now().toString(),
             name,
             email,
             password,
             createdAt: new Date().toISOString()
         };
-
-        this.users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(this.users));
         
-        this.showToast('Conta criada com sucesso! Faça login para continuar.', 'success');
-        this.showAuthForm('login');
-        
-        // Limpar formulário
-        document.getElementById('register-form-element').reset();
+        this.saveUser(user);
+        this.currentUser = user;
+        this.saveUserSession();
+        this.showDashboard();
+        this.showToast('success', 'Conta criada com sucesso!', 'Bem-vindo ao Gerir.me!');
     }
-
-    handleForgotPassword() {
-        const email = document.getElementById('forgot-email').value;
+    
+    // ==================== VALIDAÇÕES ====================
+    
+    isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    isValidPassword(password) {
+        // RN-USU-002: Mínimo 8 caracteres, com maiúscula, minúscula, número e símbolo
+        const minLength = password.length >= 8;
+        const hasUpper = /[A-Z]/.test(password);
+        const hasLower = /[a-z]/.test(password);
+        const hasNumber = /\d/.test(password);
+        const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
         
-        const user = this.users.find(u => u.email === email);
+        return minLength && hasUpper && hasLower && hasNumber && hasSymbol;
+    }
+    
+    emailExists(email) {
+        const users = this.getUsers();
+        return users.some(user => user.email === email);
+    }
+    
+    // ==================== CONTROLE DE LOGIN ====================
+    
+    getLoginAttempts(email) {
+        const attempts = this.loginAttempts[email];
+        if (!attempts) return 0;
         
-        if (user) {
-            // Simular envio de e-mail
-            this.showToast(`Instruções enviadas para ${email}. Verifique sua caixa de entrada.`, 'success');
-            setTimeout(() => {
-                this.showAuthForm('login');
-            }, 2000);
-        } else {
-            this.showToast('E-mail não encontrado!', 'error');
+        // Verificar se o bloqueio expirou
+        if (attempts.blockedUntil && new Date() > new Date(attempts.blockedUntil)) {
+            delete this.loginAttempts[email];
+            return 0;
+        }
+        
+        return attempts.count || 0;
+    }
+    
+    incrementLoginAttempts(email) {
+        if (!this.loginAttempts[email]) {
+            this.loginAttempts[email] = { count: 0 };
+        }
+        this.loginAttempts[email].count++;
+    }
+    
+    resetLoginAttempts(email) {
+        delete this.loginAttempts[email];
+    }
+    
+    blockAccount(email) {
+        const blockUntil = new Date();
+        blockUntil.setMinutes(blockUntil.getMinutes() + 15); // 15 minutos
+        
+        this.loginAttempts[email] = {
+            count: 3,
+            blockedUntil: blockUntil.toISOString()
+        };
+    }
+    
+    isAccountBlocked(email) {
+        const attempts = this.loginAttempts[email];
+        if (!attempts || !attempts.blockedUntil) return false;
+        
+        return new Date() < new Date(attempts.blockedUntil);
+    }
+    
+    // ==================== ARMAZENAMENTO ====================
+    
+    getUsers() {
+        const users = localStorage.getItem('gerirme_users');
+        return users ? JSON.parse(users) : [];
+    }
+    
+    saveUser(user) {
+        const users = this.getUsers();
+        users.push(user);
+        localStorage.setItem('gerirme_users', JSON.stringify(users));
+    }
+    
+    saveUserSession() {
+        localStorage.setItem('gerirme_current_user', JSON.stringify(this.currentUser));
+    }
+    
+    loadUserData() {
+        const userData = localStorage.getItem('gerirme_current_user');
+        if (userData) {
+            this.currentUser = JSON.parse(userData);
+            this.loadExpenses();
         }
     }
-
-    handleLogout() {
-        this.currentUser = null;
-        localStorage.removeItem('currentUser');
-        this.showAuth();
-        this.showToast('Logout realizado com sucesso!', 'success');
-    }
-
-    checkAuthState() {
+    
+    checkAuthentication() {
         if (this.currentUser) {
-            this.showApp();
+            this.showDashboard();
         } else {
             this.showAuth();
         }
     }
-
+    
+    logout() {
+        this.currentUser = null;
+        this.expenses = [];
+        localStorage.removeItem('gerirme_current_user');
+        this.showAuth();
+        this.showToast('info', 'Logout realizado', 'Até logo!');
+    }
+    
+    // ==================== INTERFACE ====================
+    
     showAuth() {
-        document.getElementById('auth-container').style.display = 'flex';
-        document.getElementById('app-container').style.display = 'none';
+        document.getElementById('auth-container').classList.remove('hidden');
+        document.getElementById('dashboard-container').classList.add('hidden');
     }
-
-    showApp() {
-        document.getElementById('auth-container').style.display = 'none';
-        document.getElementById('app-container').style.display = 'block';
-        document.getElementById('user-name').textContent = this.currentUser.name;
+    
+    showDashboard() {
+        document.getElementById('auth-container').classList.add('hidden');
+        document.getElementById('dashboard-container').classList.remove('hidden');
         
-        // Inicializar o gerenciador de despesas
-        if (!window.subscriptionManager) {
-            window.subscriptionManager = new SubscriptionManager();
-        }
-    }
-
-    showToast(message, type = 'info') {
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-            <span>${message}</span>
-        `;
+        // Atualizar nome do usuário
+        document.getElementById('userName').textContent = this.currentUser.name;
         
-        const container = document.getElementById('toast-container');
-        container.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.classList.add('show');
-        }, 100);
-        
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => {
-                container.removeChild(toast);
-            }, 300);
-        }, 3000);
-    }
-}
-
-class SubscriptionManager {
-    constructor() {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.userId = currentUser ? currentUser.id : null;
-        this.subscriptions = JSON.parse(localStorage.getItem(`subscriptions_${this.userId}`)) || [];
-        this.currentDate = new Date();
-        this.editingId = null;
-        
-        this.init();
-        this.loadSampleDataIfNeeded();
-    }
-
-    init() {
-        this.bindEvents();
-        this.renderDashboard();
-        this.renderSubscriptions();
+        // Carregar dados
+        this.loadExpenses();
+        this.updateDashboard();
         this.renderCalendar();
-        this.showSection('dashboard');
     }
-
-    bindEvents() {
-        // Navigation
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const section = link.dataset.section;
-                this.showSection(section);
-                this.updateActiveNav(link);
-            });
-        });
-
-        // Modal events
-        document.getElementById('add-subscription-btn').addEventListener('click', () => {
-            this.openModal();
-        });
-
-        document.getElementById('close-modal').addEventListener('click', () => {
-            this.closeModal();
-        });
-
-        document.getElementById('cancel-btn').addEventListener('click', () => {
-            this.closeModal();
-        });
-
-        // Form submission
-        document.getElementById('subscription-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.saveSubscription();
-        });
-
-        // Filters
-        document.getElementById('category-filter').addEventListener('change', () => {
-            this.renderSubscriptions();
-        });
-
-        document.getElementById('status-filter').addEventListener('change', () => {
-            this.renderSubscriptions();
-        });
-
-        // Calendar navigation
-        document.getElementById('prev-month').addEventListener('click', () => {
-            this.currentDate.setMonth(this.currentDate.getMonth() - 1);
-            this.renderCalendar();
-        });
-
-        document.getElementById('next-month').addEventListener('click', () => {
-            this.currentDate.setMonth(this.currentDate.getMonth() + 1);
-            this.renderCalendar();
-        });
-
-        // Close modal on outside click
-        document.getElementById('subscription-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'subscription-modal') {
-                this.closeModal();
-            }
-        });
-    }
-
+    
     showSection(sectionName) {
-        document.querySelectorAll('.section').forEach(section => {
+        // Atualizar navegação
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+        
+        // Mostrar seção
+        document.querySelectorAll('.content-section').forEach(section => {
             section.classList.remove('active');
         });
-        document.getElementById(sectionName).classList.add('active');
-
-        // Update data when switching sections
-        if (sectionName === 'dashboard') {
-            this.renderDashboard();
-        } else if (sectionName === 'subscriptions') {
-            this.renderSubscriptions();
+        document.getElementById(`${sectionName}-section`).classList.add('active');
+        
+        // Ações específicas por seção
+        if (sectionName === 'expenses') {
+            this.renderExpensesTable();
         } else if (sectionName === 'calendar') {
             this.renderCalendar();
+        } else if (sectionName === 'overview') {
+            this.updateDashboard();
         }
     }
-
-    updateActiveNav(activeLink) {
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('active');
+    
+    toggleUserMenu() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+    
+    clearFormErrors() {
+        document.querySelectorAll('.error-message').forEach(error => {
+            error.textContent = '';
         });
-        activeLink.classList.add('active');
     }
-
-    openModal(subscription = null) {
-        const modal = document.getElementById('subscription-modal');
-        const form = document.getElementById('subscription-form');
-        const title = document.getElementById('modal-title');
-
-        if (subscription) {
-            title.textContent = 'Editar Despesa';
-            this.editingId = subscription.id;
-            this.populateForm(subscription);
-        } else {
-            title.textContent = 'Adicionar Despesa';
-            this.editingId = null;
-            form.reset();
-            // Set default next payment date to today
-            document.getElementById('next-payment').value = new Date().toISOString().split('T')[0];
+    
+    showError(elementId, message) {
+        document.getElementById(elementId).textContent = message;
+    }
+    
+    // ==================== TEMA ====================
+    
+    initTheme() {
+        const savedTheme = localStorage.getItem('gerirme_theme') || 'light';
+        this.setTheme(savedTheme);
+    }
+    
+    setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('gerirme_theme', theme);
+        
+        const themeToggle = document.getElementById('theme-toggle');
+        const icon = themeToggle?.querySelector('i');
+        
+        if (icon) {
+            if (theme === 'dark') {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                themeToggle.title = 'Alternar para modo claro';
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                themeToggle.title = 'Alternar para modo escuro';
+            }
         }
-
-        modal.classList.add('active');
     }
-
-    closeModal() {
-        const modal = document.getElementById('subscription-modal');
-        modal.classList.remove('active');
-        this.editingId = null;
+    
+    toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        this.setTheme(newTheme);
+        
+        const themeName = newTheme === 'dark' ? 'escuro' : 'claro';
+        this.showToast('info', 'Tema alterado', `Modo ${themeName} ativado`);
     }
-
-    populateForm(subscription) {
-        document.getElementById('service-name').value = subscription.name;
-        document.getElementById('service-price').value = subscription.price;
-        document.getElementById('service-category').value = subscription.category;
-        document.getElementById('billing-cycle').value = subscription.billingCycle;
-        document.getElementById('next-payment').value = subscription.nextPayment;
-        document.getElementById('service-status').value = subscription.status;
+    
+    // ==================== DESPESAS ====================
+    
+    loadExpenses() {
+        if (!this.currentUser) return;
+        
+        const key = `gerirme_expenses_${this.currentUser.id}`;
+        const expenses = localStorage.getItem(key);
+        this.expenses = expenses ? JSON.parse(expenses) : [];
     }
-
-    saveSubscription() {
-        const formData = {
-            name: document.getElementById('service-name').value,
-            price: parseFloat(document.getElementById('service-price').value),
-            category: document.getElementById('service-category').value,
-            billingCycle: document.getElementById('billing-cycle').value,
-            nextPayment: document.getElementById('next-payment').value,
-            status: document.getElementById('service-status').value
+    
+    saveExpenses() {
+        if (!this.currentUser) return;
+        
+        const key = `gerirme_expenses_${this.currentUser.id}`;
+        localStorage.setItem(key, JSON.stringify(this.expenses));
+    }
+    
+    showExpenseModal(expense = null) {
+        const modal = document.getElementById('expenseModal');
+        const title = document.getElementById('modalTitle');
+        const form = document.getElementById('expenseForm');
+        
+        if (expense) {
+            // Editando despesa existente
+            title.textContent = 'Editar Despesa';
+            this.currentExpenseId = expense.id;
+            this.populateExpenseForm(expense);
+        } else {
+            // Nova despesa
+            title.textContent = 'Nova Despesa';
+            this.currentExpenseId = null;
+            form.reset();
+            this.toggleExpenseFields('');
+        }
+        
+        this.clearFormErrors();
+        modal.classList.add('show');
+    }
+    
+    hideExpenseModal() {
+        const modal = document.getElementById('expenseModal');
+        modal.classList.remove('show');
+        this.currentExpenseId = null;
+    }
+    
+    populateExpenseForm(expense) {
+        document.getElementById('expenseName').value = expense.name;
+        document.getElementById('expenseValue').value = expense.value;
+        document.getElementById('expenseCategory').value = expense.category;
+        document.getElementById('expenseType').value = expense.type;
+        
+        this.toggleExpenseFields(expense.type);
+        
+        if (expense.type === 'unique') {
+            document.getElementById('expenseDate').value = expense.date;
+        } else {
+            document.getElementById('expenseCycle').value = expense.cycle;
+            document.getElementById('nextPayment').value = expense.nextPayment;
+        }
+    }
+    
+    toggleExpenseFields(type) {
+        const uniqueFields = document.getElementById('uniqueFields');
+        const recurringFields = document.getElementById('recurringFields');
+        
+        uniqueFields.classList.remove('show');
+        recurringFields.classList.remove('show');
+        
+        if (type === 'unique') {
+            uniqueFields.classList.add('show');
+        } else if (type === 'recurring') {
+            recurringFields.classList.add('show');
+        }
+    }
+    
+    handleExpenseSubmit(e) {
+        const name = document.getElementById('expenseName').value.trim();
+        const value = parseFloat(document.getElementById('expenseValue').value);
+        const category = document.getElementById('expenseCategory').value;
+        const type = document.getElementById('expenseType').value;
+        
+        this.clearFormErrors();
+        
+        // Validações básicas (RN-DES-002, RN-DES-003)
+        let hasErrors = false;
+        
+        if (!name) {
+            this.showError('expenseNameError', 'Nome da despesa é obrigatório.');
+            hasErrors = true;
+        }
+        
+        if (!value || value <= 0) {
+            this.showError('expenseValueError', 'Valor deve ser maior que zero.');
+            hasErrors = true;
+        }
+        
+        if (!category) {
+            this.showError('expenseCategoryError', 'Categoria é obrigatória.');
+            hasErrors = true;
+        }
+        
+        if (!type) {
+            this.showError('expenseTypeError', 'Tipo é obrigatório.');
+            hasErrors = true;
+        }
+        
+        // Validações específicas por tipo (RN-DES-004, RN-DES-004A, RN-DES-005)
+        let date, cycle, nextPayment;
+        
+        if (type === 'unique') {
+            date = document.getElementById('expenseDate').value;
+            if (!date) {
+                this.showError('expenseDateError', 'Data da despesa é obrigatória.');
+                hasErrors = true;
+            } else {
+                const selectedDate = new Date(date);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (selectedDate < today) {
+                    this.showError('expenseDateError', 'Data não pode ser no passado.');
+                    hasErrors = true;
+                }
+            }
+        } else if (type === 'recurring') {
+            cycle = document.getElementById('expenseCycle').value;
+            nextPayment = document.getElementById('nextPayment').value;
+            
+            if (!cycle) {
+                this.showError('expenseCycleError', 'Ciclo de cobrança é obrigatório.');
+                hasErrors = true;
+            }
+            
+            if (!nextPayment) {
+                this.showError('nextPaymentError', 'Próxima data de cobrança é obrigatória.');
+                hasErrors = true;
+            }
+        }
+        
+        if (hasErrors) return;
+        
+        // Criar ou atualizar despesa
+        const expense = {
+            id: this.currentExpenseId || Date.now().toString(),
+            name,
+            value,
+            category,
+            type,
+            createdAt: new Date().toISOString()
         };
-
-        if (this.editingId) {
-            // Edit existing expense
-            const index = this.subscriptions.findIndex(sub => sub.id === this.editingId);
+        
+        if (type === 'unique') {
+            expense.date = date;
+        } else {
+            expense.cycle = cycle;
+            expense.nextPayment = nextPayment;
+        }
+        
+        if (this.currentExpenseId) {
+            // Atualizar despesa existente
+            const index = this.expenses.findIndex(e => e.id === this.currentExpenseId);
             if (index !== -1) {
-                this.subscriptions[index] = { ...formData, id: this.editingId };
-                this.showToast('Despesa atualizada com sucesso!', 'success');
+                expense.createdAt = this.expenses[index].createdAt; // Manter data original
+                this.expenses[index] = expense;
             }
         } else {
-            // Add new expense
-            const newSubscription = {
-                ...formData,
-                id: Date.now().toString(),
-                createdAt: new Date().toISOString()
-            };
-            this.subscriptions.push(newSubscription);
-            this.showToast('Despesa adicionada com sucesso!', 'success');
+            // Nova despesa
+            this.expenses.push(expense);
         }
-
-        this.saveToStorage();
-        this.closeModal();
-        this.renderDashboard();
-        this.renderSubscriptions();
+        
+        this.saveExpenses();
+        this.hideExpenseModal();
+        this.updateDashboard();
+        this.renderExpensesTable();
         this.renderCalendar();
+        
+        const action = this.currentExpenseId ? 'atualizada' : 'adicionada';
+        this.showToast('success', 'Despesa salva', `Despesa ${action} com sucesso!`);
     }
-
-    deleteSubscription(id) {
-        if (confirm('Tem certeza que deseja excluir esta despesa?')) {
-            this.subscriptions = this.subscriptions.filter(sub => sub.id !== id);
-            this.saveToStorage();
-            this.renderDashboard();
-            this.renderSubscriptions();
-            this.renderCalendar();
-            this.showToast('Despesa excluída com sucesso!', 'success');
+    
+    editExpense(id) {
+        const expense = this.expenses.find(e => e.id === id);
+        if (expense) {
+            this.showExpenseModal(expense);
         }
     }
-
-    toggleStatus(id) {
-        const subscription = this.subscriptions.find(sub => sub.id === id);
-        if (subscription) {
-            subscription.status = subscription.status === 'active' ? 'inactive' : 'active';
-            this.saveToStorage();
-            this.renderDashboard();
-            this.renderSubscriptions();
-            this.showToast(`Despesa ${subscription.status === 'active' ? 'ativada' : 'desativada'}!`, 'success');
-        }
-    }
-
-    saveToStorage() {
-        localStorage.setItem(`subscriptions_${this.userId}`, JSON.stringify(this.subscriptions));
-    }
-
-    loadSampleDataIfNeeded() {
-        if (this.subscriptions.length === 0) {
-            const sampleData = [
-                {
-                    id: '1',
-                    name: 'Netflix',
-                    price: 29.90,
-                    category: 'streaming',
-                    billingCycle: 'monthly',
-                    nextPayment: '2024-02-15',
-                    status: 'active',
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: '2',
-                    name: 'Spotify',
-                    price: 19.90,
-                    category: 'music',
-                    billingCycle: 'monthly',
-                    nextPayment: '2024-02-10',
-                    status: 'active',
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: '3',
-                    name: 'Adobe Creative Cloud',
-                    price: 239.88,
-                    category: 'software',
-                    billingCycle: 'yearly',
-                    nextPayment: '2024-06-15',
-                    status: 'active',
-                    createdAt: new Date().toISOString()
+    
+    deleteExpense(id) {
+        const expense = this.expenses.find(e => e.id === id);
+        if (expense) {
+            this.showConfirmModal(
+                `Tem certeza que deseja excluir a despesa "${expense.name}"?`,
+                () => {
+                    this.expenses = this.expenses.filter(e => e.id !== id);
+                    this.saveExpenses();
+                    this.updateDashboard();
+                    this.renderExpensesTable();
+                    this.renderCalendar();
+                    this.showToast('success', 'Despesa excluída', 'Despesa removida com sucesso!');
                 }
-            ];
+            );
+        }
+    }
+    
+    filterExpensesByCategory(category) {
+        this.renderExpensesTable(category);
+    }
+    
+    renderExpensesTable(categoryFilter = '') {
+        const tbody = document.getElementById('expensesTableBody');
+        let filteredExpenses = this.expenses;
+        
+        // Aplicar filtro de categoria (HU09)
+        if (categoryFilter) {
+            filteredExpenses = this.expenses.filter(e => e.category === categoryFilter);
+        }
+        
+        if (filteredExpenses.length === 0) {
+            tbody.innerHTML = `
+                <tr class="empty-row">
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <i class="fas fa-receipt"></i>
+                            <p>${categoryFilter ? 'Nenhuma despesa encontrada nesta categoria' : 'Nenhuma despesa cadastrada'}</p>
+                            <small>${categoryFilter ? 'Tente selecionar outra categoria' : 'Clique em "Nova Despesa" para começar'}</small>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+        
+        tbody.innerHTML = filteredExpenses.map(expense => {
+            const displayDate = expense.type === 'unique' 
+                ? this.formatDate(expense.date)
+                : this.formatDate(expense.nextPayment);
             
-            this.subscriptions = sampleData;
-            this.saveToStorage();
-            this.renderDashboard();
-            this.renderSubscriptions();
-            this.renderCalendar();
-        }
+            return `
+                <tr>
+                    <td>${expense.name}</td>
+                    <td>${this.formatCurrency(expense.value)}</td>
+                    <td>${expense.category}</td>
+                    <td>
+                        <span class="expense-type ${expense.type}">
+                            ${expense.type === 'unique' ? 'Única' : 'Recorrente'}
+                        </span>
+                    </td>
+                    <td>${displayDate}</td>
+                    <td>
+                        <div class="expense-actions">
+                            <button class="btn-icon" onclick="app.editExpense('${expense.id}')" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon" onclick="app.deleteExpense('${expense.id}')" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
     }
-
-    renderDashboard() {
-        const activeSubscriptions = this.subscriptions.filter(sub => sub.status === 'active');
+    
+    // ==================== DASHBOARD ====================
+    
+    updateDashboard() {
+        const calculations = this.calculateMonthlyTotals();
         
-        // Calculate totals
-        const monthlyTotal = activeSubscriptions.reduce((total, sub) => {
-            return total + (sub.billingCycle === 'monthly' ? sub.price : sub.price / 12);
-        }, 0);
+        // Atualizar cards de resumo
+        document.getElementById('monthlyTotal').textContent = this.formatCurrency(calculations.monthlyTotal);
+        document.getElementById('recurringTotal').textContent = this.formatCurrency(calculations.recurringTotal);
+        document.getElementById('uniqueTotal').textContent = this.formatCurrency(calculations.uniqueTotal);
         
-        const yearlyTotal = activeSubscriptions.reduce((total, sub) => {
-            return total + (sub.billingCycle === 'yearly' ? sub.price : sub.price * 12);
-        }, 0);
-
-        // Update stats
-        document.getElementById('total-monthly').textContent = this.formatCurrency(monthlyTotal);
-        document.getElementById('total-yearly').textContent = this.formatCurrency(yearlyTotal);
-        document.getElementById('active-subs').textContent = activeSubscriptions.length;
-        
-        // Calculate upcoming payments (next 7 days)
-        const upcomingPayments = this.getUpcomingPayments(7);
-        document.getElementById('upcoming-payments').textContent = upcomingPayments.length;
-        
-        // Render upcoming payments list
+        // Atualizar próximos pagamentos
         this.renderUpcomingPayments();
-        
-        // Render category chart
-        this.renderCategoryChart();
     }
-
-    renderUpcomingPayments() {
-        const upcomingList = document.getElementById('upcoming-list');
-        const upcomingPayments = this.getUpcomingPayments(30); // Next 30 days
+    
+    calculateMonthlyTotals() {
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
         
-        if (upcomingPayments.length === 0) {
-            upcomingList.innerHTML = '<p class="empty-state">Nenhum pagamento próximo</p>';
-            return;
-        }
+        let recurringMonthly = 0;
+        let recurringYearly = 0;
+        let uniqueThisMonth = 0;
         
-        upcomingList.innerHTML = upcomingPayments.map(payment => `
-            <div class="upcoming-item">
-                <div class="upcoming-item-info">
-                    <h5>${payment.name}</h5>
-                    <p>${this.formatDate(payment.nextPayment)}</p>
-                </div>
-                <div class="upcoming-item-price">${this.formatCurrency(payment.price)}</div>
-            </div>
-        `).join('');
-    }
-
-    renderCategoryChart() {
-        const categoryChart = document.getElementById('category-chart');
-        const activeSubscriptions = this.subscriptions.filter(sub => sub.status === 'active');
-        
-        if (activeSubscriptions.length === 0) {
-            categoryChart.innerHTML = '<p class="empty-state">Adicione despesas para ver o gráfico</p>';
-            return;
-        }
-        
-        const categoryTotals = {};
-        const categoryColors = {
-            streaming: '#ef4444',
-            software: '#3b82f6',
-            music: '#10b981',
-            fitness: '#f59e0b',
-            news: '#8b5cf6',
-            other: '#6b7280'
-        };
-        
-        activeSubscriptions.forEach(sub => {
-            const monthlyPrice = sub.billingCycle === 'monthly' ? sub.price : sub.price / 12;
-            categoryTotals[sub.category] = (categoryTotals[sub.category] || 0) + monthlyPrice;
+        this.expenses.forEach(expense => {
+            if (expense.type === 'recurring') {
+                if (expense.cycle === 'monthly') {
+                    recurringMonthly += expense.value;
+                } else if (expense.cycle === 'yearly') {
+                    recurringYearly += expense.value;
+                }
+            } else if (expense.type === 'unique') {
+                const expenseDate = new Date(expense.date);
+                if (expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear) {
+                    uniqueThisMonth += expense.value;
+                }
+            }
         });
         
-        categoryChart.innerHTML = Object.entries(categoryTotals)
-            .sort(([,a], [,b]) => b - a)
-            .map(([category, total]) => `
-                <div class="category-item">
-                    <div class="category-info">
-                        <div class="category-color" style="background-color: ${categoryColors[category]}"></div>
-                        <span class="category-name">${this.getCategoryName(category)}</span>
-                    </div>
-                    <div class="category-amount">${this.formatCurrency(total)}</div>
-                </div>
-            `).join('');
+        const recurringTotal = recurringMonthly + (recurringYearly / 12);
+        const monthlyTotal = recurringTotal + uniqueThisMonth;
+        
+        return {
+            monthlyTotal,
+            recurringTotal,
+            uniqueTotal: uniqueThisMonth
+        };
     }
-
-    renderSubscriptions() {
-        const subscriptionsList = document.getElementById('subscriptions-list');
-        const categoryFilter = document.getElementById('category-filter').value;
-        const statusFilter = document.getElementById('status-filter').value;
+    
+    renderUpcomingPayments() {
+        const container = document.getElementById('upcomingPayments');
+        const upcomingPayments = this.getUpcomingPayments();
         
-        let filteredSubscriptions = this.subscriptions;
-        
-        if (categoryFilter) {
-            filteredSubscriptions = filteredSubscriptions.filter(sub => sub.category === categoryFilter);
-        }
-        
-        if (statusFilter) {
-            filteredSubscriptions = filteredSubscriptions.filter(sub => sub.status === statusFilter);
-        }
-        
-        if (filteredSubscriptions.length === 0) {
-            subscriptionsList.innerHTML = '<p class="empty-state">Nenhuma despesa encontrada. Adicione sua primeira despesa!</p>';
+        if (upcomingPayments.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-calendar-check"></i>
+                    <p>Nenhum pagamento próximo</p>
+                </div>
+            `;
             return;
         }
         
-        subscriptionsList.innerHTML = filteredSubscriptions.map(sub => `
-            <div class="subscription-item">
-                <div class="subscription-info">
-                    <div class="subscription-icon">
-                        <i class="${this.getCategoryIcon(sub.category)}"></i>
-                    </div>
-                    <div class="subscription-details">
-                        <h4>${sub.name}</h4>
-                        <p>${this.getCategoryName(sub.category)} • ${sub.billingCycle === 'monthly' ? 'Mensal' : 'Anual'}</p>
-                        <p>Próximo pagamento: ${this.formatDate(sub.nextPayment)}</p>
-                        <span class="status-badge status-${sub.status}">${sub.status === 'active' ? 'Ativo' : 'Inativo'}</span>
-                    </div>
+        container.innerHTML = upcomingPayments.map(payment => `
+            <div class="payment-item">
+                <div class="payment-info">
+                    <h4>${payment.name}</h4>
+                    <small>${this.formatDate(payment.date)} - ${payment.category}</small>
                 </div>
-                <div class="subscription-price">${this.formatCurrency(sub.price)}</div>
-                <div class="subscription-actions">
-                    <button class="btn btn-secondary btn-small" onclick="app.toggleStatus('${sub.id}')">
-                        <i class="fas fa-${sub.status === 'active' ? 'pause' : 'play'}"></i>
-                    </button>
-                    <button class="btn btn-primary btn-small" onclick="app.openModal(${JSON.stringify(sub).replace(/"/g, '&quot;')})">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-danger btn-small" onclick="app.deleteSubscription('${sub.id}')">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                <div class="payment-value">
+                    ${this.formatCurrency(payment.value)}
                 </div>
             </div>
         `).join('');
     }
-
-    renderCalendar() {
-        const calendarGrid = document.getElementById('calendar-grid');
-        const currentMonth = document.getElementById('current-month');
+    
+    getUpcomingPayments() {
+        const now = new Date();
+        const sevenDaysFromNow = new Date();
+        sevenDaysFromNow.setDate(now.getDate() + 7);
         
+        return this.expenses
+            .filter(expense => {
+                if (expense.type !== 'recurring') return false;
+                
+                const paymentDate = new Date(expense.nextPayment);
+                return paymentDate >= now && paymentDate <= sevenDaysFromNow;
+            })
+            .map(expense => ({
+                id: expense.id,
+                name: expense.name,
+                value: expense.value,
+                category: expense.category,
+                date: expense.nextPayment
+            }))
+            .sort((a, b) => new Date(a.date) - new Date(b.date));
+    }
+    
+    // ==================== CALENDÁRIO ====================
+    
+    navigateMonth(direction) {
+        this.currentDate.setMonth(this.currentDate.getMonth() + direction);
+        this.renderCalendar();
+    }
+    
+    renderCalendar() {
         const year = this.currentDate.getFullYear();
         const month = this.currentDate.getMonth();
         
-        currentMonth.textContent = new Intl.DateTimeFormat('pt-BR', { 
-            month: 'long', 
-            year: 'numeric' 
-        }).format(this.currentDate);
+        // Atualizar título
+        const monthNames = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        ];
+        document.getElementById('currentMonth').textContent = `${monthNames[month]} ${year}`;
         
+        // Gerar calendário
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
         const startDate = new Date(firstDay);
         startDate.setDate(startDate.getDate() - firstDay.getDay());
         
-        const days = [];
-        const today = new Date();
+        const calendarGrid = document.getElementById('calendarGrid');
+        let calendarHTML = '';
         
-        for (let i = 0; i < 42; i++) {
-            const date = new Date(startDate);
-            date.setDate(startDate.getDate() + i);
-            
-            const isCurrentMonth = date.getMonth() === month;
-            const isToday = date.toDateString() === today.toDateString();
-            const payments = this.getPaymentsForDate(date);
-            
-            days.push({
-                date,
-                isCurrentMonth,
-                isToday,
-                payments
-            });
+        // Cabeçalho dos dias da semana
+        const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+        calendarHTML += '<div class="calendar-header-row">';
+        dayNames.forEach(day => {
+            calendarHTML += `<div class="calendar-header-cell">${day}</div>`;
+        });
+        calendarHTML += '</div>';
+        
+        // Dias do calendário
+        const today = new Date();
+        const currentDate = new Date(startDate);
+        
+        for (let week = 0; week < 6; week++) {
+            for (let day = 0; day < 7; day++) {
+                const dayNumber = currentDate.getDate();
+                const isCurrentMonth = currentDate.getMonth() === month;
+                const isToday = currentDate.toDateString() === today.toDateString();
+                const hasPayment = this.hasPaymentOnDate(currentDate);
+                
+                let classes = 'calendar-day';
+                if (!isCurrentMonth) classes += ' other-month';
+                if (isToday) classes += ' today';
+                if (hasPayment) classes += ' has-payment';
+                
+                calendarHTML += `<div class="${classes}" data-date="${currentDate.toISOString().split('T')[0]}">${dayNumber}</div>`;
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
         }
         
-        calendarGrid.innerHTML = days.map(day => `
-            <div class="calendar-day ${!day.isCurrentMonth ? 'other-month' : ''} ${day.isToday ? 'today' : ''}">
-                <div class="calendar-day-number">${day.date.getDate()}</div>
-                ${day.payments.map(payment => `
-                    <div class="calendar-payment" title="${payment.name} - ${this.formatCurrency(payment.price)}">
-                        ${payment.name}
-                    </div>
-                `).join('')}
-            </div>
-        `).join('');
-    }
-
-    getUpcomingPayments(days) {
-        const today = new Date();
-        const futureDate = new Date();
-        futureDate.setDate(today.getDate() + days);
+        calendarGrid.innerHTML = calendarHTML;
         
-        return this.subscriptions
-            .filter(sub => sub.status === 'active')
-            .filter(sub => {
-                const paymentDate = new Date(sub.nextPayment);
-                return paymentDate >= today && paymentDate <= futureDate;
-            })
-            .sort((a, b) => new Date(a.nextPayment) - new Date(b.nextPayment));
+        // Adicionar tooltips para dias com pagamentos
+        this.addCalendarTooltips();
     }
-
-    getPaymentsForDate(date) {
+    
+    hasPaymentOnDate(date) {
         const dateString = date.toISOString().split('T')[0];
-        return this.subscriptions
-            .filter(sub => sub.status === 'active')
-            .filter(sub => sub.nextPayment === dateString);
+        return this.expenses.some(expense => {
+            if (expense.type !== 'recurring') return false;
+            return expense.nextPayment === dateString;
+        });
     }
-
-    getCategoryName(category) {
-        const categories = {
-            streaming: 'Streaming',
-            software: 'Software',
-            music: 'Música',
-            fitness: 'Fitness',
-            news: 'Notícias',
-            other: 'Outros'
-        };
-        return categories[category] || category;
+    
+    addCalendarTooltips() {
+        document.querySelectorAll('.calendar-day.has-payment').forEach(dayElement => {
+            const date = dayElement.dataset.date;
+            const payments = this.expenses.filter(expense => 
+                expense.type === 'recurring' && expense.nextPayment === date
+            );
+            
+            if (payments.length > 0) {
+                const tooltipText = payments.map(p => `${p.name} - ${this.formatCurrency(p.value)}`).join('\n');
+                dayElement.title = tooltipText;
+            }
+        });
     }
-
-    getCategoryIcon(category) {
-        const icons = {
-            streaming: 'fas fa-play',
-            software: 'fas fa-laptop-code',
-            music: 'fas fa-music',
-            fitness: 'fas fa-dumbbell',
-            news: 'fas fa-newspaper',
-            other: 'fas fa-star'
-        };
-        return icons[category] || 'fas fa-star';
+    
+    // ==================== NOTIFICAÇÕES ====================
+    
+    requestNotificationPermission() {
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
     }
-
-    formatCurrency(amount) {
-        return new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        }).format(amount);
+    
+    startNotificationCheck() {
+        // Verificar notificações a cada 30 minutos
+        setInterval(() => {
+            this.checkUpcomingPayments();
+        }, 30 * 60 * 1000);
+        
+        // Verificar imediatamente
+        setTimeout(() => {
+            this.checkUpcomingPayments();
+        }, 5000);
     }
-
-    formatDate(dateString) {
-        const date = new Date(dateString);
-        return new Intl.DateTimeFormat('pt-BR').format(date);
+    
+    checkUpcomingPayments() {
+        if (!this.currentUser || Notification.permission !== 'granted') return;
+        
+        const now = new Date();
+        const threeDaysFromNow = new Date();
+        threeDaysFromNow.setDate(now.getDate() + 3);
+        
+        const upcomingPayments = this.expenses.filter(expense => {
+            if (expense.type !== 'recurring') return false;
+            
+            const paymentDate = new Date(expense.nextPayment);
+            return paymentDate >= now && paymentDate <= threeDaysFromNow;
+        });
+        
+        upcomingPayments.forEach(expense => {
+            const notificationKey = `${expense.id}_${expense.nextPayment}`;
+            const today = now.toISOString().split('T')[0];
+            
+            // Verificar se já foi enviada hoje (RN-NOT-003)
+            if (this.notificationsSent[notificationKey] === today) return;
+            
+            const daysUntil = Math.ceil((new Date(expense.nextPayment) - now) / (1000 * 60 * 60 * 24));
+            let message;
+            
+            if (daysUntil === 0) {
+                message = `Vence hoje: ${expense.name} - ${this.formatCurrency(expense.value)}`;
+            } else if (daysUntil === 1) {
+                message = `Vence amanhã: ${expense.name} - ${this.formatCurrency(expense.value)}`;
+            } else {
+                message = `Vence em ${daysUntil} dias: ${expense.name} - ${this.formatCurrency(expense.value)}`;
+            }
+            
+            new Notification('Gerir.me - Pagamento próximo', {
+                body: message,
+                icon: '/favicon.ico'
+            });
+            
+            // Marcar como enviada
+            this.notificationsSent[notificationKey] = today;
+        });
     }
-
-    showToast(message, type = 'info') {
-        const toastContainer = document.getElementById('toast-container');
+    
+    // ==================== MODAIS ====================
+    
+    showConfirmModal(message, onConfirm) {
+        document.getElementById('confirmMessage').textContent = message;
+        this.confirmAction = onConfirm;
+        document.getElementById('confirmModal').classList.add('show');
+    }
+    
+    hideConfirmModal() {
+        document.getElementById('confirmModal').classList.remove('show');
+        this.confirmAction = null;
+    }
+    
+    executeConfirmedAction() {
+        if (this.confirmAction) {
+            this.confirmAction();
+            this.confirmAction = null;
+        }
+        this.hideConfirmModal();
+    }
+    
+    // ==================== TOAST NOTIFICATIONS ====================
+    
+    showToast(type, title, message) {
+        const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         
-        const icon = {
-            success: 'fas fa-check-circle',
-            error: 'fas fa-exclamation-circle',
-            warning: 'fas fa-exclamation-triangle',
-            info: 'fas fa-info-circle'
-        }[type];
+        const icons = {
+            success: 'fa-check-circle',
+            error: 'fa-exclamation-circle',
+            warning: 'fa-exclamation-triangle',
+            info: 'fa-info-circle'
+        };
         
         toast.innerHTML = `
-            <i class="${icon}"></i>
-            <span>${message}</span>
+            <div class="toast-icon">
+                <i class="fas ${icons[type]}"></i>
+            </div>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <p class="toast-message">${message}</p>
+            </div>
+            <button class="toast-close">
+                <i class="fas fa-times"></i>
+            </button>
         `;
         
-        toastContainer.appendChild(toast);
+        container.appendChild(toast);
         
+        // Mostrar toast
         setTimeout(() => {
-            toast.remove();
-        }, 5000);
+            toast.classList.add('show');
+        }, 100);
+        
+        // Não auto-remover - usuário deve fechar manualmente
+        
+        // Botão de fechar
+        toast.querySelector('.toast-close').addEventListener('click', () => {
+            this.removeToast(toast);
+        });
+    }
+    
+    removeToast(toast) {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 300);
+    }
+    
+    // ==================== UTILITÁRIOS ====================
+    
+    formatCurrency(value) {
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(value);
+    }
+    
+    formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('pt-BR');
     }
 }
 
-// Initialize the authentication manager
-const authManager = new AuthManager();
-
-// Create sample user if no users exist
-if (authManager.users.length === 0) {
-    const sampleUser = {
-        id: '1',
-        name: 'Usuário Demo',
-        email: 'demo@gerir.me',
-        password: '123456',
-        createdAt: new Date().toISOString()
-    };
-    
-    authManager.users.push(sampleUser);
-    localStorage.setItem('users', JSON.stringify(authManager.users));
-}
+// Inicializar aplicação
+const app = new GerirMe();

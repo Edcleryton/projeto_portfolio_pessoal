@@ -1,21 +1,75 @@
 {
   "name": "gerir-me",
-  "version": "1.0.0",
-  "description": "Gerenciador de Despesas Recorrentes",
+  "version": "3.0.0",
+  "description": "Sistema de Gerenciamento Financeiro Pessoal - Uma aplicação web moderna para controle de despesas pessoais com interface intuitiva e funcionalidades avançadas.",
+  "main": "index.html",
   "scripts": {
-    "start": "npx http-server . -p 8080 -a localhost -o",
-    "dev": "npx http-server . -p 8080 -a localhost -o",
-    "test": "cypress open",
-    "test:run": "cypress run",
-    "test:report": "cypress run --reporter mochawesome --reporter-options reportDir=cypress/reports,overwrite=false,html=true,json=true",
-    "test:defects": "cypress run && echo Relatórios de defeitos gerados automaticamente!",
-    "serve:reports": "npx http-server docs -p 8081 -o"
+    "start": "npx serve -s -l 8080",
+    "dev": "npx serve -s -l 8080",
+    "serve": "npx serve -s -l 8080",
+    "build": "echo 'No build process needed for vanilla HTML/CSS/JS'",
+    "test": "echo 'Tests not implemented yet'",
+    "lint": "echo 'Linting not configured yet'",
+    "format": "echo 'Formatting not configured yet'"
   },
+  "keywords": [
+    "finance",
+    "expense-tracker",
+    "personal-finance",
+    "budget",
+    "money-management",
+    "web-app",
+    "javascript",
+    "html5",
+    "css3",
+    "responsive",
+    "pwa",
+    "dashboard",
+    "calendar",
+    "notifications"
+  ],
+  "author": {
+    "name": "Edcleryton",
+    "email": "edcleryton@example.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edcleryton/gerir-me.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edcleryton/gerir-me/issues"
+  },
+  "homepage": "https://github.com/edcleryton/gerir-me#readme",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
   "devDependencies": {
-    "cypress": "^14.5.4",
-    "http-server": "^14.1.1",
-    "mochawesome": "^7.1.3",
-    "mochawesome-merge": "^4.3.0",
-    "mochawesome-report-generator": "^6.2.0"
-  }
+    "serve": "^14.2.1"
+  },
+  "dependencies": {},
+  "config": {
+    "port": 8080,
+    "host": "localhost"
+  },
+  "files": [
+    "index.html",
+    "styles.css",
+    "script.js",
+    "docs/",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "directories": {
+    "doc": "docs"
+  },
+  "private": false
 }
