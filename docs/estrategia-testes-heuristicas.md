@@ -53,12 +53,8 @@ Este documento descreve a estratégia de testes implementada para o projeto **Ge
 
 | Heurística | Implementação | Arquivo |
 |------------|---------------|----------|
-| **Botão Voltar** | Testa navegação back/forward | `heuristic-tests.cy.js` |
-| **Atualizar página** | Testa reload durante operações | `heuristic-tests.cy.js` |
 | **Manipular URL** | Testa parâmetros maliciosos | `heuristic-tests.cy.js` |
 | **Responsividade** | Testa múltiplas resoluções | `validation-tests.cy.js` |
-| **Validação HTML** | Verifica estrutura semântica | `validation-tests.cy.js` |
-| **Validação CSS** | Verifica estilos e contraste | `validation-tests.cy.js` |
 
 ### 🔒 Heurísticas de Segurança
 
@@ -74,7 +70,6 @@ Este documento descreve a estratégia de testes implementada para o projeto **Ge
 | Heurística | Implementação | Arquivo |
 |------------|---------------|----------|
 | **CRUD Completo** | Create, Read, Update, Delete | `dashboard-heuristic-tests.cy.js` |
-| **Siga os Dados** | Testa relações de dependência | `dashboard-heuristic-tests.cy.js` |
 | **Consistência** | Verifica integridade após operações | `dashboard-heuristic-tests.cy.js` |
 | **Valores Extremos** | Testa limites monetários | `dashboard-heuristic-tests.cy.js` |
 
@@ -111,7 +106,6 @@ Este documento descreve a estratégia de testes implementada para o projeto **Ge
 - ✅ Navegação por teclado
 - ✅ Estados de foco e feedback visual
 - ✅ Consistência de design
-- ✅ Validação HTML/CSS
 
 ### 🛡️ Segurança
 - ✅ Proteção contra XSS
@@ -178,7 +172,7 @@ npx cypress open
 - 🔍 **Validação de Entrada**: Campos que aceitam dados inválidos
 - 🛡️ **Vulnerabilidades**: XSS, SQL Injection, manipulação de URL
 - 🎨 **Problemas de UI**: Layout quebrado, elementos inacessíveis
-- ⚡ **Performance**: Lentidão, timeouts, travamentos
+- ⚡ **Performance**: Lentidão e travamentos
 - 📱 **Responsividade**: Problemas em diferentes resoluções
 - ♿ **Acessibilidade**: Navegação por teclado, contraste, semântica
 
