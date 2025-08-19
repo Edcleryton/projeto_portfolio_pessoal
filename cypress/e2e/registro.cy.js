@@ -22,7 +22,10 @@ describe('Testes de Registro', () => {
     cy.get('#registerPassword').click().type('')
     cy.get('#confirmPassword').click().type('')
     cy.get('#registerForm > .btn-primary').click()
+    
+    // Verificar se a mensagem de erro aparece
     cy.get('.toast').should('be.visible')
+    cy.get('.toast').should('contain.text', 'erro')
   })
 
   it('deve mostrar erro para email duplicado', () => {
@@ -33,7 +36,10 @@ describe('Testes de Registro', () => {
     cy.get('#registerPassword').type('123456@Teste')
     cy.get('#confirmPassword').type('123456@Teste')
     cy.get('#registerForm > .btn-primary').click()
+    
+    // Verificar se a mensagem de erro para email duplicado aparece
     cy.get('.toast').should('be.visible')
+    cy.get('.toast').should('contain.text', 'já existe')
   })
 
   it('deve validar formato do email', () => {
@@ -44,7 +50,10 @@ describe('Testes de Registro', () => {
     cy.get('#registerPassword').type('123456@Teste')
     cy.get('#confirmPassword').type('123456@Teste')
     cy.get('#registerForm > .btn-primary').click()
+    
+    // Verificar se a mensagem de erro para formato de email aparece
     cy.get('.toast').should('be.visible')
+    cy.get('.toast').should('contain.text', 'inválido')
   })
 
   it('deve validar força da senha', () => {
@@ -55,7 +64,10 @@ describe('Testes de Registro', () => {
     cy.get('#registerPassword').type('123')
     cy.get('#confirmPassword').type('123')
     cy.get('#registerForm > .btn-primary').click()
+    
+    // Verificar se a mensagem de erro para senha fraca aparece
     cy.get('.toast').should('be.visible')
+    cy.get('.toast').should('contain.text', 'senha')
   })
 
 })

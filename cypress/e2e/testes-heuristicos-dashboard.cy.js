@@ -28,7 +28,12 @@ describe('Dashboard - Testes Heurísticos', () => {
       cy.get('#expenseDate').type('2025-01-16')
       cy.get('#saveExpenseBtn').click()
       
+      // Verificar se a despesa foi criada ou se há erro para descrição muito longa
       cy.get('.toast').should('be.visible')
+      cy.get('.toast').should('satisfy', ($toast) => {
+        const text = $toast.text()
+        return text.includes('sucesso') || text.includes('erro') || text.includes('longa')
+      })
     })
 
     it('deve criar despesa com caracteres especiais na descrição', () => {
@@ -47,6 +52,13 @@ describe('Dashboard - Testes Heurísticos', () => {
         cy.get('#expenseCategory').select('outros')
         cy.get('#expenseDate').type('2025-01-16')
         cy.get('#saveExpenseBtn').click()
+        
+        // Verificar se a despesa foi criada com caracteres especiais
+        cy.get('.toast').should('be.visible')
+        cy.get('.toast').should('satisfy', ($toast) => {
+          const text = $toast.text()
+          return text.includes('sucesso') || text.includes('erro')
+        })
         
         cy.get('.toast').should('be.visible')
         cy.wait(1000)

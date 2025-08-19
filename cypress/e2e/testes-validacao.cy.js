@@ -177,7 +177,7 @@ describe('Testes de Validação', () => {
       cy.get('#loginPassword').type('senha-errada')
       cy.get('#loginForm > .btn-primary').click()
       
-      // Verificar se aparece mensagem de erro
+      // Verificar se aparece mensagem de erro clara
       cy.get('.toast').should('be.visible')
       cy.get('.toast').should('contain.text', 'erro')
     })

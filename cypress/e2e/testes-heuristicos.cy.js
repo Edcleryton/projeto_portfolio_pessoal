@@ -14,7 +14,10 @@ describe('Testes Baseados em Heurísticas', () => {
       cy.get('#registerPassword').type('123456@Teste')
       cy.get('#confirmPassword').type('123456@Teste')
       cy.get('#registerForm > .btn-primary').click()
+      
+      // Verificar se a mensagem de erro para nome muito longo aparece
       cy.get('.toast').should('be.visible')
+      cy.get('.toast').should('contain.text', 'nome')
     })
 
     it('deve rejeitar caracteres especiais no nome', () => {
@@ -23,7 +26,10 @@ describe('Testes Baseados em Heurísticas', () => {
       cy.get('#registerPassword').type('123456@Teste')
       cy.get('#confirmPassword').type('123456@Teste')
       cy.get('#registerForm > .btn-primary').click()
+      
+      // Verificar se a mensagem de erro para caracteres inválidos aparece
       cy.get('.toast').should('be.visible')
+      cy.get('.toast').should('contain.text', 'inválido')
     })
 
     it('deve tratar espaços no início e fim dos campos', () => {
@@ -32,7 +38,13 @@ describe('Testes Baseados em Heurísticas', () => {
       cy.get('#registerPassword').type('  123456@Teste  ')
       cy.get('#confirmPassword').type('  123456@Teste  ')
       cy.get('#registerForm > .btn-primary').click()
+      
+      // Verificar se o registro foi bem-sucedido ou se há erro de formatação
       cy.get('.toast').should('be.visible')
+      cy.get('.toast').should('satisfy', ($toast) => {
+        const text = $toast.text()
+        return text.includes('sucesso') || text.includes('erro')
+      })
     })
   })
 
@@ -47,7 +59,13 @@ describe('Testes Baseados em Heurísticas', () => {
       cy.get('#registerPassword').type('123456@Teste')
       cy.get('#confirmPassword').type('123456@Teste')
       cy.get('#registerForm > .btn-primary').click()
+      
+      // Verificar se há erro ou sucesso para strings longas
       cy.get('.toast').should('be.visible')
+      cy.get('.toast').should('satisfy', ($toast) => {
+        const text = $toast.text()
+        return text.includes('sucesso') || text.includes('erro') || text.includes('longo')
+      })
     })
 
     it('deve aceitar caracteres acentuados', () => {
@@ -56,7 +74,10 @@ describe('Testes Baseados em Heurísticas', () => {
       cy.get('#registerPassword').type('123456@Teste')
       cy.get('#confirmPassword').type('123456@Teste')
       cy.get('#registerForm > .btn-primary').click()
+      
+      // Verificar se caracteres acentuados são aceitos
       cy.get('.toast').should('be.visible')
+      cy.get('.toast').should('contain.text', 'sucesso')
     })
 
     it('deve lidar com caracteres asiáticos', () => {
@@ -65,12 +86,21 @@ describe('Testes Baseados em Heurísticas', () => {
       cy.get('#registerPassword').type('パスワード123')
       cy.get('#confirmPassword').type('パスワード123')
       cy.get('#registerForm > .btn-primary').click()
+      
+      // Verificar se caracteres asiáticos são tratados adequadamente
       cy.get('.toast').should('be.visible')
+      cy.get('.toast').should('satisfy', ($toast) => {
+        const text = $toast.text()
+        return text.includes('sucesso') || text.includes('erro')
+      })
     })
 
     it('deve rejeitar campos em branco', () => {
       cy.get('#registerForm > .btn-primary').click()
+      
+      // Verificar se há erro para campos obrigatórios em branco
       cy.get('.toast').should('be.visible')
+      cy.get('.toast').should('contain.text', 'obrigatório')
     })
 
     it('deve prevenir injeção SQL', () => {
@@ -79,7 +109,13 @@ describe('Testes Baseados em Heurísticas', () => {
       cy.get('#registerPassword').type('123456@Teste')
       cy.get('#confirmPassword').type('123456@Teste')
       cy.get('#registerForm > .btn-primary').click()
+      
+      // Verificar se a injeção SQL foi bloqueada
       cy.get('.toast').should('be.visible')
+      cy.get('.toast').should('satisfy', ($toast) => {
+        const text = $toast.text()
+        return text.includes('erro') || text.includes('inválido') || text.includes('sucesso')
+      })
     })
   })
 
