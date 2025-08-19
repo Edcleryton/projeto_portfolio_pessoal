@@ -96,15 +96,23 @@ graph TD
 
 ```mermaid
 graph TD
-    A[Usuário preenche formulário] --> B[Validar campos]
-    B --> C{Tipo de despesa}
-    C -->|Única| D[Validar data futura]
-    C -->|Recorrente| E[Validar ciclo]
-    D --> F[Salvar no localStorage]
-    E --> F
-    F --> G[Atualizar interface]
-    G --> H[Recalcular totais]
-    H --> I[Renderizar calendário]
+    A[Usuário preenche formulário] --> B[Validar campos obrigatórios]
+    B --> C{Dados válidos?}
+    C -->|Não| D[Exibir erros de validação]
+    C -->|Sim| E{Tipo de despesa}
+    E -->|Única| F[Validar data não passada]
+    E -->|Recorrente| G[Validar ciclo e próxima data]
+    F --> H{Data válida?}
+    G --> I{Ciclo válido?}
+    H -->|Não| D
+    I -->|Não| D
+    H -->|Sim| J[Gerar ID único]
+    I -->|Sim| J
+    J --> K[Salvar no localStorage]
+    K --> L[Atualizar lista de despesas]
+    L --> M[Recalcular totais]
+    M --> N[Renderizar calendário]
+    N --> O[Exibir mensagem de sucesso]
 ```
 
 ## 💾 Armazenamento
@@ -114,28 +122,27 @@ graph TD
 #### Usuários
 ```javascript
 // Chave: 'gerirme_users'
+// Nota: Senhas são armazenadas como hash SHA-256
 [
     {
         id: "1642123456789",
         name: "João Silva",
         email: "joao@email.com",
-        password: "senha_hash",
+        password: "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3", // hash da senha
         createdAt: "2024-01-15T10:30:00.000Z"
     }
-]
-```
+]```
 
 #### Sessão Atual
 ```javascript
 // Chave: 'gerirme_current_user'
+// Nota: Senha não é armazenada na sessão por segurança
 {
     id: "1642123456789",
     name: "João Silva",
     email: "joao@email.com",
-    password: "senha_hash",
     createdAt: "2024-01-15T10:30:00.000Z"
-}
-```
+}```
 
 #### Despesas por Usuário
 ```javascript
@@ -163,11 +170,22 @@ graph TD
 ]
 ```
 
-#### Configurações
+#### Configurações Globais
 ```javascript
-// Chave: 'gerirme_theme'
+// Chave: 'gerirme_theme' (configuração global)
 "dark" // ou "light"
 ```
+
+#### Configurações por Usuário
+```javascript
+// Chave: 'gerirme_settings_{userId}'
+{
+    theme: "dark", // ou "light"
+    notifications: true,
+    currency: "BRL",
+    dateFormat: "DD/MM/YYYY",
+    language: "pt-BR"
+}```
 
 ### Segregação de Dados
 
@@ -191,40 +209,106 @@ isValidEmail(email) {
 #### Senha Forte
 ```javascript
 isValidPassword(password) {
+    // Senha deve ter pelo menos 8 caracteres
     const minLength = password.length >= 8;
+    // Deve conter pelo menos uma letra maiúscula
     const hasUpper = /[A-Z]/.test(password);
+    // Deve conter pelo menos uma letra minúscula
     const hasLower = /[a-z]/.test(password);
+    // Deve conter pelo menos um número
     const hasNumber = /\d/.test(password);
+    // Deve conter pelo menos um símbolo especial
     const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
     
     return minLength && hasUpper && hasLower && hasNumber && hasSymbol;
+}
 }
 ```
 
 ### Validações de Despesas
 
 #### Campos Obrigatórios
-- Nome da despesa (string não vazia)
-- Valor (número > 0)
-- Categoria (seleção obrigatória)
-- Tipo (única ou recorrente)
+- **Nome da despesa**: String entre 3 e 100 caracteres, não pode conter apenas espaços
+- **Valor**: Número decimal positivo, máximo R$ 999.999,99 (2 casas decimais)
+- **Categoria**: Uma das opções: Alimentação, Transporte, Moradia, Saúde, Educação, Lazer, Outros
+- **Tipo**: "unique" (única) ou "recurring" (recorrente)
 
 #### Validações Específicas
-- **Despesa Única**: Data não pode ser no passado
-- **Despesa Recorrente**: Ciclo e próxima data obrigatórios
+- **Despesa Única**: 
+  - Data deve ser hoje ou futura (considera apenas a data, não o horário)
+  - Campo "date" obrigatório no formato YYYY-MM-DD
+- **Despesa Recorrente**: 
+  - Campo "cycle" obrigatório: "daily", "weekly", "monthly", "yearly"
+  - Campo "nextPayment" obrigatório no formato YYYY-MM-DD
+  - Próxima data deve ser futura
+
+#### Validações de Formato
+```javascript
+// Validação de nome
+const isValidExpenseName = (name) => {
+    return name && name.trim().length >= 3 && name.trim().length <= 100;
+};
+
+// Validação de valor
+const isValidExpenseValue = (value) => {
+    const numValue = parseFloat(value);
+    return !isNaN(numValue) && numValue > 0 && numValue <= 999999.99;
+};
+
+// Validação de data futura
+const isFutureDate = (dateString) => {
+    const inputDate = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Remove horário para comparar apenas data
+    return inputDate >= today;
+};
+```
 
 ## 🔒 Segurança
 
 ### Controle de Tentativas de Login
 
+#### Regras de Bloqueio
+- **Máximo de tentativas**: 3 tentativas por email
+- **Tempo de bloqueio**: 15 minutos após 3 tentativas falhadas
+- **Escopo**: Bloqueio por email (não por IP)
+- **Reset**: Contador zera após login bem-sucedido ou após período de bloqueio
+
 ```javascript
 // Estrutura de controle
 loginAttempts = {
     "user@email.com": {
-        count: 2,
-        blockedUntil: "2024-01-15T11:45:00.000Z"
+        count: 2,                    // Tentativas atuais (máx: 3)
+        blockedUntil: "2024-01-15T11:45:00.000Z", // Data/hora do desbloqueio
+        lastAttempt: "2024-01-15T11:30:00.000Z"   // Última tentativa
     }
 }
+
+// Lógica de verificação
+const checkLoginAttempts = (email) => {
+    const attempts = loginAttempts[email];
+    if (!attempts) return { allowed: true };
+    
+    const now = new Date();
+    const blockedUntil = new Date(attempts.blockedUntil);
+    
+    // Se ainda está bloqueado
+    if (now < blockedUntil) {
+        return { 
+            allowed: false, 
+            reason: 'blocked',
+            unblockAt: blockedUntil
+        };
+    }
+    
+    // Se passou do período de bloqueio, reset contador
+    if (now >= blockedUntil && attempts.count >= 3) {
+        delete loginAttempts[email];
+        return { allowed: true };
+    }
+    
+    return { allowed: attempts.count < 3 };
+};
 ```
 
 ### Validação Client-Side
@@ -263,10 +347,29 @@ loginAttempts = {
 
 ### Métricas de Performance
 
-- **First Contentful Paint**: < 1.5s
-- **Largest Contentful Paint**: < 2.5s
-- **Cumulative Layout Shift**: < 0.1
-- **First Input Delay**: < 100ms
+#### Condições de Teste
+- **Dispositivo**: Desktop (CPU 4x slowdown, Network: Fast 3G)
+- **Dados**: Usuário com 50 despesas cadastradas
+- **Navegador**: Chrome 120+ (Lighthouse)
+- **Ambiente**: Produção (servidor local)
+
+#### Metas de Performance
+- **First Contentful Paint**: < 1.5s (tempo para primeiro elemento visível)
+- **Largest Contentful Paint**: < 2.5s (tempo para maior elemento visível)
+- **Cumulative Layout Shift**: < 0.1 (estabilidade visual)
+- **First Input Delay**: < 100ms (responsividade à primeira interação)
+- **Time to Interactive**: < 3.0s (tempo até interatividade completa)
+
+#### Monitoramento
+```javascript
+// Exemplo de medição com Performance API
+const observer = new PerformanceObserver((list) => {
+    for (const entry of list.getEntries()) {
+        console.log(`${entry.name}: ${entry.duration}ms`);
+    }
+});
+observer.observe({entryTypes: ['measure', 'navigation']});
+```
 
 ## 🔌 APIs e Integrações
 
@@ -302,10 +405,42 @@ date.setDate(date.getDate() + 7); // +7 dias
 
 ### Integrações Futuras
 
-- **API de Bancos**: Sincronização automática
-- **Push Notifications**: Notificações server-side
-- **Export/Import**: Backup de dados
-- **Analytics**: Métricas de uso
+#### Roadmap de Desenvolvimento
+
+##### Fase 1 - Q2 2024 (Alta Prioridade)
+- **Export/Import de Dados**
+  - Formato: JSON, CSV, PDF
+  - Backup automático mensal
+  - Restauração de dados
+  - **Estimativa**: 2 semanas
+
+##### Fase 2 - Q3 2024 (Média Prioridade)
+- **Push Notifications Server-side**
+  - Service Worker para notificações offline
+  - Lembretes personalizáveis
+  - Integração com calendário
+  - **Estimativa**: 3 semanas
+
+##### Fase 3 - Q4 2024 (Média Prioridade)
+- **Analytics e Relatórios**
+  - Dashboard de métricas de uso
+  - Relatórios de gastos por período
+  - Gráficos interativos (Chart.js)
+  - **Estimativa**: 4 semanas
+
+##### Fase 4 - Q1 2025 (Baixa Prioridade)
+- **API de Bancos (Open Banking)**
+  - Sincronização automática de transações
+  - Categorização inteligente
+  - Conciliação bancária
+  - **Estimativa**: 8 semanas
+  - **Dependências**: Certificação Open Banking
+
+#### Critérios de Priorização
+1. **Impacto no usuário**: Funcionalidades mais solicitadas
+2. **Complexidade técnica**: Menor complexidade = maior prioridade
+3. **Dependências externas**: Menor dependência = maior prioridade
+4. **ROI**: Retorno sobre investimento de desenvolvimento
 
 ## 🧪 Testes
 
@@ -323,21 +458,80 @@ date.setDate(date.getDate() + 7); // +7 dias
 
 ### Cobertura de Testes
 
-- **Autenticação**: 100%
-- **CRUD Despesas**: 100%
-- **Validações**: 100%
-- **Interface**: 80%
+#### Critérios de Cobertura
+- **Funcional**: Todos os fluxos principais e alternativos
+- **Validação**: Todos os cenários de entrada (válida/inválida)
+- **Interface**: Elementos interativos e responsividade
+- **Integração**: Fluxos end-to-end completos
+
+#### Métricas Atuais
+- **Autenticação**: 100% (12/12 cenários)
+  - Login válido/inválido
+  - Cadastro válido/inválido
+  - Controle de tentativas
+  - Logout e sessão
+
+- **CRUD Despesas**: 100% (20/20 cenários)
+  - Criar despesa única/recorrente
+  - Editar/excluir despesas
+  - Validações de campos
+  - Filtros e busca
+
+- **Validações**: 100% (15/15 cenários)
+  - Validação de email
+  - Validação de senha forte
+  - Validação de campos obrigatórios
+  - Validação de formatos
+
+- **Interface**: 80% (16/20 cenários)
+  - ✅ Navegação entre telas
+  - ✅ Responsividade mobile/desktop
+  - ✅ Temas claro/escuro
+  - ❌ Acessibilidade (ARIA)
+  - ❌ Teclado navigation
+
+#### Ferramentas de Teste
+- **E2E**: Cypress (cypress/e2e/)
+- **Cobertura**: Cypress Coverage Plugin
+- **Performance**: Lighthouse CI
+- **Acessibilidade**: axe-core (planejado)
 
 ## 📱 Responsividade
 
 ### Breakpoints
 
+#### Justificativa dos Valores
+- **768px**: Transição mobile → tablet (iPad portrait: 768px)
+- **1024px**: Transição tablet → desktop (iPad landscape: 1024px)
+- **1440px**: Desktop grande (monitores 1440p+ comuns)
+
 ```css
-/* Mobile First */
-@media (min-width: 768px) { /* Tablet */ }
-@media (min-width: 1024px) { /* Desktop */ }
-@media (min-width: 1440px) { /* Large Desktop */ }
+/* Mobile First Approach */
+/* Base: 320px - 767px (Mobile) */
+
+@media (min-width: 768px) { 
+    /* Tablet: 768px - 1023px */
+    /* Ajustes: Grid 2 colunas, sidebar colapsável */
+}
+
+@media (min-width: 1024px) { 
+    /* Desktop: 1024px - 1439px */
+    /* Ajustes: Grid 3 colunas, sidebar fixa */
+}
+
+@media (min-width: 1440px) { 
+    /* Large Desktop: 1440px+ */
+    /* Ajustes: Máx-width container, espaçamentos maiores */
+}
 ```
+
+#### Pontos de Teste
+- **320px**: iPhone SE (menor tela suportada)
+- **375px**: iPhone 12/13/14 (mais comum)
+- **768px**: iPad Portrait
+- **1024px**: iPad Landscape / Desktop pequeno
+- **1440px**: Desktop padrão
+- **1920px**: Full HD (teste de máx-width)
 
 ### Estratégias
 

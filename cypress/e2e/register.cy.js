@@ -1,5 +1,5 @@
-describe('Registro', () => {
-  it('Criação de conta com dados válidos deve permitir o registro com sucesso', () => {
+describe('Testes de Registro', () => {
+  it('deve registrar um novo usuário com sucesso', () => {
     cy.visit('http://localhost:8080/')
     cy.get('#showRegister').click()   
     cy.get('#registerName').click().type('teste2')
@@ -14,7 +14,7 @@ describe('Registro', () => {
     cy.contains('.toast-message', 'Bem-vindo ao Gerir.me!').should('be.visible')
   })
 
-  it('Criação de conta com dados inválidos não deve permitir o registro', () => {
+  it('deve mostrar erro para dados inválidos', () => {
     cy.visit('http://localhost:8080/')
     cy.get('#showRegister').click()   
     cy.get('#registerName').click().type('')
@@ -23,6 +23,39 @@ describe('Registro', () => {
     cy.get('#confirmPassword').click().type('')
     cy.get('#registerForm > .btn-primary').click()
     cy.get('.toast').should('be.visible')
-   })
+  })
+
+  it('deve mostrar erro para email duplicado', () => {
+    cy.visit('http://localhost:8080/')
+    cy.get('#showRegister').click()
+    cy.get('#registerName').type('Usuario Teste')
+    cy.get('#registerEmail').type('teste@teste.com')
+    cy.get('#registerPassword').type('123456@Teste')
+    cy.get('#confirmPassword').type('123456@Teste')
+    cy.get('#registerForm > .btn-primary').click()
+    cy.get('.toast').should('be.visible')
+  })
+
+  it('deve validar formato do email', () => {
+    cy.visit('http://localhost:8080/')
+    cy.get('#showRegister').click()
+    cy.get('#registerName').type('Usuario Teste')
+    cy.get('#registerEmail').type('email-invalido')
+    cy.get('#registerPassword').type('123456@Teste')
+    cy.get('#confirmPassword').type('123456@Teste')
+    cy.get('#registerForm > .btn-primary').click()
+    cy.get('.toast').should('be.visible')
+  })
+
+  it('deve validar força da senha', () => {
+    cy.visit('http://localhost:8080/')
+    cy.get('#showRegister').click()
+    cy.get('#registerName').type('Usuario Teste')
+    cy.get('#registerEmail').type('novo@teste.com')
+    cy.get('#registerPassword').type('123')
+    cy.get('#confirmPassword').type('123')
+    cy.get('#registerForm > .btn-primary').click()
+    cy.get('.toast').should('be.visible')
+  })
 
 })

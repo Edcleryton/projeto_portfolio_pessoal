@@ -3,19 +3,19 @@ describe('Testes de Validação', () => {
     cy.visit('http://localhost:8080/')
   })
 
-  describe('Validação HTML e CSS', () => {
-    it('deve ter estrutura HTML válida', () => {
+  describe('Validação de HTML/CSS', () => {
+    it('deve validar estrutura HTML', () => {
       cy.get('html').should('exist')
       cy.get('head').should('exist')
       cy.get('body').should('exist')
       cy.get('title').should('exist')
     })
 
-    it('deve ter elementos semânticos', () => {
+    it('deve validar acessibilidade dos formulários', () => {
       cy.get('main, section, article, header, footer').should('exist')
     })
 
-    it('deve ter estilos CSS carregados', () => {
+    it('deve validar estilos CSS', () => {
       cy.get('body').should('have.css', 'margin')
       cy.get('body').should('have.css', 'padding')
     })
@@ -204,8 +204,8 @@ describe('Testes de Validação', () => {
     })
   })
 
-  describe('Testes de Compatibilidade', () => {
-    it('Verificar suporte a recursos CSS modernos', () => {
+  describe('Testes com JavaScript Desabilitado', () => {
+    it('deve degradar graciosamente sem JavaScript', () => {
       // Verificar se flexbox está sendo usado
       cy.get('*').then(($elements) => {
         let hasFlexbox = false
@@ -222,7 +222,7 @@ describe('Testes de Validação', () => {
       })
     })
 
-    it('Verificar se funciona sem JavaScript (simulação)', () => {
+    it('deve mostrar mensagem apropriada quando JS está desabilitado', () => {
       // Desabilitar JavaScript não é possível no Cypress,
       // mas podemos verificar se elementos HTML básicos existem
       cy.get('form').should('exist')

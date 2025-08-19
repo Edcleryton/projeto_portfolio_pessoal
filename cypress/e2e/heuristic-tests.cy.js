@@ -83,7 +83,7 @@ describe('Testes Baseados em Heurísticas', () => {
     })
   })
 
-  describe('Testes de UI', () => {
+  describe('Testes de Interface do Usuário', () => {
     beforeEach(() => {
       cy.get('#showRegister').click()
     })
@@ -96,7 +96,7 @@ describe('Testes Baseados em Heurísticas', () => {
       cy.get('#registerName').should('have.value', '')
     })
 
-    it('deve funcionar com botão voltar', () => {
+    it('deve funcionar com botão voltar do navegador', () => {
       cy.get('#registerName').type('Teste')
       cy.go('back')
       cy.go('forward')
@@ -105,7 +105,7 @@ describe('Testes Baseados em Heurísticas', () => {
     })
   })
 
-  describe('Testes de Login', () => {
+  describe('Testes de Autenticação', () => {
     beforeEach(() => {
       // Primeiro criar um usuário
       cy.get('#showRegister').click()
@@ -118,26 +118,26 @@ describe('Testes Baseados em Heurísticas', () => {
       cy.get('#logout').click()
     })
 
-    it('deve rejeitar caracteres especiais no login', () => {
+    it('deve rejeitar caracteres especiais no email de login', () => {
       cy.get('#loginEmail').type('<script>alert("xss")</script>')
       cy.get('#loginPassword').type('123456@Teste')
       cy.get('#loginForm > .btn-primary').click()
       cy.get('.toast').should('be.visible')
     })
 
-    it('deve rejeitar senha muito longa no login', () => {
+    it('deve rejeitar senha excessivamente longa no login', () => {
       cy.get('#loginEmail').type('login@teste.com')
       cy.get('#loginPassword').type('a'.repeat(500))
       cy.get('#loginForm > .btn-primary').click()
       cy.get('.toast').should('be.visible')
     })
 
-    it('deve rejeitar campos em branco no login', () => {
+    it('deve rejeitar campos obrigatórios em branco no login', () => {
       cy.get('#loginForm > .btn-primary').click()
       cy.get('.toast').should('be.visible')
     })
 
-    it('deve lidar com Unicode/Emoji no login', () => {
+    it('deve lidar com caracteres Unicode e Emoji no login', () => {
       cy.get('#loginEmail').type('emoji@teste.com')
       cy.get('#loginPassword').type('🔒🔑💻')
       cy.get('#loginForm > .btn-primary').click()

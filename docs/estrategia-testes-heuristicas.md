@@ -90,16 +90,6 @@ Este documento descreve a estratégia de testes implementada para o projeto **Ge
 | **Consistência** | Verifica integridade após operações | `dashboard-heuristic-tests.cy.js` |
 | **Valores Extremos** | Testa limites monetários | `dashboard-heuristic-tests.cy.js` |
 
-### ⚡ Interrupções e Performance
-
-| Heurística | Implementação | Arquivo |
-|------------|---------------|----------|
-| **Timeout** | Simula demora na resposta | `heuristic-tests.cy.js` |
-| **Logout** | Interrompe operações | `dashboard-heuristic-tests.cy.js` |
-| **Erro de Rede** | Simula perda de conexão | `dashboard-heuristic-tests.cy.js` |
-| **Múltiplas Operações** | Testa operações em lote | `dashboard-heuristic-tests.cy.js` |
-| **Tempo Carregamento** | Verifica performance | `validation-tests.cy.js` |
-
 ### ♿ Acessibilidade e Usabilidade
 
 | Heurística | Implementação | Arquivo |

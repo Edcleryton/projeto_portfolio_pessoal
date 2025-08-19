@@ -1,4 +1,4 @@
-describe('Testes Heurísticos - Dashboard', () => {
+describe('Dashboard - Testes Heurísticos', () => {
   beforeEach(() => {
     // Criar usuário e fazer login
     cy.visit('http://localhost:8080/')
@@ -17,8 +17,8 @@ describe('Testes Heurísticos - Dashboard', () => {
     cy.get('#loginForm > .btn-primary').click()
   })
 
-  describe('CRUD - Despesas com Ataques de Dados', () => {
-    it('Criar despesa com descrição muito longa (>255 caracteres)', () => {
+  describe('CRUD de Despesas com Ataques de Dados', () => {
+    it('deve criar despesa com descrição muito longa (>255 caracteres)', () => {
       const longDescription = 'Descrição muito longa '.repeat(20) // ~420 caracteres
       
       cy.get('#addExpenseBtn').click()
@@ -31,7 +31,7 @@ describe('Testes Heurísticos - Dashboard', () => {
       cy.get('.toast').should('be.visible')
     })
 
-    it('Criar despesa com caracteres especiais na descrição', () => {
+    it('deve criar despesa com caracteres especiais na descrição', () => {
       const specialDescriptions = [
         'Compra com "aspas" e \'apostrofes\'',
         'Descrição com <script>alert("xss")</script>',
@@ -53,7 +53,7 @@ describe('Testes Heurísticos - Dashboard', () => {
       })
     })
 
-    it('Criar despesa com valores monetários extremos', () => {
+    it('deve criar despesa com valores monetários extremos', () => {
       const extremeValues = [
         '0.01',           // Valor mínimo
         '999999.99',      // Valor muito alto
@@ -79,7 +79,7 @@ describe('Testes Heurísticos - Dashboard', () => {
       })
     })
 
-    it('Criar despesa com datas inválidas', () => {
+    it('deve criar despesa com datas inválidas', () => {
       const invalidDates = [
         '2025-02-30',     // 30 de fevereiro
         '2025-04-31',     // 31 de abril
@@ -106,7 +106,7 @@ describe('Testes Heurísticos - Dashboard', () => {
       })
     })
 
-    it('Injeção SQL em campos de despesa', () => {
+    it('deve testar injeção SQL em campos de despesa', () => {
       const sqlInjections = [
         "'; DROP TABLE expenses; --",
         "' OR '1'='1' --",
@@ -129,8 +129,8 @@ describe('Testes Heurísticos - Dashboard', () => {
     })
   })
 
-  describe('Testes de UI - Dashboard', () => {
-    it('Atualizar página durante edição de despesa', () => {
+  describe('Testes de Interface do Dashboard', () => {
+    it('deve atualizar página durante edição de despesa', () => {
       // Criar uma despesa primeiro
       cy.get('#addExpenseBtn').click()
       cy.get('#expenseDescription').type('Despesa para teste reload')
@@ -151,7 +151,7 @@ describe('Testes Heurísticos - Dashboard', () => {
       cy.get('#dashboard').should('be.visible')
     })
 
-    it('Botão voltar durante criação de despesa', () => {
+    it('deve testar botão voltar durante criação de despesa', () => {
       cy.get('#addExpenseBtn').click()
       cy.get('#expenseDescription').type('Teste botão voltar')
       cy.get('#expenseAmount').type('50.00')
@@ -164,7 +164,7 @@ describe('Testes Heurísticos - Dashboard', () => {
       cy.get('#dashboard').should('be.visible')
     })
 
-    it('Manipular URL com parâmetros maliciosos', () => {
+    it('deve manipular URL com parâmetros maliciosos', () => {
       const maliciousParams = [
         '?id=1; DROP TABLE expenses;',
         '?user=admin&debug=true',
@@ -183,7 +183,7 @@ describe('Testes Heurísticos - Dashboard', () => {
     })
   })
 
-  describe('Testes de Filtros e Busca', () => {
+  describe('Testes de Filtros e Sistema de Busca', () => {
     beforeEach(() => {
       // Criar algumas despesas para testar filtros
       const testExpenses = [
@@ -203,7 +203,7 @@ describe('Testes Heurísticos - Dashboard', () => {
       })
     })
 
-    it('Busca com caracteres especiais', () => {
+    it('deve realizar busca com caracteres especiais', () => {
       const searchTerms = [
         '*',
         '?',
@@ -225,7 +225,7 @@ describe('Testes Heurísticos - Dashboard', () => {
       })
     })
 
-    it('Filtros com valores extremos de data', () => {
+    it('deve aplicar filtros com valores extremos de data', () => {
       // Testar filtro de data com valores extremos
       cy.get('#filterStartDate').type('1900-01-01')
       cy.get('#filterEndDate').type('2100-12-31')
@@ -235,8 +235,8 @@ describe('Testes Heurísticos - Dashboard', () => {
     })
   })
 
-  describe('Testes de Performance e Limites', () => {
-    it('Criar muitas despesas rapidamente', () => {
+  describe('Testes de Performance e Limites do Sistema', () => {
+    it('deve criar muitas despesas rapidamente', () => {
       // Criar 20 despesas em sequência
       for (let i = 0; i < 20; i++) {
         cy.get('#addExpenseBtn').click()
@@ -252,7 +252,7 @@ describe('Testes Heurísticos - Dashboard', () => {
       cy.get('.expense-item').should('have.length.at.least', 20)
     })
 
-    it('Editar e cancelar múltiplas vezes', () => {
+    it('deve editar e cancelar múltiplas vezes', () => {
       // Criar uma despesa
       cy.get('#addExpenseBtn').click()
       cy.get('#expenseDescription').type('Despesa para edição múltipla')
@@ -276,8 +276,8 @@ describe('Testes Heurísticos - Dashboard', () => {
     })
   })
 
-  describe('Testes de Interrupções e Timeouts', () => {
-    it('Logout durante criação de despesa', () => {
+  describe('Testes de Interrupções de Sessão e Timeouts', () => {
+    it('deve fazer logout durante criação de despesa', () => {
       cy.get('#addExpenseBtn').click()
       cy.get('#expenseDescription').type('Despesa interrompida')
       cy.get('#expenseAmount').type('50.00')
@@ -289,7 +289,7 @@ describe('Testes Heurísticos - Dashboard', () => {
       cy.get('#loginForm').should('be.visible')
     })
 
-    it('Simular perda de conexão durante operação', () => {
+    it('deve simular perda de conexão durante operação', () => {
       // Interceptar requisições e simular erro de rede
       cy.intercept('POST', '**/expenses', { forceNetworkError: true }).as('networkError')
       
@@ -305,8 +305,8 @@ describe('Testes Heurísticos - Dashboard', () => {
     })
   })
 
-  describe('Testes de Validação de Dados', () => {
-    it('Campos obrigatórios vazios', () => {
+  describe('Testes de Validação e Consistência de Dados', () => {
+    it('deve validar campos obrigatórios vazios', () => {
       cy.get('#addExpenseBtn').click()
       
       // Tentar salvar sem preencher nada
@@ -325,7 +325,7 @@ describe('Testes Heurísticos - Dashboard', () => {
       cy.get('.toast').should('be.visible')
     })
 
-    it('Consistência de dados após múltiplas operações', () => {
+    it('deve manter consistência de dados após múltiplas operações', () => {
       // Criar despesa
       cy.get('#addExpenseBtn').click()
       cy.get('#expenseDescription').type('Teste consistência')
