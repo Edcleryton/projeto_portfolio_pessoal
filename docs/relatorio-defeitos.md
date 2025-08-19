@@ -2,7 +2,7 @@
 
 ## Resumo Executivo
 
-Este documento apresenta uma análise detalhada dos defeitos identificados durante a execução dos testes automatizados do sistema Gerir.me e relatórios de usuários. Foram identificados **24 defeitos** distribuídos em 6 módulos principais, com **11 testes aprovados** de um total de **45 testes executados**, além de **2 defeitos críticos** reportados diretamente pelos usuários.
+Este documento apresenta uma análise detalhada dos defeitos identificados durante a execução dos testes automatizados do sistema Gerir.me e relatórios de usuários. Foram identificados **26 defeitos** distribuídos em 6 módulos principais, com **11 testes aprovados** de um total de **45 testes executados**, além de **4 defeitos críticos** reportados diretamente pelos usuários.
 
 ---
 
@@ -431,20 +431,22 @@ Implementar validação de data com comparação adequada
 
 ## 7. Resumo de Prioridades
 
-### 🔴 Defeitos Críticos (6)
+### 🔴 Defeitos Críticos (7)
 - DEF-001: Validação de Credenciais Inválidas
 - DEF-004: Adição de Nova Despesa
 - DEF-007: Cálculo de Total Mensal
 - DEF-013: Fluxo Completo de Cadastro
 - DEF-018: Exibição Incorreta de Data no Calendário
 - DEF-019: Despesas Recorrentes Não Aparecem em Meses Futuros
+- DEF-021: Validação Inadequada de Datas
 
-### 🟠 Defeitos de Alta Prioridade (4)
+### 🟠 Defeitos de Alta Prioridade (5)
 - DEF-005: Edição de Despesa Existente
 - DEF-006: Exclusão de Despesa
 - DEF-008: Exibição de Próximos Pagamentos
 - DEF-014: Persistência de Dados
 - DEF-015: Validação de Campos Obrigatórios
+- DEF-020: Formatação Incorreta de Valores Monetários
 
 ### 🟡 Defeitos de Média Prioridade (9)
 - DEF-002: Validação de E-mail Inválido
@@ -514,6 +516,88 @@ Despesas recorrentes aparecem apenas no mês inicial, não se propagam para mese
 3. Atualizar `getUpcomingPayments()` para incluir todas as ocorrências futuras
 4. Revisar como o campo `nextPayment` é utilizado e atualizado
 5. Implementar testes específicos para validar recorrência em diferentes meses
+
+---
+
+### DEF-020: Formatação Incorreta de Valores Monetários
+**Prioridade:** 🟠 **ALTO**  
+**Status:** Reportado pelo usuário  
+**Módulo:** Gerenciamento de Despesas
+
+**Descrição:**  
+Ao ajustar valores no campo numérico de despesas usando as setas (spinner), os valores dos centavos não são exibidos corretamente. Quando o valor atinge números redondos (10, 20, 30, 40, 50, 60, 70, 80, 90), apenas o primeiro dígito é exibido.
+
+**Exemplos do Problema:**  
+- "1" em vez de "10,00"
+- "2" em vez de "20,00"
+- "19,9" em vez de "19,90"
+
+**Resultado Esperado:**  
+Sistema deve sempre exibir duas casas decimais com formatação monetária correta (ex: "10,00", "20,00", "19,90")
+
+**Resultado Atual:**  
+Valores redondos exibem apenas o primeiro dígito, causando confusão na entrada de dados
+
+**Causa Raiz Provável:**  
+- Campo input type="number" não está configurado com step e formatação adequados
+- Falta de máscara de formatação monetária no campo
+- Event listeners de input não estão formatando o valor corretamente
+- Função de formatação não está sendo aplicada durante a digitação/ajuste
+
+**Sugestão de Correção:**  
+1. Implementar máscara de formatação monetária no campo de valor
+2. Configurar o input com step="0.01" para permitir centavos
+3. Adicionar event listener para formatar o valor em tempo real
+4. Utilizar a função `formatCurrency()` existente durante a entrada de dados
+5. Considerar usar input type="text" com validação numérica e formatação
+
+**Impacto:**  
+- Experiência do usuário prejudicada na entrada de valores
+- Possibilidade de erros de digitação e valores incorretos
+- Inconsistência na apresentação de dados monetários
+
+---
+
+### DEF-021: Validação Inadequada de Datas
+**Prioridade:** 🔴 **CRÍTICO**  
+**Status:** Reportado pelo usuário  
+**Módulo:** Gerenciamento de Despesas
+
+**Descrição:**  
+O sistema apresenta falhas críticas na validação de datas:
+1. Aceita anos com 6 dígitos (ex: 222222) em vez de limitar a 4 dígitos
+2. Permite salvar despesas com datas inválidas sem exibir mensagem de erro
+3. Não valida adequadamente o formato e os valores das datas antes do salvamento
+
+**Resultado Esperado:**  
+- Sistema deve aceitar apenas anos com 4 dígitos (formato YYYY)
+- Datas inválidas devem ser rejeitadas com mensagem "Por favor, selecione uma data válida"
+- Validação deve ocorrer antes de permitir o salvamento da despesa
+
+**Resultado Atual:**  
+- Anos com 6 dígitos são aceitos (ex: 22/02/222222)
+- Despesas com datas inválidas são salvas sem validação
+- Mensagem de erro não é exibida para datas inválidas
+
+**Causa Raiz Provável:**  
+- Input type="date" não está configurado com validação adequada de limites
+- Falta de validação JavaScript para formato de data antes do salvamento
+- Ausência de verificação de datas válidas na função handleExpenseSubmit
+- Validação de data não está integrada com o sistema de exibição de erros
+
+**Sugestão de Correção:**  
+1. Implementar validação de formato de data (DD/MM/YYYY) com regex
+2. Adicionar verificação de limites para ano (ex: 1900-2100)
+3. Validar se a data é uma data real (ex: 31/02 deve ser rejeitado)
+4. Integrar validação de data com a função showError() existente
+5. Adicionar atributos min/max no input de data para limitar o range
+6. Implementar validação tanto no frontend quanto no momento do salvamento
+
+**Impacto:**  
+- Dados inconsistentes no sistema com datas inválidas
+- Possibilidade de corrupção de dados e cálculos incorretos
+- Experiência do usuário prejudicada com comportamento inesperado
+- Problemas potenciais em relatórios e funcionalidades dependentes de data
 
 ---
 
