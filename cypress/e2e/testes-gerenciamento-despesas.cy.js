@@ -239,26 +239,7 @@ describe('Testes - Gerenciamento de Despesas', () => {
       cy.get('#expenseList').should('contain', 'R$ 123,45');
     });
 
-    it('Deve rejeitar valores negativos', () => {
-      cy.get('#addExpenseBtn').click();
-      cy.get('#expenseName').type('Valor Negativo');
-      cy.get('#expenseValue').type('-50');
-      cy.get('#expenseCategory').select('Alimentação');
-      cy.get('#saveExpenseBtn').click();
-      
-      cy.get('.toast').should('be.visible')
-        .and('contain.text', 'inválido');
-    });
-
-    it('Deve rejeitar valores zero', () => {
-      cy.get('#addExpenseBtn').click();
-      cy.get('#expenseName').type('Valor Zero');
-      cy.get('#expenseValue').type('0');
-      cy.get('#expenseCategory').select('Alimentação');
-      cy.get('#saveExpenseBtn').click();
-      
-      cy.get('.toast').should('be.visible')
-        .and('contain.text', 'inválido');
-    });
+    // Testes de validação de valor movidos para testes-cenarios-funcionais-avancados.cy.js
+    // para evitar duplicação e manter cenários mais completos
   });
 });

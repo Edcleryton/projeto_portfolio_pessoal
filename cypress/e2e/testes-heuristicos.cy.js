@@ -1,4 +1,4 @@
-describe('Testes Baseados em Heurísticas', () => {
+describe('Testes Heurísticos Consolidados', () => {
   beforeEach(() => {
     cy.visit('http://localhost:8080/')
   })
@@ -178,6 +178,86 @@ describe('Testes Baseados em Heurísticas', () => {
       cy.get('#loginPassword').type('🔒🔑💻')
       cy.get('#loginForm > .btn-primary').click()
       cy.get('.toast').should('be.visible')
+    })
+  })
+
+  describe('Testes de Despesas - Ataques de Dados', () => {
+    beforeEach(() => {
+      // Criar usuário e fazer login
+      cy.get('#showRegister').click()
+      cy.get('#registerName').type('UsuarioDespesas')
+      cy.get('#registerEmail').type('despesas@teste.com')
+      cy.get('#registerPassword').type('123456@Teste')
+      cy.get('#confirmPassword').type('123456@Teste')
+      cy.get('#registerForm > .btn-primary').click()
+      cy.wait(1000)
+    })
+
+    it('deve testar valores monetários extremos', () => {
+      const extremeValues = [
+        { value: '0.01', desc: 'Valor mínimo' },
+        { value: '999999.99', desc: 'Valor muito alto' },
+        { value: '-100.50', desc: 'Valor negativo' },
+        { value: '0', desc: 'Zero' },
+        { value: '100,50', desc: 'Vírgula ao invés de ponto' },
+        { value: 'abc', desc: 'Texto no lugar de número' }
+      ]
+      
+      extremeValues.forEach((test, index) => {
+        cy.get('#addExpenseBtn').click()
+        cy.get('#expenseDescription').type(test.desc)
+        cy.get('#expenseAmount').clear().type(test.value)
+        cy.get('#expenseCategory').select('outros')
+        cy.get('#expenseDate').type('2025-01-16')
+        cy.get('#saveExpenseBtn').click()
+        
+        cy.get('.toast').should('be.visible')
+        cy.wait(1000)
+      })
+    })
+
+    it('deve testar datas inválidas', () => {
+      const invalidDates = [
+        '2025-02-30',     // 30 de fevereiro
+        '2025-04-31',     // 31 de abril
+        '2025-13-01',     // Mês 13
+        '1900-01-01',     // Data muito antiga
+        'invalid-date'    // Texto inválido
+      ]
+      
+      invalidDates.forEach((date, index) => {
+        cy.get('#addExpenseBtn').click()
+        cy.get('#expenseDescription').type(`Teste data ${date}`)
+        cy.get('#expenseAmount').type('50.00')
+        cy.get('#expenseCategory').select('outros')
+        cy.get('#expenseDate').clear().type(date)
+        cy.get('#saveExpenseBtn').click()
+        
+        cy.get('.toast').should('be.visible')
+        cy.wait(1000)
+      })
+    })
+
+    it('deve testar descrições com caracteres especiais', () => {
+      const specialDescriptions = [
+        'Compra com "aspas" e \'apostrofes\'',
+        'Descrição com <script>alert("xss")</script>',
+        'Texto com & ampersand % porcentagem',
+        'Emoji na descrição 😀💰🛒',
+        "'; DROP TABLE expenses; --"
+      ]
+      
+      specialDescriptions.forEach((desc, index) => {
+        cy.get('#addExpenseBtn').click()
+        cy.get('#expenseDescription').clear().type(desc)
+        cy.get('#expenseAmount').type(`${10 + index}.99`)
+        cy.get('#expenseCategory').select('outros')
+        cy.get('#expenseDate').type('2025-01-16')
+        cy.get('#saveExpenseBtn').click()
+        
+        cy.get('.toast').should('be.visible')
+        cy.wait(1000)
+      })
     })
   })
 })

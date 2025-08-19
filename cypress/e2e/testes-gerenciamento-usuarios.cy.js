@@ -17,32 +17,8 @@ describe('Testes Abrangentes - Gerenciamento de Usuários', () => {
         .and('contain.text', 'sucesso');
     });
 
-    it('Deve rejeitar cadastro com e-mail duplicado', () => {
-      const duplicateEmail = 'usuario@duplicado.com';
-      
-      // Primeiro cadastro
-      cy.get('#showRegister').click();
-      cy.get('#registerName').type('Primeiro Usuário');
-      cy.get('#registerEmail').type(duplicateEmail);
-      cy.get('#registerPassword').type('MinhaSenh@123');
-      cy.get('#registerForm > .btn-primary').click();
-      
-      cy.wait(1000);
-      cy.reload();
-      
-      // Tentativa de segundo cadastro com mesmo e-mail
-      cy.get('#showRegister').click();
-      cy.get('#registerName').type('Segundo Usuário');
-      cy.get('#registerEmail').type(duplicateEmail);
-      cy.get('#registerPassword').type('OutraSenh@456');
-      cy.get('#registerForm > .btn-primary').click();
-      
-      cy.get('.toast').should('be.visible')
-        .and('satisfy', (toast) => {
-          const text = toast.text().toLowerCase();
-          return text.includes('já existe') || text.includes('duplicado') || text.includes('erro');
-        });
-    });
+    // Teste de e-mail duplicado movido para testes-cenarios-funcionais-avancados.cy.js
+    // onde há cenários mais completos (case insensitive, espaços extras, etc.)
 
     it('Deve validar formato de e-mail', () => {
       const invalidEmails = [

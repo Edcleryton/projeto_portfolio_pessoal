@@ -8,12 +8,12 @@ Este é o índice principal da wiki do projeto, onde você encontrará toda a do
 
 ## 🏗️ **Arquitetura e Especificações**
 
-### 📋 [Especificações Técnicas](especificacoes-tecnicas.md)
-**Requisitos funcionais, regras de negócio, critérios de aceitação e arquitetura do sistema**
-- Requisitos funcionais e não-funcionais
-- Arquitetura da aplicação
-- Tecnologias utilizadas
-- Critérios de aceitação
+### 📋 [Documentação Técnica](documentacao-tecnica.md)
+**Arquitetura completa do sistema, estrutura de classes e fluxo de dados**
+- Padrão MVC simplificado
+- Estrutura de classes e métodos
+- Armazenamento e validações
+- Performance e segurança
 
 ### ⚙️ [Regras de Negócio](regras-de-negocio.md)
 **Regras essenciais que governam o funcionamento do sistema**
@@ -22,32 +22,29 @@ Este é o índice principal da wiki do projeto, onde você encontrará toda a do
 - Cálculos e exibição de dados
 - Status de implementação
 
+### 🔑 [Credenciais](credenciais.md)
+**Informações de acesso padrão para desenvolvimento**
+- Credenciais de acesso inicial
+- Configurações de segurança
+- Instruções para alteração
+
 ---
 
 ## 🎯 **Casos de Uso e User Stories**
 
-### 📖 [Casos de Uso](casos-de-uso.md)
-**Fluxos detalhados de todas as funcionalidades com cenários principais e alternativos**
-- Autenticação e segurança
-- Gerenciamento de despesas
-- Dashboard e relatórios
-- Calendário de pagamentos
-
 ### 📝 [User Stories](user-stories.md)
 **Histórias de usuário organizadas por épicos com critérios de aceitação**
-- 32 cenários em formato Gherkin
-- Organizadas por features e épicos
-- Sistema de tags para rastreabilidade
-- Estimativas de esforço
-
-
+- Épicos de gerenciamento de usuários
+- Épicos de gerenciamento de despesas
+- Critérios de aceite detalhados
+- Cenários de uso completos
 
 ---
 
 ## 🧪 **Testes e Qualidade**
 
-### 📊 [Plano de Testes](plano-de-testes.md)
-**Estratégia e plano de testes baseado na ISO-29119-3**
+### 📊 [Estratégia de Testes](estrategia-testes-heuristicas.md)
+**Estratégia de testes baseada em heurísticas e boas práticas**
 - Épicos e estimativas de esforço
 - Condições de teste e camadas
 - Missões de teste exploratório

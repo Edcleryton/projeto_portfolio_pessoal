@@ -4,37 +4,25 @@
 
 Este documento descreve a estratégia de testes implementada para o projeto **Gerir.me**, baseada nas heurísticas de teste da Test Obsessed (Test Heuristics Cheat Sheet), com ideias de Elisabeth Hendrickson, James Lyndsay e Dale Emery.
 
-## Arquivos de Teste Criados
+## Arquivos de Teste Consolidados
 
-### 1. `register.cy.js` (Existente)
-- Testes básicos de registro de usuário
-- Validação de dados válidos e inválidos
-- Verificação de mensagens de sucesso
+### 1. Testes Funcionais Principais
+- `testes-gerenciamento-usuarios.cy.js` - Cadastro, login, autenticação
+- `testes-gerenciamento-despesas.cy.js` - CRUD de despesas
+- `testes-calculos-dashboard.cy.js` - Cálculos e totalizações
+- `testes-notificacoes-interface.cy.js` - Notificações e interface
 
-### 2. `heuristic-tests.cy.js` (Novo)
-- **Ataques de Tipos de Dados**
-- **Testes de Strings**
-- **Testes de UI**
-- **Testes de Login**
-- **Testes de Interrupções**
-- **Testes CRUD**
+### 2. Testes Funcionais Avançados
+- `testes-cenarios-funcionais-avancados.cy.js` - Regras de negócio complexas
+- `testes-edge-cases-funcionais.cy.js` - Casos limites e validações
+- `testes-integracao-fluxos.cy.js` - Fluxos completos de usuário
+- `testes-regras-negocio-complexas.cy.js` - Validações específicas
 
-### 3. `dashboard-heuristic-tests.cy.js` (Novo)
-- **CRUD de Despesas com Ataques de Dados**
-- **Testes de UI do Dashboard**
-- **Testes de Filtros e Busca**
-- **Testes de Performance e Limites**
-- **Testes de Interrupções e Timeouts**
-- **Testes de Validação de Dados**
+### 3. Testes Heurísticos (Consolidado)
+- `testes-heuristicos.cy.js` - Ataques de dados, strings, UI e segurança
 
-### 4. `validation-tests.cy.js` (Novo)
-- **Validação HTML/CSS**
-- **Testes de Responsividade**
-- **Testes de Performance**
-- **Testes de Segurança**
-- **Testes de Usabilidade**
-- **Testes de Compatibilidade**
-- **Testes de Dados e Estado**
+### 4. Testes Básicos
+- `registro.cy.js` - Testes básicos de registro
 
 ## Heurísticas Implementadas
 
