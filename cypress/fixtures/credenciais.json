@@ -1,0 +1,10 @@
+{
+    "validas": {
+        "usuario": "eddie@gerir.me",
+        "senha": "Eddie@123"
+    },
+    "invalidas": {
+        "usuario": "eddie@gerir.me",
+        "senha": "Eddie@364"
+    }
+}

@@ -11,13 +11,54 @@ class GerirMe {
     }
 
     init() {
+        console.log('🚀 [Gerir.me] Iniciando aplicação...');
+        
+        // Verificar localStorage
+        this.checkLocalStorageAvailability();
+        
+        // Criar usuário padrão e verificar
         this.ensureDefaultUser();
+        this.verifyDefaultUser();
+        
         this.loadUserData();
         this.initTheme();
         this.setupEventListeners();
         this.checkAuthentication();
         this.requestNotificationPermission();
         this.startNotificationCheck();
+        
+        console.log('✅ [Gerir.me] Aplicação inicializada com sucesso!');
+    }
+    
+    checkLocalStorageAvailability() {
+        try {
+            localStorage.setItem('gerirme_test', 'test');
+            localStorage.removeItem('gerirme_test');
+            console.log('✅ [Gerir.me] LocalStorage disponível');
+        } catch (e) {
+            console.error('❌ [Gerir.me] LocalStorage não disponível:', e.message);
+            alert('Erro: LocalStorage não está disponível. A aplicação pode não funcionar corretamente.');
+        }
+    }
+    
+    verifyDefaultUser() {
+        const users = this.getUsers();
+        console.log(`📊 [Gerir.me] Total de usuários: ${users.length}`);
+        
+        const defaultUser = users.find(u => u.email === 'eddie@gerir.me');
+        if (defaultUser) {
+            console.log('✅ [Gerir.me] Usuário padrão encontrado:', defaultUser.email);
+            
+            // Testar credenciais
+            const loginTest = users.find(u => u.email === 'eddie@gerir.me' && u.password === 'Eddie@123');
+            if (loginTest) {
+                console.log('✅ [Gerir.me] Credenciais do usuário padrão válidas');
+            } else {
+                console.error('❌ [Gerir.me] Credenciais do usuário padrão inválidas!');
+            }
+        } else {
+            console.error('❌ [Gerir.me] Usuário padrão não encontrado!');
+        }
     }
 
     // ==================== AUTENTICAÇÃO ====================
@@ -174,32 +215,40 @@ class GerirMe {
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
         
+        console.log('🔐 [Gerir.me] Tentativa de login:', email);
+        
         this.clearFormErrors();
         
         // Verificar bloqueio por tentativas (RN-USU-003)
         if (this.isAccountBlocked(email)) {
+            console.log('🚫 [Gerir.me] Conta bloqueada:', email);
             this.showError('loginEmailError', 'Conta bloqueada por 15 minutos devido a tentativas excessivas.');
             return;
         }
         
         // Validações básicas
         if (!email || !password) {
+            console.log('❌ [Gerir.me] Campos obrigatórios não preenchidos');
             if (!email) this.showError('loginEmailError', 'E-mail é obrigatório.');
             if (!password) this.showError('loginPasswordError', 'Senha é obrigatória.');
             return;
         }
         
         if (!this.isValidEmail(email)) {
+            console.log('❌ [Gerir.me] Email inválido:', email);
             this.showError('loginEmailError', 'E-mail inválido.');
             return;
         }
         
         // Verificar credenciais
         const users = this.getUsers();
+        console.log(`🔍 [Gerir.me] Buscando usuário entre ${users.length} usuários cadastrados`);
+        
         const user = users.find(u => u.email === email && u.password === password);
         
         if (user) {
             // Login bem-sucedido
+            console.log('✅ [Gerir.me] Login bem-sucedido para:', user.name);
             this.currentUser = user;
             this.saveUserSession();
             this.resetLoginAttempts(email);
@@ -207,6 +256,12 @@ class GerirMe {
             this.showToast('success', 'Login realizado', 'Bem-vindo de volta!');
         } else {
             // Login falhou
+            console.log('❌ [Gerir.me] Credenciais inválidas para:', email);
+            console.log('📋 [Gerir.me] Usuários disponíveis:');
+            users.forEach(u => {
+                console.log(`  • ${u.email} (senha: ${u.password})`);
+            });
+            
             this.incrementLoginAttempts(email);
             const attempts = this.getLoginAttempts(email);
             
@@ -350,9 +405,12 @@ class GerirMe {
     
     ensureDefaultUser() {
         const users = this.getUsers();
+        console.log(`🔍 [Gerir.me] Verificando usuários existentes: ${users.length}`);
         
         // Se não há usuários, criar o usuário padrão
         if (users.length === 0) {
+            console.log('➕ [Gerir.me] Nenhum usuário encontrado. Criando usuário padrão...');
+            
             const defaultUser = {
                 id: 'default-user-001',
                 name: 'Edcleryton Silva',
@@ -361,7 +419,19 @@ class GerirMe {
                 createdAt: new Date().toISOString()
             };
             
-            this.saveUser(defaultUser);
+            try {
+                this.saveUser(defaultUser);
+                console.log('✅ [Gerir.me] Usuário padrão criado com sucesso!');
+                console.log('📧 [Gerir.me] Email: eddie@gerir.me');
+                console.log('🔑 [Gerir.me] Senha: Eddie@123');
+            } catch (error) {
+                console.error('❌ [Gerir.me] Erro ao criar usuário padrão:', error);
+            }
+        } else {
+            console.log('ℹ️ [Gerir.me] Usuários já existem no sistema');
+            users.forEach((user, index) => {
+                console.log(`👤 [Gerir.me] Usuário ${index + 1}: ${user.email}`);
+            });
         }
     }
     
@@ -452,6 +522,13 @@ class GerirMe {
     toggleUserMenu() {
         const dropdown = document.getElementById('userDropdown');
         dropdown.classList.toggle('show');
+        
+        // Auto-fechar menu após 3 segundos se estiver aberto
+        if (dropdown.classList.contains('show')) {
+            setTimeout(() => {
+                dropdown.classList.remove('show');
+            }, 3000);
+        }
     }
     
     clearFormErrors() {
@@ -461,7 +538,15 @@ class GerirMe {
     }
     
     showError(elementId, message) {
-        document.getElementById(elementId).textContent = message;
+        const errorElement = document.getElementById(elementId);
+        errorElement.textContent = message;
+        
+        // Auto-remover mensagem de erro após 3 segundos
+        setTimeout(() => {
+            if (errorElement.textContent === message) {
+                errorElement.textContent = '';
+            }
+        }, 3000);
     }
     
     // ==================== TEMA ====================
@@ -1062,7 +1147,10 @@ class GerirMe {
             toast.classList.add('show');
         }, 100);
         
-        // Não auto-remover - usuário deve fechar manualmente
+        // Auto-remover após 3 segundos
+        setTimeout(() => {
+            this.removeToast(toast);
+        }, 3000);
         
         // Botão de fechar
         toast.querySelector('.toast-close').addEventListener('click', () => {
