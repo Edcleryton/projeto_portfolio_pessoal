@@ -1,4 +1,4 @@
-describe('Testes de Registro', () => {
+describe('Testes de registro de usário', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.get('#showRegister').should('be.visible').click();
@@ -107,7 +107,6 @@ describe('Testes de Registro', () => {
   });
 
 
-
   describe('Validação de senhas', () => {
     it('deve validar senha fraca', () => {
       cy.get('#registerName').type('João Silva');
@@ -132,7 +131,7 @@ describe('Testes de Registro', () => {
   describe('Cadastro bem-sucedido', () => {
     it('deve fazer cadastro com dados válidos', () => {
       cy.get('#registerName').should('be.visible').type('Eddie Silva');
-      cy.get('#registerEmail').should('be.visible').type('eddie@gerir.me');
+      cy.get('#registerEmail').should('be.visible').type('eddieteste@teste.com');
       cy.get('#registerPassword').should('be.visible').type('Eddie@123');
       cy.get('#confirmPassword').should('be.visible').type('Eddie@123');
       cy.get('#registerForm > .btn-primary').should('be.enabled').click();

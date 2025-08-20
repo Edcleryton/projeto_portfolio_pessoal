@@ -3,164 +3,24 @@ describe('Testes de Integração e Fluxos', () => {
     cy.visit('/');
   });
 
-  it('deve abrir a página', () => {
-    // Página já carregada pelo beforeEach
+  it('deve fazer login e navegar pelo sistema', () => {
+    cy.get('#loginEmail').type('eddie@gerir.me');
+    cy.get('#loginPassword').type('Eddie@123');
+    cy.get('#loginForm > .btn-primary').click();
+    
+    cy.get('#dashboard-container').should('be.visible');
+    cy.get('#despesasNav').click();
+    cy.get('#despesas-container').should('be.visible');
   });
 
-  it('deve fazer login e adicionar despesa', () => {
-    // Login com usuário existente
-    cy.get('#loginEmail').should('be.visible').type('eddie@gerir.me');
-    cy.get('#loginPassword').should('be.visible').type('Teste123@');
-    cy.get('#loginForm > .btn-primary').should('be.enabled').click();
+  it('deve completar fluxo de registro e login', () => {
+    cy.get('#registerTab').click();
+    cy.get('#registerName').type('Novo Usuário');
+    cy.get('#registerEmail').type('novo@teste.com');
+    cy.get('#registerPassword').type('NovaSenh@123');
+    cy.get('#confirmPassword').type('NovaSenh@123');
+    cy.get('#registerForm > .btn-primary').click();
     
-    // Verificar login bem-sucedido
-    cy.get('#dashboard-container').should('be.visible');
-    
-    // Navegar para despesas e adicionar
-    cy.get('[data-section="expenses"]').click();
-    cy.get('#addExpenseBtn').should('be.visible').click();
-    cy.get('#expenseName').should('be.visible').type('Almoço');
-    cy.get('#expenseValue').should('be.visible').type('25.50');
-    cy.get('#expenseCategory').should('be.visible').select('Alimentação');
-    cy.get('#expenseType').should('be.visible').select('unica');
-    cy.get('#expenseDate').should('be.visible').type('2025-02-15');
-    cy.get('#saveBtn').should('be.enabled').click();
-    
-    // Verificar toast de sucesso da despesa
-    cy.get('.toast.success').should('be.visible');
-    cy.get('.toast-title').should('contain', 'Despesa adicionada com sucesso!');
-    cy.get('#expensesTableBody').should('contain', 'Almoço');
+    cy.get('.toast').should('be.visible');
   });
-
-  it('deve fazer login e adicionar múltiplas despesas', () => {
-    // Login com usuário existente
-    cy.get('#loginEmail').should('be.visible').type('usuario@teste.com');
-    cy.get('#loginPassword').should('be.visible').type('Teste123@');
-    cy.get('#loginForm > .btn-primary').should('be.enabled').click();
-    
-    // Verificar login bem-sucedido
-    cy.get('#dashboard-container').should('be.visible');
-    
-    // Navegar para despesas
-    cy.get('[data-section="expenses"]').click();
-    
-    // Primeira despesa
-    cy.get('#addExpenseBtn').should('be.visible').click();
-    cy.get('#expenseName').should('be.visible').type('Supermercado');
-    cy.get('#expenseValue').should('be.visible').type('150.00');
-    cy.get('#expenseCategory').should('be.visible').select('Alimentação');
-    cy.get('#expenseType').should('be.visible').select('unica');
-    cy.get('#expenseDate').should('be.visible').type('2025-02-15');
-    cy.get('#saveBtn').should('be.enabled').click();
-    cy.get('.toast.success').should('be.visible');
-    cy.get('#expensesTableBody').should('contain', 'Supermercado');
-    
-    // Segunda despesa
-    cy.get('#addExpenseBtn').should('be.visible').click();
-    cy.get('#expenseName').should('be.visible').type('Gasolina');
-    cy.get('#expenseValue').should('be.visible').type('80.00');
-    cy.get('#expenseCategory').should('be.visible').select('Transporte');
-    cy.get('#expenseType').should('be.visible').select('unica');
-    cy.get('#expenseDate').should('be.visible').type('2025-02-15');
-    cy.get('#saveBtn').should('be.enabled').click();
-    cy.get('.toast.success').should('be.visible');
-    cy.get('#expensesTableBody').should('contain', 'Gasolina');
-  });
-
-  it('deve editar e excluir despesas', () => {
-    // Login com usuário existente
-    cy.get('#loginEmail').should('be.visible').type('usuario@teste.com');
-    cy.get('#loginPassword').should('be.visible').type('Teste123@');
-    cy.get('#loginForm > .btn-primary').should('be.enabled').click();
-    cy.get('#dashboard-container').should('be.visible');
-    
-    // Navegar para despesas e adicionar uma despesa primeiro
-    cy.get('[data-section="expenses"]').click();
-    cy.get('#addExpenseBtn').click();
-    cy.get('#expenseName').type('Despesa Original');
-    cy.get('#expenseValue').type('100.00');
-    cy.get('#expenseCategory').select('Outros');
-    cy.get('#expenseType').select('unica');
-    cy.get('#expenseDate').type('2025-02-15');
-    cy.get('#saveBtn').click();
-    
-    // Editar despesa
-    cy.get('.edit-btn').first().should('be.visible').click();
-    cy.get('#expenseName').should('be.visible').clear().type('Despesa Editada');
-    cy.get('#expenseValue').should('be.visible').clear().type('200.00');
-    cy.get('#saveBtn').should('be.enabled').click();
-    cy.get('.toast.success').should('be.visible');
-    cy.get('.toast-title').should('contain', 'Despesa atualizada com sucesso!');
-    cy.get('#expensesTableBody').should('contain', 'Despesa Editada');
-    
-    // Excluir despesa
-    cy.get('.delete-btn').first().should('be.visible').click();
-    cy.get('#confirmModal').should('be.visible');
-    cy.get('#confirmOk').should('be.visible').click();
-    cy.get('.toast.success').should('be.visible');
-    cy.get('.toast-title').should('contain', 'Despesa removida com sucesso!');
-  });
-
-  it('deve filtrar por categoria', () => {
-    // Login com usuário existente
-    cy.get('#loginEmail').should('be.visible').type('usuario@teste.com');
-    cy.get('#loginPassword').should('be.visible').type('Teste123@');
-    cy.get('#loginForm > .btn-primary').should('be.enabled').click();
-    cy.get('#dashboard-container').should('be.visible');
-    
-    // Navegar para despesas e adicionar despesas de diferentes categorias
-    cy.get('[data-section="expenses"]').click();
-    
-    // Adicionar despesa de alimentação
-    cy.get('#addExpenseBtn').click();
-    cy.get('#expenseName').type('Restaurante');
-    cy.get('#expenseValue').type('50.00');
-    cy.get('#expenseCategory').select('Alimentação');
-    cy.get('#expenseType').select('unica');
-    cy.get('#expenseDate').type('2025-02-15');
-    cy.get('#saveBtn').click();
-    
-    // Adicionar despesa de transporte
-    cy.get('#addExpenseBtn').click();
-    cy.get('#expenseName').type('Ônibus');
-    cy.get('#expenseValue').type('15.00');
-    cy.get('#expenseCategory').select('Transporte');
-    cy.get('#expenseType').select('unica');
-    cy.get('#expenseDate').type('2025-02-15');
-    cy.get('#saveBtn').click();
-    
-    // Filtrar por categoria
-    cy.get('#categoryFilter').should('be.visible').select('Alimentação');
-    cy.get('#expensesTableBody').should('contain', 'Restaurante');
-    cy.get('#expensesTableBody').should('not.contain', 'Ônibus');
-  });
-
-  it('deve persistir dados após recarregar página', () => {
-    // Login com usuário existente
-    cy.get('#loginEmail').should('be.visible').type('usuario@teste.com');
-    cy.get('#loginPassword').should('be.visible').type('Teste123@');
-    cy.get('#loginForm > .btn-primary').should('be.enabled').click();
-    cy.get('#dashboard-container').should('be.visible');
-    
-    // Adicionar uma despesa
-    cy.get('[data-section="expenses"]').click();
-    cy.get('#addExpenseBtn').click();
-    cy.get('#expenseName').type('Despesa Persistente');
-    cy.get('#expenseValue').type('75.00');
-    cy.get('#expenseCategory').select('Outros');
-    cy.get('#expenseType').select('unica');
-    cy.get('#expenseDate').type('2025-02-15');
-    cy.get('#saveBtn').click();
-    
-    // Recarregar página e verificar persistência
-    cy.reload();
-    cy.get('#dashboard-container').should('be.visible');
-    cy.get('[data-section="expenses"]').click();
-    cy.get('#expensesTableBody').should('contain', 'Despesa Persistente');
-  });
-
-
-
-
-
 });

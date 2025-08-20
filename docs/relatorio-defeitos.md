@@ -9,6 +9,7 @@ Este documento apresenta uma análise detalhada dos defeitos identificados duran
 ## 1. Defeitos de Autenticação
 
 ### DEF-001: Validação de Credenciais Inválidas
+
 **Prioridade:** 🔴 **CRÍTICO**  
 **Status:** Falha nos testes  
 **Arquivo:** `autenticacao.cy.js`
@@ -23,11 +24,13 @@ Exibir mensagem "Credenciais inválidas. Tentativas restantes: X" no elemento `#
 Mensagem não encontrada ou elemento não localizado
 
 **Causa Raiz Provável:**  
+
 - Seletor CSS incorreto no teste
 - Timing de execução (elemento não carregado)
 - Implementação da função `handleLogin()` não está definindo a mensagem corretamente
 
 **Sugestão de Correção:**  
+
 1. Verificar se o elemento `#loginPasswordError` existe no HTML
 2. Adicionar `cy.wait()` antes da verificação
 3. Validar se a função `showError()` está sendo chamada corretamente
@@ -35,6 +38,7 @@ Mensagem não encontrada ou elemento não localizado
 ---
 
 ### DEF-002: Validação de E-mail Inválido
+
 **Prioridade:** 🟡 **MÉDIO**  
 **Status:** Falha nos testes  
 **Arquivo:** `autenticacao.cy.js`
@@ -49,6 +53,7 @@ Exibir "E-mail inválido." no elemento `#loginEmailError`
 Validação não está sendo executada ou mensagem não exibida
 
 **Causa Raiz Provável:**  
+
 - Função `isValidEmail()` pode não estar funcionando corretamente
 - Elemento de erro não está sendo populado
 
@@ -58,6 +63,7 @@ Verificar implementação da regex de validação de e-mail na função `isValid
 ---
 
 ### DEF-003: Validação de Senha Fraca
+
 **Prioridade:** 🟡 **MÉDIO**  
 **Status:** Falha nos testes  
 **Arquivo:** `autenticacao.cy.js`
@@ -72,6 +78,7 @@ Exibir mensagem de erro sobre requisitos de senha
 Mensagem não exibida ou critérios de validação incorretos
 
 **Causa Raiz Provável:**  
+
 - Função `isValidPassword()` com critérios diferentes dos esperados pelo teste
 - Mensagem de erro não corresponde ao texto esperado
 
@@ -83,6 +90,7 @@ Alinhar critérios de validação entre código e testes
 ## 2. Defeitos de Gerenciamento de Despesas
 
 ### DEF-004: Adição de Nova Despesa
+
 **Prioridade:** 🔴 **CRÍTICO**  
 **Status:** Falha nos testes  
 **Arquivo:** `gerenciamento-despesas.cy.js`
@@ -97,12 +105,14 @@ Despesa adicionada com sucesso e exibida na tabela
 Falha na adição ou na renderização da despesa
 
 **Causa Raiz Provável:**  
+
 - Modal de despesa não está abrindo
 - Campos do formulário não estão sendo preenchidos
 - Função `handleExpenseSubmit()` com erro
 - Problema na função `renderExpensesTable()`
 
 **Sugestão de Correção:**  
+
 1. Verificar se o modal está sendo exibido corretamente
 2. Validar preenchimento dos campos obrigatórios
 3. Debugar função de salvamento de despesas
@@ -110,6 +120,7 @@ Falha na adição ou na renderização da despesa
 ---
 
 ### DEF-005: Edição de Despesa Existente
+
 **Prioridade:** 🟠 **ALTO**  
 **Status:** Falha nos testes  
 **Arquivo:** `gerenciamento-despesas.cy.js`
@@ -124,6 +135,7 @@ Despesa editada com sucesso e alterações refletidas
 Falha na edição ou dados não atualizados
 
 **Causa Raiz Provável:**  
+
 - Função `editExpense()` não está carregando dados corretamente
 - Modal não está sendo populado com dados existentes
 - Atualização não está sendo persistida
@@ -134,6 +146,7 @@ Verificar função `populateExpenseForm()` e processo de atualização
 ---
 
 ### DEF-006: Exclusão de Despesa
+
 **Prioridade:** 🟠 **ALTO**  
 **Status:** Falha nos testes  
 **Arquivo:** `gerenciamento-despesas.cy.js`
@@ -148,6 +161,7 @@ Despesa removida da lista após confirmação
 Despesa não é removida ou erro no processo
 
 **Causa Raiz Provável:**  
+
 - Função `deleteExpense()` com erro
 - Modal de confirmação não está funcionando
 - Problema na atualização da interface
@@ -160,6 +174,7 @@ Verificar implementação do modal de confirmação e função de exclusão
 ## 3. Defeitos de Dashboard e Cálculos
 
 ### DEF-007: Cálculo de Total Mensal
+
 **Prioridade:** 🔴 **CRÍTICO**  
 **Status:** Falha nos testes  
 **Arquivo:** `dashboard-calculos.cy.js`
@@ -174,6 +189,7 @@ Exibição correta dos valores de despesas mensais
 Valores incorretos ou não exibidos
 
 **Causa Raiz Provável:**  
+
 - Função `calculateMonthlyTotals()` com erro de lógica
 - Problema na função `updateDashboard()`
 - Dados não estão sendo carregados corretamente
@@ -184,6 +200,7 @@ Revisar lógica de cálculo e agregação de despesas mensais
 ---
 
 ### DEF-008: Exibição de Próximos Pagamentos
+
 **Prioridade:** 🟠 **ALTO**  
 **Status:** Falha nos testes  
 **Arquivo:** `dashboard-calculos.cy.js`
@@ -198,6 +215,7 @@ Lista de próximos pagamentos visível no dashboard
 Seção vazia ou não carregada
 
 **Causa Raiz Provável:**  
+
 - Função `getUpcomingPayments()` não retorna dados
 - Problema na função `renderUpcomingPayments()`
 - Filtro de datas incorreto
@@ -208,6 +226,7 @@ Verificar lógica de filtro de datas e renderização de pagamentos
 ---
 
 ### DEF-009: Navegação do Calendário
+
 **Prioridade:** 🟡 **MÉDIO**  
 **Status:** Falha nos testes  
 **Arquivo:** `dashboard-calculos.cy.js`
@@ -222,6 +241,7 @@ Calendário atualiza ao clicar nos botões de navegação
 Calendário não atualiza ou erro na navegação
 
 **Causa Raiz Provável:**  
+
 - Função `navigateMonth()` com erro
 - Event listeners não configurados corretamente
 - Problema na função `renderCalendar()`
@@ -234,6 +254,7 @@ Verificar configuração de eventos e lógica de navegação
 ## 4. Defeitos de Interface e Notificações
 
 ### DEF-010: Exibição de Toast de Sucesso
+
 **Prioridade:** 🟡 **MÉDIO**  
 **Status:** Falha nos testes  
 **Arquivo:** `interface-notificacoes.cy.js`
@@ -248,11 +269,13 @@ Toast com mensagem de sucesso visível após ações
 Toast não aparece ou não é encontrado pelo teste
 
 **Causa Raiz Provável:**  
+
 - Função `showToast()` não está sendo chamada
 - Seletores CSS incorretos no teste
 - Timing de exibição do toast
 
 **Sugestão de Correção:**  
+
 1. Verificar se `showToast()` está sendo chamada nas ações corretas
 2. Adicionar delays nos testes para aguardar renderização
 3. Validar seletores CSS utilizados
@@ -260,6 +283,7 @@ Toast não aparece ou não é encontrado pelo teste
 ---
 
 ### DEF-011: Alternância de Visibilidade da Senha
+
 **Prioridade:** 🟡 **MÉDIO**  
 **Status:** Falha nos testes  
 **Arquivo:** `interface-notificacoes.cy.js`
@@ -274,6 +298,7 @@ Campo de senha alterna entre texto e password
 Tipo do campo não muda ou botão não funciona
 
 **Causa Raiz Provável:**  
+
 - Função `togglePasswordVisibility()` com erro
 - Event listener não configurado
 - Seletor de elemento incorreto
@@ -284,6 +309,7 @@ Verificar implementação da função de alternância e configuração de evento
 ---
 
 ### DEF-012: Responsividade Mobile
+
 **Prioridade:** 🟡 **MÉDIO**  
 **Status:** Falha nos testes  
 **Arquivo:** `interface-notificacoes.cy.js`
@@ -298,6 +324,7 @@ Layout responsivo em dispositivos móveis
 Elementos não visíveis ou mal posicionados
 
 **Causa Raiz Provável:**  
+
 - CSS responsivo inadequado
 - Media queries incorretas
 - Elementos com largura fixa
@@ -310,6 +337,7 @@ Revisar CSS responsivo e media queries
 ## 5. Defeitos de Integração e Fluxos
 
 ### DEF-013: Fluxo Completo de Cadastro
+
 **Prioridade:** 🔴 **CRÍTICO**  
 **Status:** Falha nos testes  
 **Arquivo:** `integracao-fluxos.cy.js`
@@ -324,6 +352,7 @@ Usuário cadastrado com sucesso e redirecionado ao dashboard
 Falha no processo de cadastro ou redirecionamento
 
 **Causa Raiz Provável:**  
+
 - Função `handleRegister()` com erro
 - Problema na validação de dados
 - Falha no redirecionamento após cadastro
@@ -334,6 +363,7 @@ Debugar processo completo de registro e validações
 ---
 
 ### DEF-014: Persistência de Dados
+
 **Prioridade:** 🟠 **ALTO**  
 **Status:** Falha nos testes  
 **Arquivo:** `integracao-fluxos.cy.js`
@@ -348,6 +378,7 @@ Dados mantidos após recarregar página
 Perda de dados ou falha no carregamento
 
 **Causa Raiz Provável:**  
+
 - Problema no localStorage
 - Função `loadUserData()` com erro
 - Dados não sendo salvos corretamente
@@ -360,6 +391,7 @@ Verificar implementação de persistência no localStorage
 ## 6. Defeitos de Validações e Casos Extremos
 
 ### DEF-015: Validação de Campos Obrigatórios
+
 **Prioridade:** 🟠 **ALTO**  
 **Status:** Falha nos testes  
 **Arquivo:** `validacoes-edge-cases.cy.js`
@@ -374,6 +406,7 @@ Mensagens de erro para campos não preenchidos
 Validações não executadas ou mensagens incorretas
 
 **Causa Raiz Provável:**  
+
 - Validações client-side não implementadas
 - Mensagens de erro não padronizadas
 - Timing de validação incorreto
@@ -384,6 +417,7 @@ Implementar validações consistentes em todos os formulários
 ---
 
 ### DEF-016: Validação de Valor de Despesa
+
 **Prioridade:** 🟡 **MÉDIO**  
 **Status:** Falha nos testes  
 **Arquivo:** `validacoes-edge-cases.cy.js`
@@ -398,6 +432,7 @@ Rejeitar valores negativos ou zero
 Valores inválidos aceitos pelo sistema
 
 **Causa Raiz Provável:**  
+
 - Validação numérica inadequada
 - Função `handleExpenseSubmit()` não valida corretamente
 
@@ -407,6 +442,7 @@ Implementar validação robusta de valores numéricos
 ---
 
 ### DEF-017: Validação de Data no Passado
+
 **Prioridade:** 🟡 **MÉDIO**  
 **Status:** Falha nos testes  
 **Arquivo:** `validacoes-edge-cases.cy.js`
@@ -421,6 +457,7 @@ Rejeitar datas anteriores à data atual
 Datas no passado são aceitas
 
 **Causa Raiz Provável:**  
+
 - Validação de data não implementada
 - Comparação de datas incorreta
 
@@ -432,6 +469,7 @@ Implementar validação de data com comparação adequada
 ## 7. Resumo de Prioridades
 
 ### 🔴 Defeitos Críticos (7)
+
 - DEF-001: Validação de Credenciais Inválidas
 - DEF-004: Adição de Nova Despesa
 - DEF-007: Cálculo de Total Mensal
@@ -441,6 +479,7 @@ Implementar validação de data com comparação adequada
 - DEF-021: Validação Inadequada de Datas
 
 ### 🟠 Defeitos de Alta Prioridade (5)
+
 - DEF-005: Edição de Despesa Existente
 - DEF-006: Exclusão de Despesa
 - DEF-008: Exibição de Próximos Pagamentos
@@ -449,6 +488,7 @@ Implementar validação de data com comparação adequada
 - DEF-020: Formatação Incorreta de Valores Monetários
 
 ### 🟡 Defeitos de Média Prioridade (9)
+
 - DEF-002: Validação de E-mail Inválido
 - DEF-003: Validação de Senha Fraca
 - DEF-009: Navegação do Calendário
@@ -463,6 +503,7 @@ Implementar validação de data com comparação adequada
 ## 8. Novos Defeitos Identificados
 
 ### DEF-018: Exibição Incorreta de Data no Calendário
+
 **Prioridade:** 🔴 **CRÍTICO**  
 **Status:** Reportado pelo usuário  
 **Módulo:** Calendário de Pagamentos
@@ -477,12 +518,14 @@ Cobrança exibida na data correta especificada pelo usuário (10/09/2025)
 Cobrança aparece um dia antes da data configurada (09/09/2025)
 
 **Causa Raiz Provável:**  
+
 - Problema de fuso horário na conversão de datas
 - Erro na função `hasPaymentOnDate()` ou `renderCalendar()`
 - Possível problema com UTC vs horário local
 - Manipulação incorreta do objeto Date no JavaScript
 
 **Sugestão de Correção:**  
+
 1. Verificar se as datas estão sendo tratadas consistentemente em UTC ou horário local
 2. Revisar a lógica de comparação de datas na função `hasPaymentOnDate()`
 3. Implementar normalização de datas para evitar problemas de fuso horário
@@ -491,6 +534,7 @@ Cobrança aparece um dia antes da data configurada (09/09/2025)
 ---
 
 ### DEF-019: Despesas Recorrentes Não Aparecem em Meses Futuros
+
 **Prioridade:** 🔴 **CRÍTICO**  
 **Status:** Reportado pelo usuário  
 **Módulo:** Calendário de Pagamentos
@@ -505,12 +549,14 @@ Despesas recorrentes devem aparecer nos meses subsequentes conforme o ciclo conf
 Despesas recorrentes aparecem apenas no mês inicial, não se propagam para meses futuros
 
 **Causa Raiz Provável:**  
+
 - Lógica de recorrência não implementada na função `hasPaymentOnDate()`
 - Função `getUpcomingPayments()` não calcula corretamente pagamentos futuros
 - Problema na geração de datas futuras baseadas no ciclo de recorrência
 - Falta de lógica para calcular próximas ocorrências baseadas no campo `cycle`
 
 **Sugestão de Correção:**  
+
 1. Implementar lógica de cálculo de recorrência na função `hasPaymentOnDate()`
 2. Criar função auxiliar para calcular próximas datas baseadas no ciclo (mensal, semanal, etc.)
 3. Atualizar `getUpcomingPayments()` para incluir todas as ocorrências futuras
@@ -520,6 +566,7 @@ Despesas recorrentes aparecem apenas no mês inicial, não se propagam para mese
 ---
 
 ### DEF-020: Formatação Incorreta de Valores Monetários
+
 **Prioridade:** 🟠 **ALTO**  
 **Status:** Reportado pelo usuário  
 **Módulo:** Gerenciamento de Despesas
@@ -528,6 +575,7 @@ Despesas recorrentes aparecem apenas no mês inicial, não se propagam para mese
 Ao ajustar valores no campo numérico de despesas usando as setas (spinner), os valores dos centavos não são exibidos corretamente. Quando o valor atinge números redondos (10, 20, 30, 40, 50, 60, 70, 80, 90), apenas o primeiro dígito é exibido.
 
 **Exemplos do Problema:**  
+
 - "1" em vez de "10,00"
 - "2" em vez de "20,00"
 - "19,9" em vez de "19,90"
@@ -539,12 +587,14 @@ Sistema deve sempre exibir duas casas decimais com formatação monetária corre
 Valores redondos exibem apenas o primeiro dígito, causando confusão na entrada de dados
 
 **Causa Raiz Provável:**  
+
 - Campo input type="number" não está configurado com step e formatação adequados
 - Falta de máscara de formatação monetária no campo
 - Event listeners de input não estão formatando o valor corretamente
 - Função de formatação não está sendo aplicada durante a digitação/ajuste
 
 **Sugestão de Correção:**  
+
 1. Implementar máscara de formatação monetária no campo de valor
 2. Configurar o input com step="0.01" para permitir centavos
 3. Adicionar event listener para formatar o valor em tempo real
@@ -552,6 +602,7 @@ Valores redondos exibem apenas o primeiro dígito, causando confusão na entrada
 5. Considerar usar input type="text" com validação numérica e formatação
 
 **Impacto:**  
+
 - Experiência do usuário prejudicada na entrada de valores
 - Possibilidade de erros de digitação e valores incorretos
 - Inconsistência na apresentação de dados monetários
@@ -559,33 +610,39 @@ Valores redondos exibem apenas o primeiro dígito, causando confusão na entrada
 ---
 
 ### DEF-021: Validação Inadequada de Datas
+
 **Prioridade:** 🔴 **CRÍTICO**  
 **Status:** Reportado pelo usuário  
 **Módulo:** Gerenciamento de Despesas
 
 **Descrição:**  
 O sistema apresenta falhas críticas na validação de datas:
+
 1. Aceita anos com 6 dígitos (ex: 222222) em vez de limitar a 4 dígitos
 2. Permite salvar despesas com datas inválidas sem exibir mensagem de erro
 3. Não valida adequadamente o formato e os valores das datas antes do salvamento
 
 **Resultado Esperado:**  
+
 - Sistema deve aceitar apenas anos com 4 dígitos (formato YYYY)
 - Datas inválidas devem ser rejeitadas com mensagem "Por favor, selecione uma data válida"
 - Validação deve ocorrer antes de permitir o salvamento da despesa
 
 **Resultado Atual:**  
+
 - Anos com 6 dígitos são aceitos (ex: 22/02/222222)
 - Despesas com datas inválidas são salvas sem validação
 - Mensagem de erro não é exibida para datas inválidas
 
 **Causa Raiz Provável:**  
+
 - Input type="date" não está configurado com validação adequada de limites
 - Falta de validação JavaScript para formato de data antes do salvamento
 - Ausência de verificação de datas válidas na função handleExpenseSubmit
 - Validação de data não está integrada com o sistema de exibição de erros
 
 **Sugestão de Correção:**  
+
 1. Implementar validação de formato de data (DD/MM/YYYY) com regex
 2. Adicionar verificação de limites para ano (ex: 1900-2100)
 3. Validar se a data é uma data real (ex: 31/02 deve ser rejeitado)
@@ -594,6 +651,7 @@ O sistema apresenta falhas críticas na validação de datas:
 6. Implementar validação tanto no frontend quanto no momento do salvamento
 
 **Impacto:**  
+
 - Dados inconsistentes no sistema com datas inválidas
 - Possibilidade de corrupção de dados e cálculos incorretos
 - Experiência do usuário prejudicada com comportamento inesperado
@@ -604,6 +662,7 @@ O sistema apresenta falhas críticas na validação de datas:
 ## 8. Defeitos Funcionais Identificados via Casos de Teste
 
 ### DEF-027: Toast de Boas-vindas Sobrepõe Botão de Tema
+
 **Prioridade:** 🔴 **CRÍTICO**  
 **Status:** ✅ **RESOLVIDO**  
 **Caso de Teste:** CT-001
@@ -623,6 +682,7 @@ Ajustado z-index e posicionamento dos elementos para evitar sobreposição
 ---
 
 ### DEF-028: Estrutura de Toast Inadequada para Testes
+
 **Prioridade:** 🟡 **MÉDIO**  
 **Status:** ✅ **RESOLVIDO**  
 **Caso de Teste:** CT-002
@@ -642,6 +702,7 @@ Padronizada estrutura HTML dos toasts com classes específicas para testabilidad
 ---
 
 ### DEF-029: Problemas de Visibilidade Após Reload
+
 **Prioridade:** 🔴 **CRÍTICO**  
 **Status:** ✅ **RESOLVIDO**  
 **Caso de Teste:** CT-003
@@ -661,6 +722,7 @@ Corrigida lógica de inicialização e aplicação de tema na carga da página
 ---
 
 ### DEF-030: Verificações de CSS Muito Específicas
+
 **Prioridade:** 🟢 **BAIXO**  
 **Status:** ✅ **RESOLVIDO**  
 **Caso de Teste:** CT-004
@@ -680,6 +742,7 @@ Simplificadas verificações de CSS para validar aplicação de classes de tema
 ---
 
 ### DEF-031: Método Incorreto de Fechamento de Toast
+
 **Prioridade:** 🟡 **MÉDIO**  
 **Status:** ✅ **RESOLVIDO**  
 **Caso de Teste:** CT-005
@@ -699,6 +762,7 @@ Corrigido método de fechamento de toast nos testes automatizados
 ---
 
 ### DEF-032: Recorrência de Despesas Não Funciona
+
 **Prioridade:** 🔴 **CRÍTICO**  
 **Status:** ❌ **PENDENTE**  
 **Caso de Teste:** CT-006
@@ -713,11 +777,13 @@ Despesa recorrente deve aparecer no mesmo dia dos meses subsequentes
 Despesas recorrentes não são geradas automaticamente
 
 **Causa Raiz Provável:**  
+
 - Lógica de recorrência não implementada
 - Problema na geração automática de despesas futuras
 - Falta de processamento de recorrências no carregamento do calendário
 
 **Sugestão de Correção:**  
+
 1. Implementar função para gerar despesas recorrentes
 2. Adicionar processamento de recorrências no carregamento do calendário
 3. Criar rotina para verificar e gerar despesas futuras
@@ -725,6 +791,7 @@ Despesas recorrentes não são geradas automaticamente
 ---
 
 ### DEF-033: Data de Pagamento Não Exibida Corretamente
+
 **Prioridade:** 🔴 **CRÍTICO**  
 **Status:** ❌ **PENDENTE**  
 **Caso de Teste:** CT-007
@@ -739,11 +806,13 @@ Data de vencimento deve aparecer marcada no dia correto do calendário
 Datas não aparecem ou aparecem em dias incorretos
 
 **Causa Raiz Provável:**  
+
 - Problema na conversão de datas
 - Erro na lógica de mapeamento data-calendário
 - Fuso horário ou formato de data incorreto
 
 **Sugestão de Correção:**  
+
 1. Verificar formato de data utilizado no armazenamento
 2. Corrigir lógica de mapeamento entre despesas e calendário
 3. Validar conversão de strings de data para objetos Date
@@ -751,6 +820,7 @@ Datas não aparecem ou aparecem em dias incorretos
 ---
 
 ### DEF-034: Formatação Incorreta de Valores Decimais
+
 **Prioridade:** 🟡 **MÉDIO**  
 **Status:** ❌ **PENDENTE**  
 **Caso de Teste:** CT-008
@@ -765,11 +835,13 @@ Valores devem ser exibidos com duas casas decimais (ex: "R$ 21,10")
 Valores exibidos sem formatação adequada de casas decimais
 
 **Causa Raiz Provável:**  
+
 - Função de formatação monetária inadequada
 - Falta de padronização na exibição de valores
 - Problema na conversão de números para string formatada
 
 **Sugestão de Correção:**  
+
 1. Implementar função de formatação monetária consistente
 2. Utilizar `toFixed(2)` para garantir duas casas decimais
 3. Aplicar formatação em todos os pontos de exibição de valores
@@ -777,6 +849,7 @@ Valores exibidos sem formatação adequada de casas decimais
 ---
 
 ### DEF-035: Calendário Não Identifica Contas a Pagar
+
 **Prioridade:** 🟡 **MÉDIO**  
 **Status:** ❌ **PENDENTE**  
 **Caso de Teste:** CT-009
@@ -791,11 +864,13 @@ Ao clicar ou passar mouse sobre dia marcado, deve exibir lista de contas a pagar
 Apenas indicação visual sem detalhes das contas
 
 **Causa Raiz Provável:**  
+
 - Falta de implementação de tooltip ou popup
 - Ausência de evento de clique/hover nos dias marcados
 - Dados das despesas não associados aos elementos do calendário
 
 **Sugestão de Correção:**  
+
 1. Implementar tooltip com lista de despesas do dia
 2. Adicionar eventos de hover/click nos dias marcados
 3. Associar dados das despesas aos elementos do calendário
@@ -805,18 +880,21 @@ Apenas indicação visual sem detalhes das contas
 ## 9. Recomendações Gerais
 
 ### Ações Imediatas
+
 1. **Corrigir defeitos críticos** que impedem funcionalidades básicas
 2. **Revisar seletores CSS** utilizados nos testes
 3. **Implementar delays adequados** nos testes para aguardar renderização
 4. **Validar persistência de dados** no localStorage
 
 ### Melhorias de Processo
+
 1. **Implementar testes unitários** para funções individuais
 2. **Criar ambiente de teste isolado** com dados mockados
 3. **Estabelecer padrões de mensagens de erro** consistentes
 4. **Implementar logging** para facilitar debugging
 
 ### Próximos Passos
+
 1. Priorizar correção dos defeitos críticos
 2. Executar testes após cada correção
 3. Implementar testes de regressão

@@ -11,6 +11,7 @@ class GerirMe {
     }
 
     init() {
+        this.ensureDefaultUser();
         this.loadUserData();
         this.initTheme();
         this.setupEventListeners();
@@ -343,6 +344,25 @@ class GerirMe {
         if (!attempts || !attempts.blockedUntil) return false;
         
         return new Date() < new Date(attempts.blockedUntil);
+    }
+    
+    // ==================== USUÁRIO PADRÃO ====================
+    
+    ensureDefaultUser() {
+        const users = this.getUsers();
+        
+        // Se não há usuários, criar o usuário padrão
+        if (users.length === 0) {
+            const defaultUser = {
+                id: 'default-user-001',
+                name: 'Edcleryton Silva',
+                email: 'eddie@gerir.me',
+                password: 'Eddie@123',
+                createdAt: new Date().toISOString()
+            };
+            
+            this.saveUser(defaultUser);
+        }
     }
     
     // ==================== ARMAZENAMENTO ====================
@@ -718,22 +738,22 @@ class GerirMe {
                 : this.formatDate(expense.nextPayment);
             
             return `
-                <tr>
-                    <td>${expense.name}</td>
-                    <td>${this.formatCurrency(expense.value)}</td>
-                    <td>${expense.category}</td>
+                <tr data-testid="expense-row" data-expense-id="${expense.id}">
+                    <td data-testid="expense-name">${expense.name}</td>
+                    <td data-testid="expense-value">${this.formatCurrency(expense.value)}</td>
+                    <td data-testid="expense-category">${expense.category}</td>
                     <td>
-                        <span class="expense-type ${expense.type}">
+                        <span class="expense-type ${expense.type}" data-testid="expense-type">
                             ${expense.type === 'unique' ? 'Única' : 'Recorrente'}
                         </span>
                     </td>
-                    <td>${displayDate}</td>
+                    <td data-testid="expense-date">${displayDate}</td>
                     <td>
-                        <div class="expense-actions">
-                            <button class="btn-icon" onclick="app.editExpense('${expense.id}')" title="Editar">
+                        <div class="expense-actions" data-testid="expense-actions">
+                            <button class="btn-icon" onclick="app.editExpense('${expense.id}')" title="Editar" data-testid="edit-expense-btn">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn-icon" onclick="app.deleteExpense('${expense.id}')" title="Excluir">
+                            <button class="btn-icon" onclick="app.deleteExpense('${expense.id}')" title="Excluir" data-testid="delete-expense-btn">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -797,7 +817,7 @@ class GerirMe {
         
         if (upcomingPayments.length === 0) {
             container.innerHTML = `
-                <div class="empty-state">
+                <div class="empty-state" data-testid="no-upcoming-payments">
                     <i class="fas fa-calendar-check"></i>
                     <p>Nenhum pagamento próximo</p>
                 </div>
@@ -806,12 +826,12 @@ class GerirMe {
         }
         
         container.innerHTML = upcomingPayments.map(payment => `
-            <div class="payment-item">
-                <div class="payment-info">
-                    <h4>${payment.name}</h4>
-                    <small>${this.formatDate(payment.date)} - ${payment.category}</small>
+            <div class="payment-item" data-testid="payment-item" data-payment-id="${payment.id}">
+                <div class="payment-info" data-testid="payment-info">
+                    <h4 data-testid="payment-name">${payment.name}</h4>
+                    <small data-testid="payment-details">${this.formatDate(payment.date)} - ${payment.category}</small>
                 </div>
-                <div class="payment-value">
+                <div class="payment-value" data-testid="payment-value">
                     ${this.formatCurrency(payment.value)}
                 </div>
             </div>
@@ -869,9 +889,9 @@ class GerirMe {
         
         // Cabeçalho dos dias da semana
         const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-        calendarHTML += '<div class="calendar-header-row">';
+        calendarHTML += '<div class="calendar-header-row" data-testid="calendar-header-row">';
         dayNames.forEach(day => {
-            calendarHTML += `<div class="calendar-header-cell">${day}</div>`;
+            calendarHTML += `<div class="calendar-header-cell" data-testid="calendar-header-cell">${day}</div>`;
         });
         calendarHTML += '</div>';
         
@@ -891,7 +911,7 @@ class GerirMe {
                 if (isToday) classes += ' today';
                 if (hasPayment) classes += ' has-payment';
                 
-                calendarHTML += `<div class="${classes}" data-date="${currentDate.toISOString().split('T')[0]}">${dayNumber}</div>`;
+                calendarHTML += `<div class="${classes}" data-date="${currentDate.toISOString().split('T')[0]}" data-testid="calendar-day">${dayNumber}</div>`;
                 
                 currentDate.setDate(currentDate.getDate() + 1);
             }

@@ -120,17 +120,17 @@
         <!-- Main Content -->
         <main class="dashboard-main">
             <!-- Sidebar -->
-            <aside class="sidebar">
-                <nav class="sidebar-nav">
-                    <a href="#" class="nav-item active" data-section="overview">
+            <aside class="sidebar" data-testid="sidebar">
+                <nav class="sidebar-nav" data-testid="sidebar-nav">
+                    <a href="#" class="nav-item active" data-section="overview" data-testid="nav-overview">
                         <i class="fas fa-chart-pie"></i>
                         <span>Visão Geral</span>
                     </a>
-                    <a href="#" class="nav-item" data-section="expenses">
+                    <a href="#" class="nav-item" data-section="expenses" data-testid="nav-expenses">
                         <i class="fas fa-receipt"></i>
                         <span>Despesas</span>
                     </a>
-                    <a href="#" class="nav-item" data-section="calendar">
+                    <a href="#" class="nav-item" data-section="calendar" data-testid="nav-calendar">
                         <i class="fas fa-calendar-alt"></i>
                         <span>Calendário</span>
                     </a>
@@ -138,54 +138,54 @@
             </aside>
 
             <!-- Content Area -->
-            <div class="content-area">
+            <div class="content-area" data-testid="content-area">
                 <!-- Overview Section -->
-                <section id="overview-section" class="content-section active">
+                <section id="overview-section" class="content-section active" data-testid="overview-section">
                     <div class="section-header">
                         <h2>Visão Geral</h2>
                         <p>Acompanhe seus gastos mensais</p>
                     </div>
                     
                     <!-- Cards de Resumo -->
-                    <div class="summary-cards">
-                        <div class="summary-card primary">
+                    <div class="summary-cards" data-testid="summary-cards">
+                        <div class="summary-card primary" data-testid="monthly-card">
                             <div class="card-icon">
                                 <i class="fas fa-wallet"></i>
                             </div>
                             <div class="card-content">
                                 <h3>Gasto Mensal</h3>
-                                <p class="card-value" id="monthlyTotal">R$ 0,00</p>
+                                <p class="card-value" id="monthlyTotal" data-testid="monthly-total">R$ 0,00</p>
                                 <small class="card-subtitle">Total do mês atual</small>
                             </div>
                         </div>
                         
-                        <div class="summary-card">
+                        <div class="summary-card" data-testid="recurring-card">
                             <div class="card-icon">
                                 <i class="fas fa-repeat"></i>
                             </div>
                             <div class="card-content">
                                 <h3>Despesas Recorrentes</h3>
-                                <p class="card-value" id="recurringTotal">R$ 0,00</p>
+                                <p class="card-value" id="recurringTotal" data-testid="recurring-total">R$ 0,00</p>
                                 <small class="card-subtitle">Mensais + Anuais</small>
                             </div>
                         </div>
                         
-                        <div class="summary-card">
+                        <div class="summary-card" data-testid="unique-card">
                             <div class="card-icon">
                                 <i class="fas fa-calendar-day"></i>
                             </div>
                             <div class="card-content">
                                 <h3>Despesas Únicas</h3>
-                                <p class="card-value" id="uniqueTotal">R$ 0,00</p>
+                                <p class="card-value" id="uniqueTotal" data-testid="unique-total">R$ 0,00</p>
                                 <small class="card-subtitle">Apenas este mês</small>
                             </div>
                         </div>
                     </div>
 
                     <!-- Próximos Pagamentos -->
-                    <div class="upcoming-payments">
+                    <div class="upcoming-payments" data-testid="upcoming-payments">
                         <h3>Próximos Pagamentos</h3>
-                        <div class="payments-list" id="upcomingPayments">
+                        <div class="payments-list" id="upcomingPayments" data-testid="payments-list">
                             <div class="empty-state">
                                 <i class="fas fa-calendar-check"></i>
                                 <p>Nenhum pagamento próximo</p>
@@ -195,11 +195,11 @@
                 </section>
 
                 <!-- Expenses Section -->
-                <section id="expenses-section" class="content-section">
+                <section id="expenses-section" class="content-section" data-testid="expenses-section">
                     <div class="section-header">
                         <h2>Gerenciar Despesas</h2>
-                        <div class="section-actions">
-                            <select id="categoryFilter" class="filter-select">
+                        <div class="section-actions" data-testid="section-actions">
+                            <select id="categoryFilter" class="filter-select" data-testid="category-filter">
                                 <option value="">Todas as categorias</option>
                                 <option value="Alimentação">Alimentação</option>
                                 <option value="Transporte">Transporte</option>
@@ -209,7 +209,7 @@
                                 <option value="Lazer">Lazer</option>
                                 <option value="Outros">Outros</option>
                             </select>
-                            <button id="addExpenseBtn" class="btn-primary">
+                            <button id="addExpenseBtn" class="btn-primary" data-testid="add-expense-btn">
                                 <i class="fas fa-plus"></i>
                                 Nova Despesa
                             </button>
@@ -217,8 +217,8 @@
                     </div>
                     
                     <!-- Lista de Despesas -->
-                    <div class="expenses-table-container">
-                        <table class="expenses-table">
+                    <div class="expenses-table-container" data-testid="expenses-table-container">
+                        <table class="expenses-table" data-testid="expenses-table">
                             <thead>
                                 <tr>
                                     <th>Nome</th>
@@ -229,7 +229,7 @@
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-                            <tbody id="expensesTableBody">
+                            <tbody id="expensesTableBody" data-testid="expenses-table-body">
                                 <tr class="empty-row">
                                     <td colspan="6">
                                         <div class="empty-state">
@@ -245,28 +245,28 @@
                 </section>
 
                 <!-- Calendar Section -->
-                <section id="calendar-section" class="content-section">
+                <section id="calendar-section" class="content-section" data-testid="calendar-section">
                     <div class="section-header">
                         <h2>Calendário de Pagamentos</h2>
                         <p>Visualize suas despesas recorrentes</p>
                     </div>
                     
-                    <div class="calendar-container">
-                        <div class="calendar-header">
-                            <button id="prevMonth" class="btn-icon">
+                    <div class="calendar-container" data-testid="calendar-container">
+                        <div class="calendar-header" data-testid="calendar-header">
+                            <button id="prevMonth" class="btn-icon" data-testid="prev-month-btn">
                                 <i class="fas fa-chevron-left"></i>
                             </button>
-                            <h3 id="currentMonth">Janeiro 2025</h3>
-                            <button id="nextMonth" class="btn-icon">
+                            <h3 id="currentMonth" data-testid="current-month">Janeiro 2025</h3>
+                            <button id="nextMonth" class="btn-icon" data-testid="next-month-btn">
                                 <i class="fas fa-chevron-right"></i>
                             </button>
                         </div>
                         
-                        <div class="calendar-grid" id="calendarGrid">
+                        <div class="calendar-grid" id="calendarGrid" data-testid="calendar-grid">
                             <!-- Calendar will be generated by JavaScript -->
                         </div>
                         
-                        <div class="calendar-legend">
+                        <div class="calendar-legend" data-testid="calendar-legend">
                             <div class="legend-item">
                                 <div class="legend-color has-payment"></div>
                                 <span>Dias com pagamentos</span>
@@ -279,31 +279,31 @@
     </div>
 
     <!-- Modal para Adicionar/Editar Despesa -->
-    <div id="expenseModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Nova Despesa</h3>
-                <button class="modal-close" id="closeModal">
+    <div id="expenseModal" class="modal" data-testid="expense-modal">
+        <div class="modal-content" data-testid="modal-content">
+            <div class="modal-header" data-testid="modal-header">
+                <h3 id="modalTitle" data-testid="modal-title">Nova Despesa</h3>
+                <button class="modal-close" id="closeModal" data-testid="close-modal-btn">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <form id="expenseForm" class="modal-body">
+            <form id="expenseForm" class="modal-body" data-testid="expense-form">
                 <div class="form-group">
                     <label for="expenseName">Nome da despesa</label>
-                    <input type="text" id="expenseName" required>
-                    <span class="error-message" id="expenseNameError"></span>
+                    <input type="text" id="expenseName" required data-testid="expense-name-input">
+                    <span class="error-message" id="expenseNameError" data-testid="expense-name-error"></span>
                 </div>
                 
                 <div class="form-group">
                     <label for="expenseValue">Valor</label>
-                    <input type="number" id="expenseValue" step="0.01" min="0.01" required>
-                    <span class="error-message" id="expenseValueError"></span>
+                    <input type="number" id="expenseValue" step="0.01" min="0.01" required data-testid="expense-value-input">
+                    <span class="error-message" id="expenseValueError" data-testid="expense-value-error"></span>
                 </div>
                 
                 <div class="form-group">
                     <label for="expenseCategory">Categoria</label>
-                    <select id="expenseCategory" required>
+                    <select id="expenseCategory" required data-testid="expense-category-select">
                         <option value="">Selecione uma categoria</option>
                         <option value="Alimentação">Alimentação</option>
                         <option value="Transporte">Transporte</option>
@@ -313,73 +313,73 @@
                         <option value="Lazer">Lazer</option>
                         <option value="Outros">Outros</option>
                     </select>
-                    <span class="error-message" id="expenseCategoryError"></span>
+                    <span class="error-message" id="expenseCategoryError" data-testid="expense-category-error"></span>
                 </div>
                 
                 <div class="form-group">
                     <label for="expenseType">Tipo</label>
-                    <select id="expenseType" required>
+                    <select id="expenseType" required data-testid="expense-type-select">
                         <option value="">Selecione o tipo</option>
                         <option value="unique">Única</option>
                         <option value="recurring">Recorrente</option>
                     </select>
-                    <span class="error-message" id="expenseTypeError"></span>
+                    <span class="error-message" id="expenseTypeError" data-testid="expense-type-error"></span>
                 </div>
                 
                 <!-- Campos condicionais para despesa única -->
-                <div id="uniqueFields" class="conditional-fields">
+                <div id="uniqueFields" class="conditional-fields" data-testid="unique-fields">
                     <div class="form-group">
                         <label for="expenseDate">Data da despesa</label>
-                        <input type="date" id="expenseDate">
-                        <span class="error-message" id="expenseDateError"></span>
+                        <input type="date" id="expenseDate" data-testid="expense-date-input">
+                        <span class="error-message" id="expenseDateError" data-testid="expense-date-error"></span>
                     </div>
                 </div>
                 
                 <!-- Campos condicionais para despesa recorrente -->
-                <div id="recurringFields" class="conditional-fields">
+                <div id="recurringFields" class="conditional-fields" data-testid="recurring-fields">
                     <div class="form-group">
                         <label for="expenseCycle">Ciclo de cobrança</label>
-                        <select id="expenseCycle">
+                        <select id="expenseCycle" data-testid="expense-cycle-select">
                             <option value="">Selecione o ciclo</option>
                             <option value="monthly">Mensal</option>
                             <option value="yearly">Anual</option>
                         </select>
-                        <span class="error-message" id="expenseCycleError"></span>
+                        <span class="error-message" id="expenseCycleError" data-testid="expense-cycle-error"></span>
                     </div>
                     
                     <div class="form-group">
                         <label for="nextPayment">Próxima data de cobrança</label>
-                        <input type="date" id="nextPayment">
-                        <span class="error-message" id="nextPaymentError"></span>
+                        <input type="date" id="nextPayment" data-testid="next-payment-input">
+                        <span class="error-message" id="nextPaymentError" data-testid="next-payment-error"></span>
                     </div>
                 </div>
                 
-                <div class="modal-actions">
-                    <button type="button" class="btn-secondary" id="cancelBtn">Cancelar</button>
-                    <button type="submit" class="btn-primary" id="saveBtn">Salvar</button>
+                <div class="modal-actions" data-testid="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn" data-testid="cancel-btn">Cancelar</button>
+                    <button type="submit" class="btn-primary" id="saveBtn" data-testid="save-btn">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Modal de Confirmação -->
-    <div id="confirmModal" class="modal">
-        <div class="modal-content small">
-            <div class="modal-header">
+    <div id="confirmModal" class="modal" data-testid="confirm-modal">
+        <div class="modal-content small" data-testid="confirm-modal-content">
+            <div class="modal-header" data-testid="confirm-modal-header">
                 <h3>Confirmar ação</h3>
             </div>
-            <div class="modal-body">
-                <p id="confirmMessage">Tem certeza que deseja realizar esta ação?</p>
-                <div class="modal-actions">
-                    <button type="button" class="btn-secondary" id="confirmCancel">Cancelar</button>
-                    <button type="button" class="btn-danger" id="confirmOk">Confirmar</button>
+            <div class="modal-body" data-testid="confirm-modal-body">
+                <p id="confirmMessage" data-testid="confirm-message">Tem certeza que deseja realizar esta ação?</p>
+                <div class="modal-actions" data-testid="confirm-modal-actions">
+                    <button type="button" class="btn-secondary" id="confirmCancel" data-testid="confirm-cancel-btn">Cancelar</button>
+                    <button type="button" class="btn-danger" id="confirmOk" data-testid="confirm-ok-btn">Confirmar</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Toast Notifications -->
-    <div id="toastContainer" class="toast-container"></div>
+    <div id="toastContainer" class="toast-container" data-testid="toast-container"></div>
 
     <script src="script.js"></script>
 </body>

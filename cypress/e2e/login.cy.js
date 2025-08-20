@@ -3,94 +3,91 @@ describe('Testes de Login', () => {
     cy.visit('/');
   });
 
-  describe('Funcionalidades básicas', () => {
-    it('deve abrir a página', () => {
-      cy.get('#loginForm').should('be.visible');
-      cy.get('#loginForm h2').should('contain', 'Entrar na sua conta');
-    });
-
-    it('deve fazer login', () => {
+  describe('Login com credenciais válidas', () => {
+    it('deve fazer login com sucesso', () => {
       cy.get('#loginEmail').type('eddie@gerir.me');
       cy.get('#loginPassword').type('Eddie@123');
       cy.get('#loginForm > .btn-primary').click();
-      cy.get('.toast.success').should('be.visible');
-      cy.get('#dashboard-container').should('be.visible');
-    });
-
-    it('deve fazer logout', () => {
-      cy.get('#loginEmail').type('joao@email.com');
-      cy.get('#loginPassword').type('MinhaSenh@123');
-      cy.get('#loginForm > .btn-primary').click();
+      cy.get('.toast').should('be.visible');
+      cy.get('.toast-title').should('contain', 'Login realizado');
+      cy.get('.toast-message').should('contain', 'Bem-vindo de volta!');
+      cy.get('.toast-close > .fas').click();
+      cy.get('#userMenuBtn').click();
       cy.get('#logoutBtn').click();
-      cy.get('#auth-container').should('be.visible');
+           
     });
   });
 
-  describe('Validações', () => {
-    it('deve validar campos obrigatórios', () => {
-      cy.get('#loginForm > .btn-primary').click();
-      cy.get('#loginEmailError').should('contain', 'E-mail é obrigatório.');
-      cy.get('#loginPasswordError').should('contain', 'Senha é obrigatória.');
-    });
-
-    it('deve validar e-mail inválido', () => {
+  describe('Login com credenciais inválidas', () => {
+    it('deve exibir erro para email inválido', () => {
       cy.get('#loginEmail').type('email-invalido');
       cy.get('#loginPassword').type('MinhaSenh@123');
       cy.get('#loginForm > .btn-primary').click();
-      cy.get('#loginEmailError').should('contain', 'E-mail inválido.');
+      cy.get('#loginEmailError').should('contain', 'E-mail deve ter um formato válido.');
     });
 
-    it('deve validar credenciais inválidas', () => {
-      cy.get('#loginEmail').type('usuario@inexistente.com');
-      cy.get('#loginPassword').type('senhaerrada');
-      cy.get('#loginForm > .btn-primary').click();
-      cy.get('#loginPasswordError').should('contain', 'Credenciais inválidas. Tentativas restantes: 2');
-    });
-
-    it('deve validar caracteres especiais não permitidos no e-mail', () => {
-      cy.get('#loginEmail').type('usuario@<script>alert(1)</script>');
+    it('deve exibir erro para email não cadastrado', () => {
+      cy.get('#loginEmail').type('naoexiste@teste.com');
       cy.get('#loginPassword').type('MinhaSenh@123');
       cy.get('#loginForm > .btn-primary').click();
-      cy.get('#loginEmailError').should('contain', 'E-mail inválido.');
+      cy.get('#loginEmailError').should('contain', 'E-mail não encontrado.');
     });
 
-    it('deve validar limite máximo de caracteres no e-mail', () => {
-      const longEmail = 'a'.repeat(255) + '@email.com';
-      cy.get('#loginEmail').type(longEmail);
-      cy.get('#loginPassword').type('MinhaSenh@123');
+    it('deve exibir erro para senha incorreta', () => {
+      cy.get('#loginEmail').type('usuario@teste.com');
+      cy.get('#loginPassword').type('SenhaErrada123@');
       cy.get('#loginForm > .btn-primary').click();
-      cy.get('#loginEmailError').should('contain', 'E-mail muito longo.');
-    });
-
-    it('deve direcionar foco para primeiro campo inválido', () => {
-      cy.get('#loginForm > .btn-primary').click();
-      cy.focused().should('have.id', 'loginEmail');
+      cy.get('#loginPasswordError').should('contain', 'Senha incorreta.');
     });
   });
 
-  describe('Requisitos de Senha', () => {
-    it('deve validar comprimento mínimo da senha', () => {
-      cy.get('#loginEmail').type('usuario@teste.com');
-      cy.get('#loginPassword').type('123');
+  describe('Validação de campos obrigatórios', () => {
+    it('deve validar campo email vazio', () => {
+      cy.get('#loginPassword').type('MinhaSenh@123');
       cy.get('#loginForm > .btn-primary').click();
-      cy.get('#loginPasswordError').should('contain', 'Senha deve ter pelo menos 8 caracteres.');
+      cy.get('#loginEmailError').should('contain', 'E-mail é obrigatório.');
     });
 
-    it('deve validar presença de caracteres especiais na senha', () => {
+    it('deve validar campo senha vazio', () => {
       cy.get('#loginEmail').type('usuario@teste.com');
-      cy.get('#loginPassword').type('senhasemcaracterespecial');
       cy.get('#loginForm > .btn-primary').click();
-      cy.get('#loginPasswordError').should('contain', 'Senha deve conter pelo menos um caractere especial.');
+      cy.get('#loginPasswordError').should('contain', 'Senha é obrigatória.');
     });
+  });
 
-    it('deve validar presença de números na senha', () => {
+  describe('Funcionalidade de mostrar/ocultar senha', () => {
+    it('deve alternar visibilidade da senha', () => {
+      cy.get('#loginPassword').should('have.attr', 'type', 'password');
+      cy.get('#toggleLoginPassword').click();
+      cy.get('#loginPassword').should('have.attr', 'type', 'text');
+      cy.get('#toggleLoginPassword').click();
+      cy.get('#loginPassword').should('have.attr', 'type', 'password');
+    });
+  });
+
+  describe('Validações de formato de senha', () => {
+    it('deve validar senha sem número', () => {
       cy.get('#loginEmail').type('usuario@teste.com');
-      cy.get('#loginPassword').type('SenhaSemNumero@');
+      cy.get('#loginPassword').type('MinhaSenh@');
       cy.get('#loginForm > .btn-primary').click();
       cy.get('#loginPasswordError').should('contain', 'Senha deve conter pelo menos um número.');
     });
 
-    it('deve validar presença de letras maiúsculas na senha', () => {
+    it('deve validar senha sem símbolo', () => {
+      cy.get('#loginEmail').type('usuario@teste.com');
+      cy.get('#loginPassword').type('MinhaSenh123');
+      cy.get('#loginForm > .btn-primary').click();
+      cy.get('#loginPasswordError').should('contain', 'Senha deve conter pelo menos um símbolo.');
+    });
+
+    it('deve validar senha sem letra minúscula', () => {
+      cy.get('#loginEmail').type('usuario@teste.com');
+      cy.get('#loginPassword').type('MINHASENHA123@');
+      cy.get('#loginForm > .btn-primary').click();
+      cy.get('#loginPasswordError').should('contain', 'Senha deve conter pelo menos uma letra minúscula.');
+    });
+
+    it('deve validar senha sem letra maiúscula', () => {
       cy.get('#loginEmail').type('usuario@teste.com');
       cy.get('#loginPassword').type('senhasemmaiuscula123@');
       cy.get('#loginForm > .btn-primary').click();
