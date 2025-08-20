@@ -4,316 +4,475 @@ Documento baseado na ISO-29119-3 contendo os casos de teste para validação das
 
 ---
 
-## Caso de Teste CT-001
+## Casos de Teste – Gerir.me
 
-**ID:** CT-001
+### Caso de Teste 1: Cadastro de Utilizador
 
-**Título:** Validação de alternância de tema com toast sobrepondo elementos
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-HU01-01 |
+| **Título** | Validar o cadastro de um novo utilizador com dados válidos e únicos. |
+| **Prioridade** | Alta |
+| **Rastreabilidade** | HU01, RN-USU-001, RN-USU-002 |
+| **Pré-Condições** | - O utilizador não está autenticado no sistema.<br>- O e-mail a ser utilizado para o cadastro não existe na base de dados. |
 
-**Prioridade:** Alta
+#### Passos
 
-**Rastreabilidade:** RF-008 (Alternância de tema), RF-009 (Notificações toast)
+| Passo | Ação |
+|-------|------|
+| Passo 1 | Aceder à página inicial da aplicação "Gerir.me". |
+| Passo 2 | Clicar na opção "Criar nova conta". |
+| Passo 3 | Preencher o campo "Nome" com um nome válido (ex: "Utilizador Teste"). |
+| Passo 4 | Preencher o campo "E-mail" com um e-mail válido e único (ex: "<teste@gerir.me>"). |
+| Passo 5 | Preencher o campo "Senha" com uma senha que atenda à política de segurança (ex: "Teste@123"). |
+| Passo 6 | Clicar no botão "Cadastrar". |
 
-**Pré-Condições:**
-- Usuário logado no sistema
-- Dashboard carregado na seção "Visão Geral"
-- Toast de boas-vindas visível na tela
+| **Pós-Condições** |
+|-------------------|
+| - Um novo registo de utilizador é criado na base de dados.<br>- O nome do utilizador é exibido no cabeçalho da aplicação. |
 
-### Passos
+---
+
+### Caso de Teste 2: Validação de Despesa
+
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-US003-04 |
+| **Título** | Validar o bloqueio de cadastro de despesa com valor negativo. |
+| **Prioridade** | Média |
+| **Rastreabilidade** | HU03, RN-DES-003 |
+| **Pré-Condições** | - O utilizador deve estar autenticado no sistema.<br>- O utilizador está na página do dashboard. |
+
+#### Passos
+
+| Passo | Ação |
+|-------|------|
+| Passo 1 | Clicar no botão para "Adicionar Nova Despesa". |
+| Passo 2 | Preencher o campo "Nome" com um nome válido (ex: "Assinatura Inválida"). |
+| Passo 3 | Preencher o campo "Valor" com um número negativo (ex: "-50,00"). |
+| Passo 4 | Preencher os demais campos obrigatórios com dados válidos. |
+| Passo 5 | Clicar no botão "Salvar". |
+
+| **Pós-Condições** |
+|-------------------|
+| - Nenhum novo registo de despesa é criado na base de dados.<br>- O utilizador permanece no formulário para poder corrigir os dados. |
+
+---
+
+### Caso de Teste 3: Cálculo do Dashboard
+
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-HU07-01 |
+| **Título** | Validar o cálculo do gasto mensal no dashboard com diferentes tipos de despesas. |
+| **Prioridade** | Alta |
+| **Rastreabilidade** | HU07, RN-CAL-001, RN-CAL-002 |
+| **Pré-Condições** | - O utilizador está autenticado no sistema.<br>- O utilizador possui as seguintes despesas cadastradas e ativas:<br>  - Despesa 1 (Recorrente Mensal): R$ 50,00<br>  - Despesa 2 (Recorrente Anual): R$ 120,00<br>  - Despesa 3 (Única, no mês corrente): R$ 30,00 |
+
+#### Passos
+
+| Passo | Ação |
+|-------|------|
+| Passo 1 | Aceder à página do dashboard. |
+| Passo 2 | Observar o valor exibido no card "Gasto Mensal Total". |
+
+| **Pós-Condições** |
+|-------------------|
+| - Os dados das despesas permanecem inalterados. |
+
+---
+
+### Caso de Teste 4: Login e Bloqueio de Conta
+
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-HU02-02 |
+| **Título** | Validar o bloqueio de conta após 3 tentativas de login falhadas. |
+| **Prioridade** | Alta |
+| **Rastreabilidade** | HU02, RN-USU-003 |
+| **Pré-Condições** | - Existe um utilizador cadastrado com o e-mail "<bloqueio@gerir.me>". |
+
+#### Passos
+
+| Passo | Ação |
+|-------|------|
+| Passo 1 | Aceder à página de login. |
+| Passo 2 | Inserir o e-mail "<bloqueio@gerir.me>" e uma senha incorreta. Clicar em "Entrar". |
+| Passo 3 | Repetir o Passo 2 mais uma vez (segunda tentativa). |
+| Passo 4 | Repetir o Passo 2 mais uma vez (terceira tentativa). |
+| Passo 5 | Tentar fazer login novamente com as credenciais corretas. |
+
+| **Pós-Condições** |
+|-------------------|
+| - A conta do utilizador "<bloqueio@gerir.me>" fica com o status "bloqueada" por 15 minutos. |
+
+---
+
+### Caso de Teste 5: Exclusão de Despesa
+
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-HU06-01 |
+| **Título** | Validar o fluxo de exclusão de uma despesa com confirmação. |
+| **Prioridade** | Média |
+| **Rastreabilidade** | HU06, RN-DES-007 |
+| **Pré-Condições** | - O utilizador está autenticado.<br>- Existe pelo menos uma despesa cadastrada na lista. |
+
+#### Passos
+
+| Passo | Ação |
+|-------|------|
+| Passo 1 | No dashboard, localizar uma despesa na lista e clicar no ícone de "Excluir". |
+| Passo 2 | Clicar no botão "Cancelar" no modal. |
+| Passo 3 | Clicar novamente no ícone de "Excluir" da mesma despesa. |
+| Passo 4 | Clicar no botão "Confirmar". |
+
+| **Pós-Condições** |
+|-------------------|
+| - O registo da despesa é removido da base de dados. |
+
+---
+
+### Caso de Teste 6: Persistência de Tema
+
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-HU11-01 |
+| **Título** | Validar a alternância de tema e a sua persistência entre sessões. |
+| **Prioridade** | Baixa |
+| **Rastreabilidade** | HU11, RN-INT-001, RN-INT-002 |
+| **Pré-Condições** | - O utilizador está autenticado.<br>- O tema padrão da aplicação é o "claro". |
+
+#### Passos
+
+| Passo | Ação |
+|-------|------|
+| Passo 1 | No cabeçalho da aplicação, clicar no botão para alternar o tema. |
+| Passo 2 | Fazer logout da aplicação. |
+| Passo 3 | Fazer login novamente com o mesmo utilizador. |
+
+| **Pós-Condições** |
+|-------------------|
+| - A preferência de tema do utilizador (escuro) fica salva no localStorage. |
+
+---
+
+## Casos de Teste Detalhados com Resultados Esperados
+
+### Caso de Teste 1: Cadastro de Utilizador
+
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-HU01-01 |
+| **Título** | Validar o cadastro de um novo utilizador com dados válidos e únicos. |
+| **Prioridade** | Alta |
+| **Rastreabilidade** | HU01, RN-USU-001, RN-USU-002 |
+| **Pré-Condições** | - O utilizador não está autenticado no sistema.<br>- O e-mail a ser utilizado para o cadastro não existe na base de dados. |
+
+#### Passos Detalhados
 
 | Passo | Ação | Resultados Esperados |
 |-------|------|---------------------|
-| Passo 1 | Clicar no botão de alternância de tema no canto superior direito | Botão deve ser clicável e responder ao clique |
-| Passo 2 | Observar a mudança de tema | Tema deve alternar de claro para escuro com transição suave |
-| Passo 3 | Verificar a exibição do toast de confirmação | Toast deve aparecer com mensagem "Tema alterado - Modo escuro ativado" |
+| Passo 1 | Aceder à página inicial da aplicação "Gerir.me". | A tela de login ou uma opção para "Criar nova conta" é apresentada. |
+| Passo 2 | Clicar na opção "Criar nova conta". | O formulário de cadastro de novo utilizador é exibido. |
+| Passo 3 | Preencher o campo "Nome" com um nome válido (ex: "Utilizador Teste"). | N/A |
+| Passo 4 | Preencher o campo "E-mail" com um e-mail válido e único (ex: "<teste@gerir.me>"). | N/A |
+| Passo 5 | Preencher o campo "Senha" com uma senha que atenda à política de segurança (ex: "Teste@123"). | N/A |
+| Passo 6 | Clicar no botão "Cadastrar". | O sistema cria a nova conta com sucesso e redireciona o utilizador para o dashboard principal. |
 
-**Pós-Condições:**
-- Tema escuro aplicado em toda a interface
-- Toast de confirmação exibido
-- Preferência salva no localStorage
-
-**Defeito Relacionado:** DEF-027 (ver Relatório de Defeitos)
+| **Pós-Condições** |
+|-------------------|
+| - Um novo registo de utilizador é criado na base de dados.<br>- O nome do utilizador é exibido no cabeçalho da aplicação. |
 
 ---
 
-## Caso de Teste CT-002
+### Caso de Teste 2: Validação de Despesa
 
-**ID:** CT-002
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-US003-04 |
+| **Título** | Validar o bloqueio de cadastro de despesa com valor negativo. |
+| **Prioridade** | Média |
+| **Rastreabilidade** | HU03, RN-DES-003 |
+| **Pré-Condições** | - O utilizador deve estar autenticado no sistema.<br>- O utilizador está na página do dashboard. |
 
-**Título:** Verificação de estrutura de toast para automação
-
-**Prioridade:** Média
-
-**Rastreabilidade:** RF-009 (Notificações toast), RNF-003 (Testabilidade)
-
-**Pré-Condições:**
-- Sistema carregado
-- Testes automatizados configurados
-- Usuário logado no dashboard
-
-### Passos
+#### Passos Detalhados
 
 | Passo | Ação | Resultados Esperados |
 |-------|------|---------------------|
-| Passo 1 | Executar teste automatizado de alternância de tema | Teste deve localizar elementos do toast corretamente |
-| Passo 2 | Verificar seletores CSS para título do toast | Elemento `.toast-title` deve estar presente e acessível |
-| Passo 3 | Verificar seletores CSS para mensagem do toast | Elemento `.toast-message` deve estar presente e acessível |
+| Passo 1 | Clicar no botão para "Adicionar Nova Despesa". | O formulário de cadastro de despesa é exibido. |
+| Passo 2 | Preencher o campo "Nome" com um nome válido (ex: "Assinatura Inválida"). | N/A |
+| Passo 3 | Preencher o campo "Valor" com um número negativo (ex: "-50,00"). | N/A |
+| Passo 4 | Preencher os demais campos obrigatórios com dados válidos. | N/A |
+| Passo 5 | Clicar no botão "Salvar". | O sistema exibe uma mensagem de erro clara: "O valor da despesa deve ser um número positivo".<br>A despesa não é salva. |
 
-**Pós-Condições:**
-- Testes automatizados executam com sucesso
-- Estrutura do toast validada
-
-**Defeito Relacionado:** DEF-028 (ver Relatório de Defeitos)
+| **Pós-Condições** |
+|-------------------|
+| - Nenhum novo registo de despesa é criado na base de dados.<br>- O utilizador permanece no formulário para poder corrigir os dados. |
 
 ---
 
-## Caso de Teste CT-003
+### Caso de Teste 3: Cálculo do Dashboard
 
-**ID:** CT-003
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-HU07-01 |
+| **Título** | Validar o cálculo do gasto mensal no dashboard com diferentes tipos de despesas. |
+| **Prioridade** | Alta |
+| **Rastreabilidade** | HU07, RN-CAL-001, RN-CAL-002 |
+| **Pré-Condições** | - O utilizador está autenticado no sistema.<br>- O utilizador possui as seguintes despesas cadastradas e ativas:<br>  - Despesa 1 (Recorrente Mensal): R$ 50,00<br>  - Despesa 2 (Recorrente Anual): R$ 120,00<br>  - Despesa 3 (Única, no mês corrente): R$ 30,00 |
 
-**Título:** Persistência de tema após recarregamento da página
-
-**Prioridade:** Alta
-
-**Rastreabilidade:** RF-008 (Alternância de tema), RNF-002 (Persistência de dados)
-
-**Pré-Condições:**
-- Usuário logado no sistema
-- Tema padrão (claro) ativo
-- Dashboard carregado
-
-### Passos
+#### Passos Detalhados
 
 | Passo | Ação | Resultados Esperados |
 |-------|------|---------------------|
-| Passo 1 | Alternar para tema escuro | Tema escuro deve ser aplicado e salvo no localStorage |
-| Passo 2 | Recarregar a página (F5 ou Ctrl+R) | Página deve recarregar completamente |
-| Passo 3 | Fazer login novamente | Sistema deve carregar com tema escuro mantido |
-| Passo 4 | Verificar localStorage | Valor 'gerirme_theme' deve estar definido como 'dark' |
+| Passo 1 | Aceder à página do dashboard. | O dashboard é carregado com as informações financeiras. |
+| Passo 2 | Observar o valor exibido no card "Gasto Mensal Total". | O valor exibido é "R$ 90,00" e está formatado no padrão BRL. |
 
-**Pós-Condições:**
-- Tema escuro mantido após recarregamento
-- Preferência persistida no navegador
-
-**Defeito Relacionado:** DEF-029 (ver Relatório de Defeitos)
+| **Pós-Condições** |
+|-------------------|
+| - Os dados das despesas permanecem inalterados. |
 
 ---
 
-## Caso de Teste CT-004
+### Caso de Teste 4: Login e Bloqueio de Conta
 
-**ID:** CT-004
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-HU02-02 |
+| **Título** | Validar o bloqueio de conta após 3 tentativas de login falhadas. |
+| **Prioridade** | Alta |
+| **Rastreabilidade** | HU02, RN-USU-003 |
+| **Pré-Condições** | - Existe um utilizador cadastrado com o e-mail "<bloqueio@gerir.me>". |
 
-**Título:** Validação de cores CSS em diferentes temas
-
-**Prioridade:** Baixa
-
-**Rastreabilidade:** RF-008 (Alternância de tema), RNF-001 (Interface responsiva)
-
-**Pré-Condições:**
-- Sistema carregado no tema claro
-- Dashboard visível
-- Ferramentas de desenvolvedor disponíveis
-
-### Passos
+#### Passos Detalhados
 
 | Passo | Ação | Resultados Esperados |
 |-------|------|---------------------|
-| Passo 1 | Inspecionar cores do tema claro | Background deve ser branco/claro (rgb(255,255,255)) |
-| Passo 2 | Alternar para tema escuro | Cores devem mudar para tons escuros |
-| Passo 3 | Inspecionar cores do tema escuro | Background deve ser escuro (rgb(15,23,42) ou similar) |
-| Passo 4 | Verificar contraste de elementos | Texto deve manter legibilidade em ambos os temas |
+| Passo 1 | Aceder à página de login. | A tela de login é apresentada. |
+| Passo 2 | Inserir o e-mail "<bloqueio@gerir.me>" e uma senha incorreta. Clicar em "Entrar". | O sistema exibe a mensagem "E-mail ou senha inválidos". |
+| Passo 3 | Repetir o Passo 2 mais uma vez (segunda tentativa). | O sistema exibe novamente a mensagem "E-mail ou senha inválidos". |
+| Passo 4 | Repetir o Passo 2 mais uma vez (terceira tentativa). | O sistema exibe uma mensagem informando que a conta foi bloqueada por 15 minutos. |
+| Passo 5 | Tentar fazer login novamente com as credenciais corretas. | O sistema impede o login e mantém a mensagem de bloqueio. |
 
-**Pós-Condições:**
-- Cores aplicadas corretamente
-- Contraste adequado mantido
-
-**Defeito Relacionado:** DEF-030 (ver Relatório de Defeitos)
+| **Pós-Condições** |
+|-------------------|
+| - A conta do utilizador "<bloqueio@gerir.me>" fica com o status "bloqueada" por 15 minutos. |
 
 ---
 
-## Caso de Teste CT-005
+### Caso de Teste 5: Exclusão de Despesa
 
-**ID:** CT-005
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-HU06-01 |
+| **Título** | Validar o fluxo de exclusão de uma despesa com confirmação. |
+| **Prioridade** | Média |
+| **Rastreabilidade** | HU06, RN-DES-007 |
+| **Pré-Condições** | - O utilizador está autenticado.<br>- Existe pelo menos uma despesa cadastrada na lista. |
 
-**Título:** Fechamento manual de toast
-
-**Prioridade:** Média
-
-**Rastreabilidade:** RF-009 (Notificações toast), RF-010 (Usabilidade)
-
-**Pré-Condições:**
-- Sistema carregado
-- Toast visível na tela
-- Botão de fechar (X) presente no toast
-
-### Passos
+#### Passos Detalhados
 
 | Passo | Ação | Resultados Esperados |
 |-------|------|---------------------|
-| Passo 1 | Localizar botão de fechar no toast | Botão 'X' deve estar visível no canto do toast |
-| Passo 2 | Clicar no botão de fechar | Toast deve desaparecer da tela |
-| Passo 3 | Verificar se toast foi removido do DOM | Elemento toast não deve mais estar presente |
+| Passo 1 | No dashboard, localizar uma despesa na lista e clicar no ícone de "Excluir". | Um modal de confirmação é exibido com a mensagem "Tem a certeza de que deseja excluir esta despesa?". |
+| Passo 2 | Clicar no botão "Cancelar" no modal. | O modal é fechado e a despesa permanece na lista. |
+| Passo 3 | Clicar novamente no ícone de "Excluir" da mesma despesa. | O modal de confirmação é exibido novamente. |
+| Passo 4 | Clicar no botão "Confirmar". | A despesa é removida permanentemente da lista.<br>O valor no dashboard é recalculado. |
 
-**Pós-Condições:**
-- Toast removido da interface
-- Elementos subjacentes acessíveis novamente
-
-**Defeito Relacionado:** DEF-031 (ver Relatório de Defeitos)
+| **Pós-Condições** |
+|-------------------|
+| - O registo da despesa é removido da base de dados. |
 
 ---
 
-## Caso de Teste CT-006
+### Caso de Teste 6: Persistência de Tema
 
-**ID:** CT-006
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-HU11-01 |
+| **Título** | Validar a alternância de tema e a sua persistência entre sessões. |
+| **Prioridade** | Baixa |
+| **Rastreabilidade** | HU11, RN-INT-001, RN-INT-002 |
+| **Pré-Condições** | - O utilizador está autenticado.<br>- O tema padrão da aplicação é o "claro". |
 
-**Título:** Validação de recorrência de despesas em meses seguintes
-
-**Prioridade:** Alta
-
-**Rastreabilidade:** RF-003 (Gerenciamento de despesas), RF-004 (Despesas recorrentes)
-
-**Pré-Condições:**
-- Usuário logado no sistema
-- Despesa recorrente cadastrada no mês atual
-- Sistema configurado para processar recorrências
-
-### Passos
+#### Passos Detalhados
 
 | Passo | Ação | Resultados Esperados |
 |-------|------|---------------------|
-| Passo 1 | Cadastrar uma despesa com recorrência mensal | Despesa deve ser salva com flag de recorrência |
-| Passo 2 | Navegar para o próximo mês no calendário | Calendário deve exibir o mês seguinte |
-| Passo 3 | Verificar se a despesa recorrente aparece | Despesa deve estar visível no mesmo dia do mês seguinte |
+| Passo 1 | No cabeçalho da aplicação, clicar no botão para alternar o tema. | A interface muda imediatamente para o tema "escuro".<br>Uma notificação "toast" confirma a mudança. |
+| Passo 2 | Fazer logout da aplicação. | O utilizador é redirecionado para a tela de login. |
+| Passo 3 | Fazer login novamente com o mesmo utilizador. | O utilizador é autenticado e o dashboard é exibido no tema "escuro", mantendo a preferência anterior. |
 
-**Pós-Condições:**
-- Despesa recorrente visível em meses subsequentes
-- Dados de recorrência mantidos corretamente
-
-**Defeito Relacionado:** DEF-032 (ver Relatório de Defeitos)
+| **Pós-Condições** |
+|-------------------|
+| - A preferência de tema do utilizador (escuro) fica salva no localStorage. |
 
 ---
 
-## Caso de Teste CT-007
+### Caso de Teste 7: Edição de Despesa
 
-**ID:** CT-007
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-HU05-01 |
+| **Título** | Validar a edição dos dados de uma despesa existente. |
+| **Prioridade** | Alta |
+| **Rastreabilidade** | HU05 |
+| **Pré-Condições** | - O utilizador está autenticado.<br>- Existe uma despesa cadastrada com o nome "Spotify" e valor "R$ 20,00". |
 
-**Título:** Verificação de exibição correta da data de pagamento
-
-**Prioridade:** Alta
-
-**Rastreabilidade:** RF-003 (Gerenciamento de despesas), RF-005 (Calendário de pagamentos)
-
-**Pré-Condições:**
-- Usuário logado no sistema
-- Despesa cadastrada com data de vencimento específica
-- Calendário carregado
-
-### Passos
+#### Passos Detalhados
 
 | Passo | Ação | Resultados Esperados |
 |-------|------|---------------------|
-| Passo 1 | Cadastrar despesa com data de vencimento 15/01/2025 | Despesa deve ser salva com data correta |
-| Passo 2 | Visualizar o calendário do mês de janeiro | Calendário deve exibir janeiro de 2025 |
-| Passo 3 | Localizar o dia 15 no calendário | Data de pagamento deve estar marcada no dia 15 |
+| Passo 1 | No dashboard, localizar a despesa "Spotify" e clicar no ícone de "Editar". | O formulário de edição é aberto com todos os dados da despesa "Spotify" preenchidos. |
+| Passo 2 | Alterar o campo "Valor" para "25,00". | N/A |
+| Passo 3 | Clicar no botão "Salvar". | O utilizador é redirecionado para o dashboard.<br>A despesa "Spotify" agora exibe o valor "R$ 25,00".<br>O "Gasto Mensal Total" no dashboard é recalculado para refletir a alteração. |
 
-**Pós-Condições:**
-- Data de pagamento exibida no dia correto
-- Calendário sincronizado com dados das despesas
-
-**Defeito Relacionado:** DEF-033 (ver Relatório de Defeitos)
+| **Pós-Condições** |
+|-------------------|
+| - O registo da despesa "Spotify" é atualizado na base de dados com o novo valor. |
 
 ---
 
-## Caso de Teste CT-008
+### Caso de Teste 8: Visualização do Calendário
 
-**ID:** CT-008
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-HU08-01 |
+| **Título** | Validar a exibição de marcadores no calendário apenas para despesas recorrentes. |
+| **Prioridade** | Média |
+| **Rastreabilidade** | HU08, RN-CAL-003 |
+| **Pré-Condições** | - O utilizador está autenticado.<br>- Existem duas despesas cadastradas para o mês de Setembro de 2025:<br>  - Despesa 1 (Recorrente): "Ginásio", Próxima Cobrança em 15/09/2025.<br>  - Despesa 2 (Única): "Jantar", Data da Despesa em 20/09/2025. |
 
-**Título:** Formatação correta de valores decimais
-
-**Prioridade:** Média
-
-**Rastreabilidade:** RF-003 (Gerenciamento de despesas), RNF-004 (Formatação de dados)
-
-**Pré-Condições:**
-- Usuário logado no sistema
-- Formulário de cadastro de despesa aberto
-- Campo de valor disponível para entrada
-
-### Passos
+#### Passos Detalhados
 
 | Passo | Ação | Resultados Esperados |
 |-------|------|---------------------|
-| Passo 1 | Inserir valor "21,10" no campo de valor | Sistema deve aceitar o valor com duas casas decimais |
-| Passo 2 | Salvar a despesa | Despesa deve ser salva com valor formatado corretamente |
-| Passo 3 | Visualizar a despesa na lista | Valor deve ser exibido como "R$ 21,10" |
+| Passo 1 | Aceder ao ecrã do "Calendário". | O calendário do mês corrente é exibido. |
+| Passo 2 | Navegar para o mês de "Setembro de 2025". | O calendário exibe os dias do mês de Setembro. |
+| Passo 3 | Observar os dias 15 e 20 do calendário. | O dia 15 deve ter um marcador visual indicando uma cobrança.<br>O dia 20 não deve ter nenhum marcador. |
 
-**Pós-Condições:**
-- Valores decimais exibidos com duas casas decimais
-- Formatação monetária consistente em toda a aplicação
-
-**Defeito Relacionado:** DEF-034 (ver Relatório de Defeitos)
+| **Pós-Condições** |
+|-------------------|
+| - Nenhuma alteração de dados é realizada. |
 
 ---
 
-## Caso de Teste CT-009
+### Caso de Teste 9: Segregação de Dados (Segurança)
 
-**ID:** CT-009
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-RN-USU-005-01 |
+| **Título** | Validar que um utilizador não pode aceder aos dados de outro utilizador. |
+| **Prioridade** | Crítica |
+| **Rastreabilidade** | RN-USU-005 |
+| **Pré-Condições** | - Existem dois utilizadores: Utilizador A e Utilizador B.<br>- O Utilizador A possui uma despesa com ID "123".<br>- O Utilizador B está autenticado no sistema. |
 
-**Título:** Identificação de contas no calendário
-
-**Prioridade:** Média
-
-**Rastreabilidade:** RF-005 (Calendário de pagamentos), RF-006 (Identificação de despesas)
-
-**Pré-Condições:**
-- Usuário logado no sistema
-- Múltiplas despesas cadastradas para o mesmo dia
-- Calendário carregado com dados das despesas
-
-### Passos
+#### Passos Detalhados
 
 | Passo | Ação | Resultados Esperados |
 |-------|------|---------------------|
-| Passo 1 | Cadastrar duas despesas para o mesmo dia | Ambas despesas devem ser salvas |
-| Passo 2 | Visualizar o calendário | Dia deve estar marcado em amarelo |
-| Passo 3 | Clicar ou passar o mouse sobre o dia marcado | Tooltip ou popup deve mostrar quais contas devem ser pagas |
+| Passo 1 | Tentar aceder diretamente à URL de edição da despesa do Utilizador A (ex: .../despesas/editar/123). | O sistema deve impedir o acesso, exibindo uma mensagem de "Acesso Negado" ou "Despesa não encontrada", e/ou redirecionar o Utilizador B para o seu próprio dashboard. |
 
-**Pós-Condições:**
-- Usuário consegue identificar quais contas vencer no dia
-- Interface fornece informações detalhadas sobre pagamentos
-
-**Defeito Relacionado:** DEF-035 (ver Relatório de Defeitos)
+| **Pós-Condições** |
+|-------------------|
+| - Os dados do Utilizador A permanecem seguros e não foram visualizados ou alterados pelo Utilizador B. |
 
 ---
 
-## Resumo dos Casos de Teste
+## Casos de Teste Adicionais
 
-| ID | Título | Prioridade | Status | Defeito Relacionado |
-|----|--------|------------|--------|--------------------|
-| CT-001 | Alternância de tema com sobreposição | Alta | ✅ Executado | DEF-027 |
-| CT-002 | Estrutura de toast para automação | Média | ✅ Executado | DEF-028 |
-| CT-003 | Persistência de tema após reload | Alta | ✅ Executado | DEF-029 |
-| CT-004 | Validação de cores CSS | Baixa | ✅ Executado | DEF-030 |
-| CT-005 | Fechamento manual de toast | Média | ✅ Executado | DEF-031 |
-| CT-006 | Recorrência de despesas em meses seguintes | Alta | 📋 Planejado | DEF-032 |
-| CT-007 | Exibição correta da data de pagamento | Alta | 📋 Planejado | DEF-033 |
-| CT-008 | Formatação correta de valores decimais | Média | 📋 Planejado | DEF-034 |
-| CT-009 | Identificação de contas no calendário | Média | 📋 Planejado | DEF-035 |
+### CT-001: Validação de alternância de tema com toast sobrepondo elementos
+
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-001 |
+| **Título** | Validação de alternância de tema com toast sobrepondo elementos |
+| **Prioridade** | Média |
+| **Rastreabilidade** | HU11 |
+| **Pré-Condições** | - Utilizador autenticado no sistema<br>- Interface no tema claro |
+
+#### Passos
+
+| Passo | Ação | Resultado Esperado |
+|-------|------|-------------------|
+| 1 | Clicar no botão de alternância de tema | Toast de confirmação aparece |
+| 2 | Verificar se o toast não sobrepõe elementos importantes | Toast posicionado adequadamente |
+| 3 | Aguardar desaparecimento automático do toast | Toast desaparece após 3 segundos |
+| 4 | Verificar mudança de tema | Interface alterada para tema escuro |
+
+**Defeitos Relacionados:** DEF-001
 
 ---
 
-## Observações
+### CT-002: Verificação de estrutura de toast para automação
 
-- **5 casos de teste executados** com sucesso, identificando defeitos de interface
-- **4 casos de teste planejados** para validação de funcionalidades principais
-- Os testes automatizados de interface passam com 100% de sucesso (11/11 testes)
-- A funcionalidade de alternância de tema está funcionando conforme especificado
-- A estrutura dos toasts foi padronizada para melhor testabilidade
-- **Todos os defeitos identificados foram registrados no Relatório de Defeitos** (DEF-027 a DEF-035)
-- **Status dos defeitos:**
-  - 5 defeitos de interface: ✅ Resolvidos
-  - 4 defeitos funcionais: ❌ Pendentes de correção
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-002 |
+| **Título** | Verificação de estrutura de toast para automação |
+| **Prioridade** | Baixa |
+| **Rastreabilidade** | HU11 |
+| **Pré-Condições** | - Sistema carregado<br>- Ferramentas de desenvolvimento abertas |
 
-**Data de Criação:** Janeiro 2025  
-**Última Atualização:** Janeiro 2025  
-**Responsável:** Equipe de QA
+#### Passos
+
+| Passo | Ação | Resultado Esperado |
+|-------|------|-------------------|
+| 1 | Executar ação que gera toast | Toast aparece na tela |
+| 2 | Inspecionar elemento toast no DOM | Elemento possui classe `.toast` |
+| 3 | Verificar estrutura interna | Contém `.toast-title` e `.toast-message` |
+| 4 | Verificar botão de fechar | Elemento `.toast-close` presente |
+
+**Defeitos Relacionados:** Nenhum
+
+---
+
+### CT-003: Persistência de tema após recarregamento
+
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-003 |
+| **Título** | Persistência de tema após recarregamento da página |
+| **Prioridade** | Alta |
+| **Rastreabilidade** | HU11, RN-INT-001 |
+| **Pré-Condições** | - Utilizador autenticado<br>- Tema atual: claro |
+
+#### Passos
+
+| Passo | Ação | Resultado Esperado |
+|-------|------|-------------------|
+| 1 | Alternar para tema escuro | Interface muda para tema escuro |
+| 2 | Recarregar a página (F5) | Página recarrega |
+| 3 | Fazer login novamente | Acesso ao dashboard |
+| 4 | Verificar localStorage | Tema 'dark' armazenado |
+
+**Defeitos Relacionados:** DEF-002
+
+---
+
+### CT-004: Validação de cores CSS em diferentes temas
+
+| Campo | Valor |
+|-------|-------|
+| **ID** | CT-004 |
+| **Título** | Validação de cores CSS aplicadas nos temas claro e escuro |
+| **Prioridade** | Média |
+| **Rastreabilidade** | HU11, RN-INT-002 |
+| **Pré-Condições** | - Sistema carregado<br>- Acesso às ferramentas de desenvolvimento |
+
+#### Passos
+
+| Passo | Ação | Resultado Esperado |
+|-------|------|-------------------|
+| 1 | Inspecionar elemento no tema claro | Background: #ffffff, Text: #333333 |
+| 2 | Alternar para tema escuro | Tema muda para escuro |
+| 3 | Inspecionar mesmo elemento | Background: #1a1a1a, Text: #ffffff |
+| 4 | Verificar contraste de cores | Contraste adequado para acessibilidade |
+
+**Defeitos Relacionados:** Nenhum
+
+---
+
+*Documento atualizado em: Janeiro 2025*
+*Versão: 2.0*
