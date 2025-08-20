@@ -5,7 +5,7 @@
 Para acessar a aplicação pela primeira vez, utilize as seguintes credenciais:
 
 **Email:** eddie@gerir.me  
-**Senha:** Eddie123  
+**Senha:** Eddie@123  
 **Nome:** Edcleryton Silva
 
 ## Configuração
@@ -14,7 +14,7 @@ As credenciais padrão estão definidas no arquivo `.env` nas seguintes variáve
 
 ```env
 DEFAULT_USER_EMAIL=eddie@gerir.me
-DEFAULT_USER_PASSWORD=Eddie123
+DEFAULT_USER_PASSWORD=Eddie@123
 DEFAULT_USER_NAME=Edcleryton Silva
 ```
 
