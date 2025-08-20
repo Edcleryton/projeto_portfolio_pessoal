@@ -155,6 +155,11 @@ temp/
 /coverage
 /cypress/videos
 /cypress/screenshots
+/cypress/reports
+/cypress/downloads
+*.json.backup
+mochawesome-report/
+test-results/
 
 # Backup files
 *.backup

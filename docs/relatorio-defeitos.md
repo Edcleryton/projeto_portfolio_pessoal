@@ -1,8 +1,8 @@
 # Relatório de Defeitos - Sistema Gerir.me
 
-## Resumo Executivo
+## Resumo
 
-Este documento apresenta uma análise detalhada dos defeitos identificados durante a execução dos testes automatizados do sistema Gerir.me e relatórios de usuários. Foram identificados **26 defeitos** distribuídos em 6 módulos principais, com **11 testes aprovados** de um total de **45 testes executados**, além de **4 defeitos críticos** reportados diretamente pelos usuários.
+Este documento apresenta uma análise detalhada dos defeitos identificados durante a execução dos testes automatizados do sistema Gerir.me e relatórios de usuários. Foram identificados **35 defeitos** distribuídos em 7 módulos principais, com **11 testes aprovados** de um total de **45 testes executados**, além de **9 defeitos funcionais** identificados através de casos de teste estruturados.
 
 ---
 
@@ -598,6 +598,207 @@ O sistema apresenta falhas críticas na validação de datas:
 - Possibilidade de corrupção de dados e cálculos incorretos
 - Experiência do usuário prejudicada com comportamento inesperado
 - Problemas potenciais em relatórios e funcionalidades dependentes de data
+
+---
+
+## 8. Defeitos Funcionais Identificados via Casos de Teste
+
+### DEF-027: Toast de Boas-vindas Sobrepõe Botão de Tema
+**Prioridade:** 🔴 **CRÍTICO**  
+**Status:** ✅ **RESOLVIDO**  
+**Caso de Teste:** CT-001
+
+**Descrição:**  
+O toast de boas-vindas estava sobrepondo o botão de alternância de tema, impedindo a interação do usuário.
+
+**Resultado Esperado:**  
+Botão de tema deve ser clicável mesmo com toast visível
+
+**Resultado Atual:**  
+Botão inacessível devido à sobreposição do toast
+
+**Correção Aplicada:**  
+Ajustado z-index e posicionamento dos elementos para evitar sobreposição
+
+---
+
+### DEF-028: Estrutura de Toast Inadequada para Testes
+**Prioridade:** 🟡 **MÉDIO**  
+**Status:** ✅ **RESOLVIDO**  
+**Caso de Teste:** CT-002
+
+**Descrição:**  
+Estrutura HTML dos toasts não possuía seletores adequados para automação de testes.
+
+**Resultado Esperado:**  
+Elementos `.toast-title` e `.toast-message` devem estar presentes
+
+**Resultado Atual:**  
+Estrutura inadequada para localização em testes automatizados
+
+**Correção Aplicada:**  
+Padronizada estrutura HTML dos toasts com classes específicas para testabilidade
+
+---
+
+### DEF-029: Problemas de Visibilidade Após Reload
+**Prioridade:** 🔴 **CRÍTICO**  
+**Status:** ✅ **RESOLVIDO**  
+**Caso de Teste:** CT-003
+
+**Descrição:**  
+Elementos da interface apresentavam problemas de visibilidade após recarregamento da página.
+
+**Resultado Esperado:**  
+Tema persistido e elementos visíveis após reload
+
+**Resultado Atual:**  
+Problemas de renderização e visibilidade de elementos
+
+**Correção Aplicada:**  
+Corrigida lógica de inicialização e aplicação de tema na carga da página
+
+---
+
+### DEF-030: Verificações de CSS Muito Específicas
+**Prioridade:** 🟢 **BAIXO**  
+**Status:** ✅ **RESOLVIDO**  
+**Caso de Teste:** CT-004
+
+**Descrição:**  
+Testes automatizados falhavam devido a verificações muito específicas de valores CSS.
+
+**Resultado Esperado:**  
+Testes devem validar aplicação de tema sem valores CSS específicos
+
+**Resultado Atual:**  
+Falhas em testes devido a verificações rígidas de cores
+
+**Correção Aplicada:**  
+Simplificadas verificações de CSS para validar aplicação de classes de tema
+
+---
+
+### DEF-031: Método Incorreto de Fechamento de Toast
+**Prioridade:** 🟡 **MÉDIO**  
+**Status:** ✅ **RESOLVIDO**  
+**Caso de Teste:** CT-005
+
+**Descrição:**  
+Testes automatizados utilizavam método incorreto para fechar toasts.
+
+**Resultado Esperado:**  
+Toast deve ser fechado corretamente em testes automatizados
+
+**Resultado Atual:**  
+Falha na execução de testes devido a método inadequado
+
+**Correção Aplicada:**  
+Corrigido método de fechamento de toast nos testes automatizados
+
+---
+
+### DEF-032: Recorrência de Despesas Não Funciona
+**Prioridade:** 🔴 **CRÍTICO**  
+**Status:** ❌ **PENDENTE**  
+**Caso de Teste:** CT-006
+
+**Descrição:**  
+Despesas marcadas como recorrentes não aparecem automaticamente nos meses seguintes.
+
+**Resultado Esperado:**  
+Despesa recorrente deve aparecer no mesmo dia dos meses subsequentes
+
+**Resultado Atual:**  
+Despesas recorrentes não são geradas automaticamente
+
+**Causa Raiz Provável:**  
+- Lógica de recorrência não implementada
+- Problema na geração automática de despesas futuras
+- Falta de processamento de recorrências no carregamento do calendário
+
+**Sugestão de Correção:**  
+1. Implementar função para gerar despesas recorrentes
+2. Adicionar processamento de recorrências no carregamento do calendário
+3. Criar rotina para verificar e gerar despesas futuras
+
+---
+
+### DEF-033: Data de Pagamento Não Exibida Corretamente
+**Prioridade:** 🔴 **CRÍTICO**  
+**Status:** ❌ **PENDENTE**  
+**Caso de Teste:** CT-007
+
+**Descrição:**  
+Datas de vencimento das despesas não são exibidas nos dias corretos do calendário.
+
+**Resultado Esperado:**  
+Data de vencimento deve aparecer marcada no dia correto do calendário
+
+**Resultado Atual:**  
+Datas não aparecem ou aparecem em dias incorretos
+
+**Causa Raiz Provável:**  
+- Problema na conversão de datas
+- Erro na lógica de mapeamento data-calendário
+- Fuso horário ou formato de data incorreto
+
+**Sugestão de Correção:**  
+1. Verificar formato de data utilizado no armazenamento
+2. Corrigir lógica de mapeamento entre despesas e calendário
+3. Validar conversão de strings de data para objetos Date
+
+---
+
+### DEF-034: Formatação Incorreta de Valores Decimais
+**Prioridade:** 🟡 **MÉDIO**  
+**Status:** ❌ **PENDENTE**  
+**Caso de Teste:** CT-008
+
+**Descrição:**  
+Valores monetários com decimais são exibidos incorretamente (ex: "21,1" em vez de "21,10").
+
+**Resultado Esperado:**  
+Valores devem ser exibidos com duas casas decimais (ex: "R$ 21,10")
+
+**Resultado Atual:**  
+Valores exibidos sem formatação adequada de casas decimais
+
+**Causa Raiz Provável:**  
+- Função de formatação monetária inadequada
+- Falta de padronização na exibição de valores
+- Problema na conversão de números para string formatada
+
+**Sugestão de Correção:**  
+1. Implementar função de formatação monetária consistente
+2. Utilizar `toFixed(2)` para garantir duas casas decimais
+3. Aplicar formatação em todos os pontos de exibição de valores
+
+---
+
+### DEF-035: Calendário Não Identifica Contas a Pagar
+**Prioridade:** 🟡 **MÉDIO**  
+**Status:** ❌ **PENDENTE**  
+**Caso de Teste:** CT-009
+
+**Descrição:**  
+Calendário marca dias com pagamentos em amarelo, mas não indica quais contas devem ser pagas.
+
+**Resultado Esperado:**  
+Ao clicar ou passar mouse sobre dia marcado, deve exibir lista de contas a pagar
+
+**Resultado Atual:**  
+Apenas indicação visual sem detalhes das contas
+
+**Causa Raiz Provável:**  
+- Falta de implementação de tooltip ou popup
+- Ausência de evento de clique/hover nos dias marcados
+- Dados das despesas não associados aos elementos do calendário
+
+**Sugestão de Correção:**  
+1. Implementar tooltip com lista de despesas do dia
+2. Adicionar eventos de hover/click nos dias marcados
+3. Associar dados das despesas aos elementos do calendário
 
 ---
 

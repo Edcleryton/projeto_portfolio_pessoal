@@ -8,7 +8,8 @@
     "dev": "npx serve -s -l 8080",
     "serve": "npx serve -s -l 8080",
     "build": "echo 'No build process needed for vanilla HTML/CSS/JS'",
-    "test": "echo 'Tests not implemented yet'",
+    "test": "npx cypress run",
+    "test:open": "npx cypress open",
     "lint": "echo 'Linting not configured yet'",
     "format": "echo 'Formatting not configured yet'"
   },
@@ -53,6 +54,7 @@
   ],
   "devDependencies": {
     "cypress": "^14.5.4",
+    "cypress-mochawesome-reporter": "^4.0.1",
     "serve": "^14.2.1"
   },
   "config": {
