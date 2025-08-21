@@ -23,13 +23,13 @@
                 <form id="loginForm">
                     <div class="form-group">
                         <label for="loginEmail">E-mail</label>
-                        <input type="email" id="loginEmail" data-testid="login-email" required>
+                        <input type="email" id="loginEmail" data-testid="login-email" maxlength="255" required>
                         <span class="error-message" id="loginEmailError" data-testid="login-email-error"></span>
                     </div>
                     <div class="form-group">
                         <label for="loginPassword">Senha</label>
                         <div class="password-input">
-                            <input type="password" id="loginPassword" data-testid="login-password" required>
+                            <input type="password" id="loginPassword" data-testid="login-password" maxlength="128" required>
                             <button type="button" class="toggle-password" data-target="loginPassword">
                                 <i class="fas fa-eye"></i>
                             </button>
@@ -50,18 +50,18 @@
                 <form id="registerForm">
                     <div class="form-group">
                         <label for="registerName">Nome completo</label>
-                        <input type="text" id="registerName" required>
+                        <input type="text" id="registerName" maxlength="100" required>
                         <span class="error-message" id="registerNameError" data-testid="register-name-error"></span>
                     </div>
                     <div class="form-group">
                         <label for="registerEmail">E-mail</label>
-                        <input type="email" id="registerEmail" required>
+                        <input type="email" id="registerEmail" maxlength="255" required>
                         <span class="error-message" id="registerEmailError" data-testid="register-email-error"></span>
                     </div>
                     <div class="form-group">
                         <label for="registerPassword">Senha</label>
                         <div class="password-input">
-                            <input type="password" id="registerPassword" required>
+                            <input type="password" id="registerPassword" maxlength="128" required>
                             <button type="button" class="toggle-password" data-target="registerPassword">
                                 <i class="fas fa-eye"></i>
                             </button>
@@ -74,7 +74,7 @@
                     <div class="form-group">
                         <label for="confirmPassword">Confirmar senha</label>
                         <div class="password-input">
-                            <input type="password" id="confirmPassword" required>
+                            <input type="password" id="confirmPassword" maxlength="128" required>
                             <button type="button" class="toggle-password" data-target="confirmPassword">
                                 <i class="fas fa-eye"></i>
                             </button>
@@ -291,7 +291,7 @@
             <form id="expenseForm" class="modal-body" data-testid="expense-form">
                 <div class="form-group">
                     <label for="expenseName">Nome da despesa</label>
-                    <input type="text" id="expenseName" required data-testid="expense-name-input">
+                    <input type="text" id="expenseName" maxlength="100" required data-testid="expense-name-input">
                     <span class="error-message" id="expenseNameError" data-testid="expense-name-error"></span>
                 </div>
                 

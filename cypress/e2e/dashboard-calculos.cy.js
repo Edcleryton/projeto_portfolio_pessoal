@@ -8,44 +8,24 @@ describe('Testes de Dashboard e Cálculos', () => {
 
   describe('Visão geral', () => {
     it('deve abrir a página do dashboard', () => {
-      // Arrange: Usuário já está logado e navegou para overview (beforeEach)
-      
-      // Act: Verificar se a página foi carregada
-      // (ação já executada no beforeEach)
-      
-      // Assert: Verificar se a seção overview está visível
+
       cy.get('#overview-section').should('be.visible');
     });
 
     it('deve mostrar total mensal', () => {
-      // Arrange: Dashboard já carregado (beforeEach)
-      
-      // Act: Verificar elemento de total mensal
-      // (elemento já deve estar presente na página)
-      
-      // Assert: Verificar visibilidade e formato do total mensal
+
       cy.get('#monthlyTotal').should('be.visible');
       cy.get('#monthlyTotal').should('contain.text', 'R$');
     });
 
     it('deve mostrar despesas recorrentes e únicas', () => {
-      // Arrange: Dashboard já carregado (beforeEach)
-      
-      // Act: Verificar elementos de totais
-      // (elementos já devem estar presentes na página)
-      
-      // Assert: Verificar visibilidade dos totais
+
       cy.get('#recurringTotal').should('be.visible');
       cy.get('#uniqueTotal').should('be.visible');
     });
 
     it('deve mostrar próximos pagamentos', () => {
-      // Arrange: Dashboard já carregado (beforeEach)
-      
-      // Act: Verificar elemento de próximos pagamentos
-      // (elemento já deve estar presente na página)
-      
-      // Assert: Verificar visibilidade dos próximos pagamentos
+
       cy.get('#upcomingPayments').should('be.visible');
     });
 
@@ -107,12 +87,7 @@ describe('Testes de Dashboard e Cálculos', () => {
     });
 
     it('deve mostrar cards de resumo', () => {
-      // Arrange: Dashboard já carregado (beforeEach)
-      
-      // Act: Verificar elementos dos cards de resumo
-      // (elementos já devem estar presentes na página)
-      
-      // Assert: Verificar visibilidade e quantidade dos cards
+
       cy.get('.summary-cards').should('be.visible');
       cy.get('.summary-card').should('have.length', 3);
     });
@@ -120,18 +95,13 @@ describe('Testes de Dashboard e Cálculos', () => {
 
   describe('Navegação', () => {
     it('deve navegar entre seções', () => {
-      // Arrange: Dashboard já carregado (beforeEach)
-      
-      // Act: Navegar para seção de despesas
+
       cy.get('[data-section="expenses"]').click();
-      
-      // Assert: Verificar se a seção de despesas está visível
+ 
       cy.get('#expenses-section').should('be.visible');
       
-      // Act: Voltar para overview
       cy.get('[data-section="overview"]').click();
-      
-      // Assert: Verificar se voltou para overview
+
       cy.get('#overview-section').should('be.visible');
     });
 
@@ -142,12 +112,9 @@ describe('Testes de Dashboard e Cálculos', () => {
     });
 
     it('deve mostrar calendário', () => {
-      // Arrange: Dashboard já carregado (beforeEach)
-      
-      // Act: Navegar para seção de calendário
+
       cy.get('[data-section="calendar"]').click();
-      
-      // Assert: Verificar se a seção de calendário está visível
+
       cy.get('#calendar-section').should('be.visible');
       cy.get('#calendarGrid').should('exist');
     });
@@ -155,7 +122,6 @@ describe('Testes de Dashboard e Cálculos', () => {
 
   describe('Alternância de Tema', () => {
     beforeEach(() => {
-      // Fecha o toast de boas-vindas que aparece após o login
       cy.get('body').then(($body) => {
         if ($body.find('.toast').length > 0) {
           cy.get('.toast .toast-close').click();
@@ -165,15 +131,9 @@ describe('Testes de Dashboard e Cálculos', () => {
     });
 
     it('deve aplicar o tema corretamente ao carregar a página', () => {
-      // Arrange: Página já carregada com tema padrão (beforeEach)
-      
-      // Act: Verificar estado inicial do tema
-      // (tema já deve estar aplicado na página)
-      
-      // Assert: Verificar se o tema padrão é claro
+
       cy.get('html').should('have.attr', 'data-theme', 'light');
-      
-      // Assert: Verificar se o botão de tema está visível com ícone correto
+
       cy.get('#theme-toggle').should('be.visible');
       cy.get('#theme-toggle i').should('be.visible');
       cy.get('#theme-toggle i').should('have.class', 'fa-moon');
@@ -181,14 +141,11 @@ describe('Testes de Dashboard e Cálculos', () => {
     });
 
     it('deve alternar entre os modos claro e escuro', () => {
-      // Verifica estado inicial (modo claro)
       cy.get('html').should('have.attr', 'data-theme', 'light');
       cy.get('#theme-toggle i').should('have.class', 'fa-moon');
-      
-      // Alterna para modo escuro
+
        cy.get('#theme-toggle').click({ force: true });
       
-      // Verifica se o toast de confirmação aparece com a mensagem correta
        cy.get('.toast').should('be.visible');
        cy.get('.toast .toast-title').should('contain.text', 'Tema alterado');
        cy.get('.toast .toast-message').should('contain.text', 'Modo escuro ativado');

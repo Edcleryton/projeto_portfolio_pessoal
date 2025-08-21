@@ -201,6 +201,10 @@ Cada usuário possui seus próprios dados isolados:
 #### E-mail
 ```javascript
 isValidEmail(email) {
+    // Validar limite de caracteres (máximo 255)
+    if (email.length > 255) {
+        return false;
+    }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
@@ -209,6 +213,10 @@ isValidEmail(email) {
 #### Senha Forte
 ```javascript
 isValidPassword(password) {
+    // Validar limite de caracteres (máximo 128)
+    if (password.length > 128) {
+        return false;
+    }
     // Senha deve ter pelo menos 8 caracteres
     const minLength = password.length >= 8;
     // Deve conter pelo menos uma letra maiúscula
@@ -222,7 +230,22 @@ isValidPassword(password) {
     
     return minLength && hasUpper && hasLower && hasNumber && hasSymbol;
 }
+```
+
+#### Nome de Usuário
+```javascript
+isValidName(name) {
+    // Validar se nome não está vazio
+    if (!name || name.trim().length === 0) {
+        return false;
+    }
+    // Validar limite de caracteres (máximo 100)
+    if (name.length > 100) {
+        return false;
+    }
+    return true;
 }
+```
 ```
 
 ### Validações de Despesas
@@ -244,9 +267,21 @@ isValidPassword(password) {
 
 #### Validações de Formato
 ```javascript
-// Validação de nome
+// Validação de nome da despesa
 const isValidExpenseName = (name) => {
-    return name && name.trim().length >= 3 && name.trim().length <= 100;
+    // Verificar se nome não está vazio
+    if (!name || name.trim().length === 0) {
+        return false;
+    }
+    // Verificar limite mínimo de 3 caracteres
+    if (name.trim().length < 3) {
+        return false;
+    }
+    // Verificar limite máximo de 100 caracteres
+    if (name.length > 100) {
+        return false;
+    }
+    return true;
 };
 
 // Validação de valor
@@ -317,6 +352,24 @@ const checkLoginAttempts = (email) => {
 2. **Validação de Tipos**: Verificação de tipos de dados
 3. **Limites de Tamanho**: Controle de tamanho de strings
 4. **Regex Patterns**: Validação de formatos (email, etc.)
+
+#### Limites de Caracteres Implementados
+
+Para prevenir vulnerabilidades de segurança e problemas de performance, foram implementados os seguintes limites:
+
+| Campo | Limite Máximo | Validação HTML | Validação JavaScript |
+|-------|---------------|----------------|---------------------|
+| **E-mail** | 255 caracteres | `maxlength="255"` | `email.length > 255` |
+| **Senha** | 128 caracteres | `maxlength="128"` | `password.length > 128` |
+| **Nome de Usuário** | 100 caracteres | `maxlength="100"` | `name.length > 100` |
+| **Nome da Despesa** | 100 caracteres | `maxlength="100"` | `name.length > 100` |
+| **Confirmação de Senha** | 128 caracteres | `maxlength="128"` | `password.length > 128` |
+
+**Benefícios dos Limites:**
+- Prevenção de ataques de buffer overflow
+- Melhoria na performance do sistema
+- Consistência na interface do usuário
+- Redução do uso de memória e armazenamento
 
 ### Prevenção de Ataques
 

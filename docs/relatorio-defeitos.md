@@ -34,7 +34,22 @@ Este documento apresenta uma análise detalhada dos defeitos identificados duran
 **Severidade:** Crítica  
 **Informações sobre o Software:** Versão 1.2.3, Ambiente de Produção  
 **Rastreabilidade:** CT-HU01-01 (Cadastro de Usuário)  
-**Status:** Aberto  
+**Status:** Aberto
+
+### Defeito 
+**ID:** DEF-003  
+**Título:** Ausência de limite de caracteres nos campos de entrada  
+**Testador:** Edcleryton  
+**Data e Hora:** 23/01/2025 10:15  
+**Resultado Esperado:** O sistema deve limitar o número de caracteres nos campos de entrada para prevenir problemas de segurança e performance (e-mail: 255 chars, senha: 128 chars, nome: 100 chars).  
+**Resultado Atual:** O sistema permitia inserção de textos extremamente longos (mais de 255 caracteres) em todos os campos, causando potenciais vulnerabilidades de buffer overflow e problemas de performance.  
+**Evidências:** Campos de login, cadastro e despesas aceitavam strings com mais de 1000 caracteres sem validação.  
+**Prioridade:** Alta  
+**Severidade:** Alta  
+**Informações sobre o Software:** Versão 1.2.4, Ambiente de Desenvolvimento  
+**Rastreabilidade:** Validação de Segurança  
+**Status:** ✅ Corrigido (23/01/2025)  
+**Correção Aplicada:** Implementado atributo maxlength no HTML e validações JavaScript com limites apropriados para cada campo.  
 
 ---
 
@@ -44,7 +59,8 @@ Todos os defeitos previamente identificados foram corrigidos e validados:
 
 - **35 defeitos** de testes automatizados - ✅ Corrigidos
 - **9 defeitos funcionais** de casos de teste - ✅ Corrigidos
-- **Total de defeitos resolvidos:** 44
+- **1 defeito** de validação de segurança (limite de caracteres) - ✅ Corrigido
+- **Total de defeitos resolvidos:** 45
 
 ### Categorias de Defeitos Corrigidos
 

@@ -249,6 +249,19 @@ class GerirMe {
             return;
         }
         
+        // Validar limite de caracteres
+        if (email.length > 255) {
+            console.log('❌ [Gerir.me] Email muito longo:', email.length);
+            this.showError('loginEmailError', 'E-mail deve ter no máximo 255 caracteres.');
+            return;
+        }
+        
+        if (password.length > 128) {
+            console.log('❌ [Gerir.me] Senha muito longa:', password.length);
+            this.showError('loginPasswordError', 'Senha deve ter no máximo 128 caracteres.');
+            return;
+        }
+        
         if (!this.isValidEmail(email)) {
             console.log('❌ [Gerir.me] Email inválido:', email);
             this.showError('loginEmailError', 'E-mail inválido.');
@@ -300,13 +313,20 @@ class GerirMe {
         // Validações (RN-USU-001, RN-USU-002)
         let hasErrors = false;
         
-        if (!name) {
-            this.showError('registerNameError', 'Nome é obrigatório.');
+        if (!this.isValidName(name)) {
+            if (!name || name.trim().length === 0) {
+                this.showError('registerNameError', 'Nome é obrigatório.');
+            } else if (name.length > 100) {
+                this.showError('registerNameError', 'Nome deve ter no máximo 100 caracteres.');
+            }
             hasErrors = true;
         }
         
         if (!email) {
             this.showError('registerEmailError', 'E-mail é obrigatório.');
+            hasErrors = true;
+        } else if (email.length > 255) {
+            this.showError('registerEmailError', 'E-mail deve ter no máximo 255 caracteres.');
             hasErrors = true;
         } else if (!this.isValidEmail(email)) {
             this.showError('registerEmailError', 'E-mail inválido.');
@@ -319,6 +339,9 @@ class GerirMe {
         if (!password) {
             this.showError('registerPasswordError', 'Senha é obrigatória.');
             hasErrors = true;
+        } else if (password.length > 128) {
+            this.showError('registerPasswordError', 'Senha deve ter no máximo 128 caracteres.');
+            hasErrors = true;
         } else if (!this.isValidPassword(password)) {
             this.showError('registerPasswordError', 'Senha deve ter no mínimo 8 caracteres, com letras maiúsculas, minúsculas, números e símbolos.');
             hasErrors = true;
@@ -326,6 +349,9 @@ class GerirMe {
         
         if (!confirmPassword) {
             this.showError('confirmPasswordError', 'Confirmação de senha é obrigatória.');
+            hasErrors = true;
+        } else if (confirmPassword.length > 128) {
+            this.showError('confirmPasswordError', 'Confirmação de senha deve ter no máximo 128 caracteres.');
             hasErrors = true;
         } else if (password !== confirmPassword) {
             this.showError('confirmPasswordError', 'Senhas não coincidem.');
@@ -353,11 +379,19 @@ class GerirMe {
     // ==================== VALIDAÇÕES ====================
     
     isValidEmail(email) {
+        // Validar limite de caracteres
+        if (email.length > 255) {
+            return false;
+        }
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
     
     isValidPassword(password) {
+        // Validar limite de caracteres
+        if (password.length > 128) {
+            return false;
+        }
         // RN-USU-002: Mínimo 8 caracteres, com maiúscula, minúscula, número e símbolo
         const minLength = password.length >= 8;
         const hasUpper = /[A-Z]/.test(password);
@@ -366,6 +400,28 @@ class GerirMe {
         const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
         
         return minLength && hasUpper && hasLower && hasNumber && hasSymbol;
+    }
+    
+    isValidName(name) {
+        // Validar limite de caracteres para nome
+        if (!name || name.trim().length === 0) {
+            return false;
+        }
+        if (name.length > 100) {
+            return false;
+        }
+        return true;
+    }
+    
+    isValidExpenseName(name) {
+        // Validar limite de caracteres para nome de despesa
+        if (!name || name.trim().length === 0) {
+            return false;
+        }
+        if (name.length > 100) {
+            return false;
+        }
+        return name.trim().length >= 3;
     }
     
     emailExists(email) {
@@ -694,8 +750,14 @@ class GerirMe {
         // Validações básicas (RN-DES-002, RN-DES-003)
         let hasErrors = false;
         
-        if (!name) {
-            this.showError('expenseNameError', 'Nome da despesa é obrigatório.');
+        if (!this.isValidExpenseName(name)) {
+            if (!name || name.trim().length === 0) {
+                this.showError('expenseNameError', 'Nome da despesa é obrigatório.');
+            } else if (name.length > 100) {
+                this.showError('expenseNameError', 'Nome da despesa deve ter no máximo 100 caracteres.');
+            } else if (name.trim().length < 3) {
+                this.showError('expenseNameError', 'Nome da despesa deve ter pelo menos 3 caracteres.');
+            }
             hasErrors = true;
         }
         
