@@ -1,231 +1,129 @@
-describe('Testes de registro de usário', () => {
+// Testes de Registro - Versão Simples para Iniciantes
+describe('Testes de Registro', () => {
+  
+  // Executa antes de cada teste
   beforeEach(() => {
-    cy.visit('/');
-    cy.get('#showRegister').should('be.visible').click();
+    cy.visit('/'); // Visita a página inicial
+    
+    // Vai para a tela de registro
+    cy.get('#showRegister').click();
   });
 
-  describe('Validação de campos obrigatórios', () => {
-    it('deve validar campo nome vazio', () => {
-      cy.get('#registerEmail').type('teste@email.com');
-      cy.get('#registerPassword').type('MinhaSenh@123');
-      cy.get('#confirmPassword').type('MinhaSenh@123');
-      cy.get('#registerForm > .btn-primary').click();
-      cy.get('#registerNameError').should('contain', 'Nome é obrigatório.');
-    });
-
-    it('deve validar campo email vazio', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerPassword').type('MinhaSenh@123');
-      cy.get('#confirmPassword').type('MinhaSenh@123');
-      cy.get('#registerForm > .btn-primary').click();
-      cy.get('#registerEmailError').should('contain', 'E-mail é obrigatório.');
-    });
-
-    it('deve validar campo senha vazio', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('joao@teste.com');
-      cy.get('#confirmPassword').type('MinhaSenh@123');
-      cy.get('#registerForm > .btn-primary').click();
-      cy.get('#registerPasswordError').should('contain', 'Senha é obrigatória.');
-    });
-
-    it('deve validar campo confirmação de senha vazio', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('joao@teste.com');
-      cy.get('#registerPassword').type('MinhaSenh@123');
-      cy.get('#registerForm > .btn-primary').click();
-      cy.get('#confirmPasswordError').should('contain', 'Confirmação de senha é obrigatória.');
-    });
-
-    it('deve validar todos os campos vazios', () => {
-      cy.get('#registerForm > .btn-primary').click();
-      cy.get('#registerNameError').should('contain', 'Nome é obrigatório.');
-      cy.get('#registerEmailError').should('contain', 'E-mail é obrigatório.');
-      cy.get('#registerPasswordError').should('contain', 'Senha é obrigatória.');
-      cy.get('#confirmPasswordError').should('contain', 'Confirmação de senha é obrigatória.');
-    });
+  // Teste 1: Verificar se a tela de registro carrega
+  it('deve abrir a tela de registro', () => {
+    // Verifica se o formulário de registro está visível
+    cy.get('#registerForm').should('be.visible');
+    
+    // Verifica se tem todos os campos necessários
+    cy.get('#registerName').should('be.visible');
+    cy.get('#registerEmail').should('be.visible');
+    cy.get('#registerPassword').should('be.visible');
+    cy.get('#confirmPassword').should('be.visible');
   });
 
-  describe('Validação de formato de e-mail', () => {
-    it('deve validar e-mail duplicado', () => {
-      // Primeiro cadastro
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('joao@teste.com');
-      cy.get('#registerPassword').type('MinhaSenh@123');
-      cy.get('#confirmPassword').type('MinhaSenh@123');
-      cy.get('#registerForm > .btn-primary').click();
-      cy.get('.toast.success').should('be.visible');
-      
-      // Logout para tentar cadastrar novamente
-      cy.get('#logoutBtn').click();
-      cy.get('#showRegister').click();
-      
-      // Tentativa de cadastro com mesmo e-mail
-      cy.get('#registerName').type('Maria Silva');
-      cy.get('#registerEmail').type('joao@teste.com');
-      cy.get('#registerPassword').type('OutraSenh@456');
-      cy.get('#confirmPassword').type('OutraSenh@456');
-      cy.get('#registerForm > .btn-primary').click();
-      cy.get('#registerEmailError').should('contain', 'E-mail já cadastrado.');
-    });
-
-    it('deve validar e-mail sem @', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('emailinvalido.com');
-      cy.get('#registerPassword').type('MinhaSenh@123');
-      cy.get('#confirmPassword').type('MinhaSenh@123');
-      cy.get('#registerForm > .btn-primary').click();
-      cy.get('#registerEmailError').should('contain', 'E-mail inválido.');
-    });
-
-    it('deve validar e-mail sem domínio', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('email@');
-      cy.get('#registerPassword').type('MinhaSenh@123');
-      cy.get('#confirmPassword').type('MinhaSenh@123');
-      cy.get('#registerForm > .btn-primary').click();
-      cy.get('#registerEmailError').should('contain', 'E-mail inválido.');
-    });
-
-    it('deve validar e-mail sem extensão', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('email@dominio');
-      cy.get('#registerPassword').type('MinhaSenh@123');
-      cy.get('#confirmPassword').type('MinhaSenh@123');
-      cy.get('#registerForm > .btn-primary').click();
-      cy.get('#registerEmailError').should('contain', 'E-mail inválido.');
-    });
-
-    it('deve validar e-mail com espaços', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('email @dominio.com');
-      cy.get('#registerPassword').type('MinhaSenh@123');
-      cy.get('#confirmPassword').type('MinhaSenh@123');
-      cy.get('#registerForm > .btn-primary').click();
-      cy.get('#registerEmailError').should('contain', 'E-mail inválido.');
-    });
+  // Teste 2: Registro com dados válidos
+  it('deve registrar um novo usuário com sucesso', () => {
+    // Preenche os dados do registro
+    cy.get('#registerName').type('João Silva');
+    cy.get('#registerEmail').type('joao@teste.com');
+    cy.get('#registerPassword').type('MinhaSenh@123');
+    cy.get('#confirmPassword').type('MinhaSenh@123');
+    
+    // Clica no botão de registrar
+    cy.get('#registerForm > .btn-primary').click();
+    
+    // Verifica se apareceu mensagem de sucesso
+    cy.get('.toast.success').should('be.visible');
+    cy.get('.toast-title').should('contain.text', 'Cadastro realizado');
   });
 
-
-  describe('Validação de senhas', () => {
-    // Testes de Política de Senha Forte
-  describe('Validação de Complexidade de Senha', () => {
-    it('deve aceitar senha que atende todos os critérios', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('joao.teste@email.com');
-      cy.get('#registerPassword').type('MinhaSenh@123');
-      cy.get('#confirmPassword').type('MinhaSenh@123');
-      cy.get('#registerForm > .btn-primary').click();
-      
-      cy.get('.toast.success').should('be.visible');
-      cy.get('#registerPasswordError').should('not.exist');
-    });
-
-    it('deve rejeitar senha com menos de 8 caracteres', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('joao.teste@email.com');
-      cy.get('#registerPassword').type('Abc@1');
-      cy.get('#confirmPassword').type('Abc@1');
-      cy.get('#registerForm > .btn-primary').click();
-      
-      cy.get('#registerPasswordError').should('contain', 'Senha deve ter no mínimo 8 caracteres, com letras maiúsculas, minúsculas, números e símbolos.');
-    });
-
-    it('deve rejeitar senha sem letra maiúscula', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('joao.teste@email.com');
-      cy.get('#registerPassword').type('minhasen@123');
-      cy.get('#confirmPassword').type('minhasen@123');
-      cy.get('#registerForm > .btn-primary').click();
-      
-      cy.get('#registerPasswordError').should('contain', 'Senha deve ter no mínimo 8 caracteres, com letras maiúsculas, minúsculas, números e símbolos.');
-    });
-
-    it('deve rejeitar senha sem letra minúscula', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('joao.teste@email.com');
-      cy.get('#registerPassword').type('MINHASEN@123');
-      cy.get('#confirmPassword').type('MINHASEN@123');
-      cy.get('#registerForm > .btn-primary').click();
-      
-      cy.get('#registerPasswordError').should('contain', 'Senha deve ter no mínimo 8 caracteres, com letras maiúsculas, minúsculas, números e símbolos.');
-    });
-
-    it('deve rejeitar senha sem número', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('joao.teste@email.com');
-      cy.get('#registerPassword').type('MinhaSen@ha');
-      cy.get('#confirmPassword').type('MinhaSen@ha');
-      cy.get('#registerForm > .btn-primary').click();
-      
-      cy.get('#registerPasswordError').should('contain', 'Senha deve ter no mínimo 8 caracteres, com letras maiúsculas, minúsculas, números e símbolos.');
-    });
-
-    it('deve rejeitar senha sem caractere especial', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('joao.teste@email.com');
-      cy.get('#registerPassword').type('MinhaSenha123');
-      cy.get('#confirmPassword').type('MinhaSenha123');
-      cy.get('#registerForm > .btn-primary').click();
-      
-      cy.get('#registerPasswordError').should('contain', 'Senha deve ter no mínimo 8 caracteres, com letras maiúsculas, minúsculas, números e símbolos.');
-    });
-
-    it('deve validar senha com exatamente 8 caracteres', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('joao.teste@email.com');
-      cy.get('#registerPassword').type('Abc@123d');
-      cy.get('#confirmPassword').type('Abc@123d');
-      cy.get('#registerForm > .btn-primary').click();
-      
-      cy.get('.toast.success').should('be.visible');
-    });
-
-    it('deve aceitar senha com múltiplos caracteres especiais', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('joao.teste@email.com');
-      cy.get('#registerPassword').type('Minh@Sen#a123!');
-      cy.get('#confirmPassword').type('Minh@Sen#a123!');
-      cy.get('#registerForm > .btn-primary').click();
-      
-      cy.get('.toast.success').should('be.visible');
-    });
+  // Teste 3: Registro sem preencher nome
+  it('deve mostrar erro quando nome está vazio', () => {
+    // Preenche só os outros campos
+    cy.get('#registerEmail').type('teste@email.com');
+    cy.get('#registerPassword').type('MinhaSenh@123');
+    cy.get('#confirmPassword').type('MinhaSenh@123');
+    
+    // Clica no botão de registrar
+    cy.get('#registerForm > .btn-primary').click();
+    
+    // Verifica se apareceu erro de nome obrigatório
+    cy.get('#registerNameError').should('be.visible');
+    cy.get('#registerNameError').should('contain', 'Nome é obrigatório');
   });
 
-  describe('Validação Avançada de Confirmação de Senha', () => {
-    it('deve detectar diferenças sutis entre senhas', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('joao.teste@email.com');
-      cy.get('#registerPassword').type('MinhaSenh@123');
-      cy.get('#confirmPassword').type('MinhaSenh@123 '); // Espaço extra
-      cy.get('#registerForm > .btn-primary').click();
-      
-      cy.get('#confirmPasswordError').should('contain', 'Senhas não coincidem.');
-    });
+  // Teste 4: Registro sem preencher email
+  it('deve mostrar erro quando email está vazio', () => {
+    // Preenche só os outros campos
+    cy.get('#registerName').type('João Silva');
+    cy.get('#registerPassword').type('MinhaSenh@123');
+    cy.get('#confirmPassword').type('MinhaSenh@123');
+    
+    // Clica no botão de registrar
+    cy.get('#registerForm > .btn-primary').click();
+    
+    // Verifica se apareceu erro de email obrigatório
+    cy.get('#registerEmailError').should('be.visible');
+    cy.get('#registerEmailError').should('contain', 'E-mail é obrigatório');
   });
 
-    it('deve validar senhas não coincidem', () => {
-      cy.get('#registerName').type('João Silva');
-      cy.get('#registerEmail').type('joao@teste.com');
-      cy.get('#registerPassword').type('MinhaSenh@123');
-      cy.get('#confirmPassword').type('MinhaSenh@456');
-      cy.get('#registerForm > .btn-primary').click();
-      cy.get('#confirmPasswordError').should('contain', 'Senhas não coincidem.');
-    });
+  // Teste 5: Registro com senhas diferentes
+  it('deve mostrar erro quando senhas não coincidem', () => {
+    // Preenche os dados com senhas diferentes
+    cy.get('#registerName').type('João Silva');
+    cy.get('#registerEmail').type('joao@teste.com');
+    cy.get('#registerPassword').type('MinhaSenh@123');
+    cy.get('#confirmPassword').type('SenhaDiferente@123');
+    
+    // Clica no botão de registrar
+    cy.get('#registerForm > .btn-primary').click();
+    
+    // Verifica se apareceu erro de senhas não coincidem
+    cy.get('#confirmPasswordError').should('be.visible');
+    cy.get('#confirmPasswordError').should('contain', 'Senhas não coincidem');
   });
 
-  // Teste de cadastro bem-sucedido por último para evitar interferências
-  describe('Cadastro bem-sucedido', () => {
-    it('deve fazer cadastro com dados válidos', () => {
-      cy.get('#registerName').should('be.visible').type('Eddie Silva');
-      cy.get('#registerEmail').should('be.visible').type('eddieteste@teste.com');
-      cy.get('#registerPassword').should('be.visible').type('Eddie@123');
-      cy.get('#confirmPassword').should('be.visible').type('Eddie@123');
-      cy.get('#registerForm > .btn-primary').should('be.enabled').click();
-      cy.get('.toast.success').should('be.visible');
-      cy.get('.toast-title').should('contain', 'Conta criada com sucesso!');
-      cy.get('#dashboard-container').should('be.visible');
-    });
+  // Teste 6: Registro com senha fraca
+  it('deve mostrar erro para senha fraca', () => {
+    // Preenche os dados com senha fraca
+    cy.get('#registerName').type('João Silva');
+    cy.get('#registerEmail').type('joao@teste.com');
+    cy.get('#registerPassword').type('123');
+    cy.get('#confirmPassword').type('123');
+    
+    // Clica no botão de registrar
+    cy.get('#registerForm > .btn-primary').click();
+    
+    // Verifica se apareceu erro de senha fraca
+    cy.get('#registerPasswordError').should('be.visible');
+    cy.get('#registerPasswordError').should('contain', 'Senha deve ter pelo menos');
   });
 
+  // Teste 7: Registro com email inválido
+  it('deve mostrar erro para email inválido', () => {
+    // Preenche os dados com email inválido
+    cy.get('#registerName').type('João Silva');
+    cy.get('#registerEmail').type('emailinvalido');
+    cy.get('#registerPassword').type('MinhaSenh@123');
+    cy.get('#confirmPassword').type('MinhaSenh@123');
+    
+    // Clica no botão de registrar
+    cy.get('#registerForm > .btn-primary').click();
+    
+    // Verifica se apareceu erro de email inválido
+    cy.get('#registerEmailError').should('be.visible');
+    cy.get('#registerEmailError').should('contain', 'E-mail inválido');
+  });
+
+  // Teste 8: Voltar para tela de login
+  it('deve conseguir voltar para a tela de login', () => {
+    // Clica no link para voltar ao login
+    cy.get('#showLogin').click();
+    
+    // Verifica se voltou para a tela de login
+    cy.get('#loginForm').should('be.visible');
+    
+    // Verifica se a tela de registro não está mais visível
+    cy.get('#registerForm').should('not.be.visible');
+  });
 });

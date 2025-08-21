@@ -50,6 +50,7 @@ Este documento apresenta uma análise detalhada dos defeitos identificados duran
 **Rastreabilidade:** Validação de Segurança  
 **Status:** ✅ Corrigido (23/01/2025)  
 **Correção Aplicada:** Implementado atributo maxlength no HTML e validações JavaScript com limites apropriados para cada campo.  
+**Método de Teste:** Validações testadas através de testes exploratórios e heurísticas de usabilidade.  
 
 ---
 

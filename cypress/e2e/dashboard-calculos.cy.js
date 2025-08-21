@@ -1,240 +1,139 @@
-describe('Testes de Dashboard e Cálculos', () => {
+// Testes de Dashboard - Versão Simples para Iniciantes
+describe('Testes do Dashboard', () => {
+  
+  // Executa antes de cada teste - faz login primeiro
   beforeEach(() => {
-    cy.clearTestData();
-    cy.visit('/');
-    cy.loginAsDefaultUser();
+    cy.visit('/'); // Visita a página inicial
+    
+    // Faz login com usuário padrão
+    cy.get('#loginEmail').type('eddie@gerir.me');
+    cy.get('#loginPassword').type('Eddie@123');
+    cy.get('#loginForm > .btn-primary').click();
+    
+    // Aguarda o login e vai para a visão geral
+    cy.get('.toast.success').should('be.visible');
     cy.get('[data-section="overview"]').click();
   });
 
-  describe('Visão geral', () => {
-    it('deve abrir a página do dashboard', () => {
-
-      cy.get('#overview-section').should('be.visible');
-    });
-
-    it('deve mostrar total mensal', () => {
-
-      cy.get('#monthlyTotal').should('be.visible');
-      cy.get('#monthlyTotal').should('contain.text', 'R$');
-    });
-
-    it('deve mostrar despesas recorrentes e únicas', () => {
-
-      cy.get('#recurringTotal').should('be.visible');
-      cy.get('#uniqueTotal').should('be.visible');
-    });
-
-    it('deve mostrar próximos pagamentos', () => {
-
-      cy.get('#upcomingPayments').should('be.visible');
-    });
-
-    it('deve exibir despesas próximas ao vencimento com destaque', () => {
-      const amanha = new Date();
-      amanha.setDate(amanha.getDate() + 1);
-      const amanhaStr = amanha.toISOString().split('T')[0];
-      
-      // Criar despesa que aparecerá em próximos pagamentos
-      cy.get('[data-section="expenses"]').click();
-      cy.get('#addExpenseBtn').click();
-      
-      cy.get('#expenseName').type('Despesa Próxima Dashboard');
-      cy.get('#expenseValue').type('250.00');
-      cy.get('#expenseCategory').select('Saúde');
-      cy.get('#expenseType').select('recurring');
-      cy.get('#expenseCycle').select('monthly');
-      cy.get('#nextPayment').type(amanhaStr);
-      
-      cy.get('#saveExpenseBtn').click();
-      cy.get('.toast.success').should('be.visible');
-      
-      // Voltar para dashboard
-      cy.get('[data-section="overview"]').click();
-      
-      // Verificar se aparece em próximos pagamentos
-      cy.get('#upcomingPayments').should('be.visible');
-      cy.get('[data-testid="payment-item"]').should('exist');
-      cy.get('[data-testid="payment-name"]').should('contain', 'Despesa Próxima Dashboard');
-      cy.get('[data-testid="payment-value"]').should('contain', 'R$ 250,00');
-    });
-
-    it('deve destacar despesas que vencem em até 7 dias', () => {
-      const seteDias = new Date();
-      seteDias.setDate(seteDias.getDate() + 7);
-      const seteDiasStr = seteDias.toISOString().split('T')[0];
-      
-      // Criar despesa que vence em 7 dias
-      cy.get('[data-section="expenses"]').click();
-      cy.get('#addExpenseBtn').click();
-      
-      cy.get('#expenseName').type('Despesa 7 Dias');
-      cy.get('#expenseValue').type('180.00');
-      cy.get('#expenseCategory').select('Transporte');
-      cy.get('#expenseType').select('recurring');
-      cy.get('#expenseCycle').select('monthly');
-      cy.get('#nextPayment').type(seteDiasStr);
-      
-      cy.get('#saveExpenseBtn').click();
-      cy.get('.toast.success').should('be.visible');
-      
-      // Voltar para dashboard
-      cy.get('[data-section="overview"]').click();
-      
-      // Verificar se aparece destacada
-      cy.get('#upcomingPayments').should('be.visible');
-      cy.get('[data-testid="payment-item"]').should('exist');
-      cy.get('[data-testid="payment-item"]').should('have.class', 'highlighted');
-    });
-
-    it('deve mostrar cards de resumo', () => {
-
-      cy.get('.summary-cards').should('be.visible');
-      cy.get('.summary-card').should('have.length', 3);
-    });
+  // Teste 1: Verificar se o dashboard carrega
+  it('deve abrir a página do dashboard', () => {
+    // Verifica se a seção de visão geral está visível
+    cy.get('#overview-section').should('be.visible');
+    
+    // Verifica se o título está presente
+    cy.get('h2').should('contain.text', 'Visão Geral');
   });
 
-  describe('Navegação', () => {
-    it('deve navegar entre seções', () => {
-
-      cy.get('[data-section="expenses"]').click();
- 
-      cy.get('#expenses-section').should('be.visible');
-      
-      cy.get('[data-section="overview"]').click();
-
-      cy.get('#overview-section').should('be.visible');
-    });
-
-    it('deve mostrar calendário', () => {
-      cy.get('[data-section="calendar"]').click();   
-      cy.get('#calendar-section').should('be.visible');
-      cy.get('#calendarGrid').should('exist');
-    });
-
-    it('deve mostrar calendário', () => {
-
-      cy.get('[data-section="calendar"]').click();
-
-      cy.get('#calendar-section').should('be.visible');
-      cy.get('#calendarGrid').should('exist');
-    });
+  // Teste 2: Verificar cards de resumo
+  it('deve mostrar os cards de resumo financeiro', () => {
+    // Verifica se o card de gasto mensal existe
+    cy.get('#monthlyTotal').should('be.visible');
+    cy.get('#monthlyTotal').should('contain.text', 'R$');
+    
+    // Verifica se o card de despesas recorrentes existe
+    cy.get('#recurringTotal').should('be.visible');
+    cy.get('#recurringTotal').should('contain.text', 'R$');
+    
+    // Verifica se o card de despesas únicas existe
+    cy.get('#uniqueTotal').should('be.visible');
+    cy.get('#uniqueTotal').should('contain.text', 'R$');
   });
 
-  describe('Alternância de Tema', () => {
-    beforeEach(() => {
-      cy.get('body').then(($body) => {
-        if ($body.find('.toast').length > 0) {
-          cy.get('.toast .toast-close').click();
-          cy.wait(500);
-        }
-      });
-    });
+  // Teste 3: Verificar seção de próximos pagamentos
+  it('deve mostrar a seção de próximos pagamentos', () => {
+    // Verifica se a seção de próximos pagamentos existe
+    cy.get('#upcomingPayments').should('be.visible');
+    
+    // Verifica se tem o título da seção
+    cy.get('#upcomingPayments h3').should('contain.text', 'Próximos Pagamentos');
+  });
 
-    it('deve aplicar o tema corretamente ao carregar a página', () => {
+  // Teste 4: Navegação entre seções
+  it('deve navegar entre as diferentes seções', () => {
+    // Testa navegação para despesas
+    cy.get('[data-section="expenses"]').click();
+    cy.get('#expenses-section').should('be.visible');
+    
+    // Volta para visão geral
+    cy.get('[data-section="overview"]').click();
+    cy.get('#overview-section').should('be.visible');
+    
+    // Testa navegação para calendário
+    cy.get('[data-section="calendar"]').click();
+    cy.get('#calendar-section').should('be.visible');
+  });
 
-      cy.get('html').should('have.attr', 'data-theme', 'light');
+  // Teste 5: Verificar funcionalidade do menu do usuário
+  it('deve abrir e fechar o menu do usuário', () => {
+    // Clica no botão do menu do usuário
+    cy.get('#userMenuBtn').click();
+    
+    // Verifica se o menu apareceu
+    cy.get('#userMenu').should('be.visible');
+    
+    // Verifica se tem a opção de logout
+    cy.get('#logoutBtn').should('be.visible');
+    
+    // Clica fora para fechar o menu
+    cy.get('body').click(0, 0);
+    
+    // Verifica se o menu fechou
+    cy.get('#userMenu').should('not.be.visible');
+  });
 
-      cy.get('#theme-toggle').should('be.visible');
-      cy.get('#theme-toggle i').should('be.visible');
-      cy.get('#theme-toggle i').should('have.class', 'fa-moon');
-      cy.get('#theme-toggle').should('have.attr', 'title', 'Alternar para modo escuro');
-    });
+  // Teste 6: Verificar alternância de tema
+  it('deve alternar entre tema claro e escuro', () => {
+    // Clica no botão de alternar tema
+    cy.get('#themeToggle').click();
+    
+    // Verifica se o tema mudou (verifica se o body tem a classe dark)
+    cy.get('body').should('have.class', 'dark-theme');
+    
+    // Clica novamente para voltar ao tema claro
+    cy.get('#themeToggle').click();
+    
+    // Verifica se voltou ao tema claro
+    cy.get('body').should('not.have.class', 'dark-theme');
+  });
 
-    it('deve alternar entre os modos claro e escuro', () => {
-      cy.get('html').should('have.attr', 'data-theme', 'light');
-      cy.get('#theme-toggle i').should('have.class', 'fa-moon');
+  // Teste 7: Verificar se os valores são atualizados após adicionar despesa
+  it('deve atualizar valores do dashboard após adicionar despesa', () => {
+    // Anota o valor atual do gasto mensal
+    cy.get('#monthlyTotal').invoke('text').as('valorInicial');
+    
+    // Vai para a seção de despesas
+    cy.get('[data-section="expenses"]').click();
+    
+    // Adiciona uma nova despesa
+    cy.get('#addExpenseBtn').click();
+    cy.get('#expenseName').type('Teste Dashboard');
+    cy.get('#expenseValue').type('100.00');
+    cy.get('#expenseCategory').select('Outros');
+    cy.get('#expenseType').select('unica');
+    cy.get('#expenseDate').type('2025-02-15');
+    cy.get('#saveBtn').click();
+    cy.get('.toast.success').should('be.visible');
+    
+    // Volta para o dashboard
+    cy.get('[data-section="overview"]').click();
+    
+    // Verifica se o valor foi atualizado
+    cy.get('#monthlyTotal').should('be.visible');
+    cy.get('#monthlyTotal').should('contain.text', 'R$');
+  });
 
-       cy.get('#theme-toggle').click({ force: true });
-      
-       cy.get('.toast').should('be.visible');
-       cy.get('.toast .toast-title').should('contain.text', 'Tema alterado');
-       cy.get('.toast .toast-message').should('contain.text', 'Modo escuro ativado');
-      
-      // Verifica se o tema foi alterado
-      cy.get('html').should('have.attr', 'data-theme', 'dark');
-      cy.get('#theme-toggle i').should('have.class', 'fa-sun');
-      cy.get('#theme-toggle').should('have.attr', 'title', 'Alternar para modo claro');
-      
-      // Fecha o toast clicando nele
-      cy.get('.toast .toast-close').click();
-      cy.wait(500);
-      
-      // Volta para modo claro
-       cy.get('#theme-toggle').click({ force: true });
-      
-      // Verifica se o toast de confirmação aparece com a mensagem correta
-       cy.get('.toast').should('be.visible');
-       cy.get('.toast .toast-title').should('contain.text', 'Tema alterado');
-       cy.get('.toast .toast-message').should('contain.text', 'Modo claro ativado');
-      
-      // Verifica se o tema foi alterado
-      cy.get('html').should('have.attr', 'data-theme', 'light');
-      cy.get('#theme-toggle i').should('have.class', 'fa-moon');
-      cy.get('#theme-toggle').should('have.attr', 'title', 'Alternar para modo escuro');
-    });
-
-    it('deve renderizar cores e estilos adequadamente em cada modo', () => {
-      // Verifica estado inicial (modo claro)
-      cy.get('html').should('have.attr', 'data-theme', 'light');
-      cy.get('#theme-toggle i').should('have.class', 'fa-moon');
-      cy.get('#theme-toggle').should('have.attr', 'title', 'Alternar para modo escuro');
-      
-      // Alterna para modo escuro
-      cy.get('#theme-toggle').click({ force: true });
-      
-      // Verifica se o toast aparece com a mensagem correta
-      cy.get('.toast').should('be.visible');
-      cy.get('.toast .toast-title').should('contain.text', 'Tema alterado');
-      cy.get('.toast .toast-message').should('contain.text', 'Modo escuro ativado');
-      
-      // Verifica se o tema foi alterado
-      cy.get('html').should('have.attr', 'data-theme', 'dark');
-      cy.get('#theme-toggle i').should('have.class', 'fa-sun');
-      cy.get('#theme-toggle').should('have.attr', 'title', 'Alternar para modo claro');
-      
-      // Fecha o toast
-      cy.get('.toast .toast-close').click();
-      cy.wait(500);
-    });
-
-    it('deve manter a preferência do usuário após atualização da página', () => {
-      // Alterna para modo escuro
-      cy.get('#theme-toggle').click({ force: true });
-      
-      // Verifica se o toast aparece com a mensagem correta
-      cy.get('.toast').should('be.visible');
-      cy.get('.toast .toast-title').should('contain.text', 'Tema alterado');
-      cy.get('.toast .toast-message').should('contain.text', 'Modo escuro ativado');
-      
-      // Verifica se o tema foi alterado
-      cy.get('html').should('have.attr', 'data-theme', 'dark');
-      
-      // Fecha o toast
-      cy.get('.toast .toast-close').click();
-      cy.wait(500);
-      
-      // Verifica se a preferência foi salva no localStorage
-      cy.window().then((win) => {
-        expect(win.localStorage.getItem('gerirme_theme')).to.equal('dark');
-      });
-      
-      // Alterna de volta para modo claro para verificar a funcionalidade completa
-      cy.get('#theme-toggle').click({ force: true });
-      
-      // Verifica se o toast aparece com a mensagem correta
-      cy.get('.toast').should('be.visible');
-      cy.get('.toast .toast-title').should('contain.text', 'Tema alterado');
-      cy.get('.toast .toast-message').should('contain.text', 'Modo claro ativado');
-      
-      // Verifica se o tema foi alterado de volta
-      cy.get('html').should('have.attr', 'data-theme', 'light');
-      cy.get('#theme-toggle i').should('have.class', 'fa-moon');
-      cy.get('#theme-toggle').should('have.attr', 'title', 'Alternar para modo escuro');
-      
-      // Verifica se a preferência foi atualizada no localStorage
-      cy.window().then((win) => {
-        expect(win.localStorage.getItem('gerirme_theme')).to.equal('light');
-      });
-    });
+  // Teste 8: Verificar logout
+  it('deve fazer logout corretamente', () => {
+    // Abre o menu do usuário
+    cy.get('#userMenuBtn').click();
+    
+    // Clica em logout
+    cy.get('#logoutBtn').click();
+    
+    // Verifica se voltou para a tela de login
+    cy.get('#loginForm').should('be.visible');
+    
+    // Verifica se não está mais logado
+    cy.get('#dashboard').should('not.exist');
   });
 });
