@@ -23,20 +23,20 @@
                 <form id="loginForm">
                     <div class="form-group">
                         <label for="loginEmail">E-mail</label>
-                        <input type="email" id="loginEmail" required>
-                        <span class="error-message" id="loginEmailError"></span>
+                        <input type="email" id="loginEmail" data-testid="login-email" required>
+                        <span class="error-message" id="loginEmailError" data-testid="login-email-error"></span>
                     </div>
                     <div class="form-group">
                         <label for="loginPassword">Senha</label>
                         <div class="password-input">
-                            <input type="password" id="loginPassword" required>
+                            <input type="password" id="loginPassword" data-testid="login-password" required>
                             <button type="button" class="toggle-password" data-target="loginPassword">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
-                        <span class="error-message" id="loginPasswordError"></span>
+                        <span class="error-message" id="loginPasswordError" data-testid="login-password-error"></span>
                     </div>
-                    <button type="submit" class="btn-primary">Entrar</button>
+                    <button type="submit" class="btn-primary" data-testid="login-submit">Entrar</button>
                 </form>
                 <p class="auth-switch">
                     Não tem uma conta? 
@@ -51,12 +51,12 @@
                     <div class="form-group">
                         <label for="registerName">Nome completo</label>
                         <input type="text" id="registerName" required>
-                        <span class="error-message" id="registerNameError"></span>
+                        <span class="error-message" id="registerNameError" data-testid="register-name-error"></span>
                     </div>
                     <div class="form-group">
                         <label for="registerEmail">E-mail</label>
                         <input type="email" id="registerEmail" required>
-                        <span class="error-message" id="registerEmailError"></span>
+                        <span class="error-message" id="registerEmailError" data-testid="register-email-error"></span>
                     </div>
                     <div class="form-group">
                         <label for="registerPassword">Senha</label>
@@ -69,7 +69,7 @@
                         <div class="password-requirements">
                             <small>Mínimo 8 caracteres, com letras maiúsculas, minúsculas, números e símbolos</small>
                         </div>
-                        <span class="error-message" id="registerPasswordError"></span>
+                        <span class="error-message" id="registerPasswordError" data-testid="register-password-error"></span>
                     </div>
                     <div class="form-group">
                         <label for="confirmPassword">Confirmar senha</label>
@@ -79,7 +79,7 @@
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
-                        <span class="error-message" id="confirmPasswordError"></span>
+                        <span class="error-message" id="confirmPasswordError" data-testid="confirm-password-error"></span>
                     </div>
                     <button type="submit" class="btn-primary">Criar conta</button>
                 </form>

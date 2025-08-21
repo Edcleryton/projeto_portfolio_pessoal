@@ -49,6 +49,63 @@ describe('Testes de Dashboard e Cálculos', () => {
       cy.get('#upcomingPayments').should('be.visible');
     });
 
+    it('deve exibir despesas próximas ao vencimento com destaque', () => {
+      const amanha = new Date();
+      amanha.setDate(amanha.getDate() + 1);
+      const amanhaStr = amanha.toISOString().split('T')[0];
+      
+      // Criar despesa que aparecerá em próximos pagamentos
+      cy.get('[data-section="expenses"]').click();
+      cy.get('#addExpenseBtn').click();
+      
+      cy.get('#expenseName').type('Despesa Próxima Dashboard');
+      cy.get('#expenseValue').type('250.00');
+      cy.get('#expenseCategory').select('Saúde');
+      cy.get('#expenseType').select('recurring');
+      cy.get('#expenseCycle').select('monthly');
+      cy.get('#nextPayment').type(amanhaStr);
+      
+      cy.get('#saveExpenseBtn').click();
+      cy.get('.toast.success').should('be.visible');
+      
+      // Voltar para dashboard
+      cy.get('[data-section="overview"]').click();
+      
+      // Verificar se aparece em próximos pagamentos
+      cy.get('#upcomingPayments').should('be.visible');
+      cy.get('[data-testid="payment-item"]').should('exist');
+      cy.get('[data-testid="payment-name"]').should('contain', 'Despesa Próxima Dashboard');
+      cy.get('[data-testid="payment-value"]').should('contain', 'R$ 250,00');
+    });
+
+    it('deve destacar despesas que vencem em até 7 dias', () => {
+      const seteDias = new Date();
+      seteDias.setDate(seteDias.getDate() + 7);
+      const seteDiasStr = seteDias.toISOString().split('T')[0];
+      
+      // Criar despesa que vence em 7 dias
+      cy.get('[data-section="expenses"]').click();
+      cy.get('#addExpenseBtn').click();
+      
+      cy.get('#expenseName').type('Despesa 7 Dias');
+      cy.get('#expenseValue').type('180.00');
+      cy.get('#expenseCategory').select('Transporte');
+      cy.get('#expenseType').select('recurring');
+      cy.get('#expenseCycle').select('monthly');
+      cy.get('#nextPayment').type(seteDiasStr);
+      
+      cy.get('#saveExpenseBtn').click();
+      cy.get('.toast.success').should('be.visible');
+      
+      // Voltar para dashboard
+      cy.get('[data-section="overview"]').click();
+      
+      // Verificar se aparece destacada
+      cy.get('#upcomingPayments').should('be.visible');
+      cy.get('[data-testid="payment-item"]').should('exist');
+      cy.get('[data-testid="payment-item"]').should('have.class', 'highlighted');
+    });
+
     it('deve mostrar cards de resumo', () => {
       // Arrange: Dashboard já carregado (beforeEach)
       
@@ -63,7 +120,7 @@ describe('Testes de Dashboard e Cálculos', () => {
 
   describe('Navegação', () => {
     it('deve navegar entre seções', () => {
-      // Arrange: Dashboard já carregado na seção overview (beforeEach)
+      // Arrange: Dashboard já carregado (beforeEach)
       
       // Act: Navegar para seção de despesas
       cy.get('[data-section="expenses"]').click();
@@ -71,11 +128,17 @@ describe('Testes de Dashboard e Cálculos', () => {
       // Assert: Verificar se a seção de despesas está visível
       cy.get('#expenses-section').should('be.visible');
       
-      // Act: Navegar de volta para overview
+      // Act: Voltar para overview
       cy.get('[data-section="overview"]').click();
       
-      // Assert: Verificar se a seção overview está visível
+      // Assert: Verificar se voltou para overview
       cy.get('#overview-section').should('be.visible');
+    });
+
+    it('deve mostrar calendário', () => {
+      cy.get('[data-section="calendar"]').click();   
+      cy.get('#calendar-section').should('be.visible');
+      cy.get('#calendarGrid').should('exist');
     });
 
     it('deve mostrar calendário', () => {

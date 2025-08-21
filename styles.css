@@ -278,6 +278,8 @@ input:invalid, select:invalid, textarea:invalid {
     color: var(--error-color);
     font-size: 0.75rem;
     font-weight: 500;
+    min-height: 1rem;
+    line-height: 1.2;
 }
 
 .filter-select {

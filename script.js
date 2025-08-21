@@ -77,6 +77,7 @@ class GerirMe {
         
         // Auth forms
         document.getElementById('loginForm')?.addEventListener('submit', (e) => {
+            console.log('🔍 [Debug] Evento de submit interceptado');
             e.preventDefault();
             this.handleLogin(e);
         });
@@ -211,11 +212,13 @@ class GerirMe {
     }
     
     handleLogin(e) {
+        console.log('🔍 [Debug] handleLogin chamado');
         const formData = new FormData(e.target);
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
         
         console.log('🔐 [Gerir.me] Tentativa de login:', email);
+        console.log('🔍 [Debug] Email:', `"${email}"`, 'Password:', `"${password}"`);
         
         this.clearFormErrors();
         
@@ -227,10 +230,22 @@ class GerirMe {
         }
         
         // Validações básicas
+        console.log('🔍 [Debug] Verificando campos vazios...');
+        console.log('🔍 [Debug] Email length:', email.length, 'Password length:', password.length);
+        console.log('🔍 [Debug] Email truthy:', !!email, 'Password truthy:', !!password);
+        
         if (!email || !password) {
             console.log('❌ [Gerir.me] Campos obrigatórios não preenchidos');
-            if (!email) this.showError('loginEmailError', 'E-mail é obrigatório.');
-            if (!password) this.showError('loginPasswordError', 'Senha é obrigatória.');
+            console.log('🔍 [Debug] Email vazio:', !email, 'Password vazio:', !password);
+            
+            if (!email) {
+                console.log('🔍 [Debug] Chamando showError para email...');
+                this.showError('loginEmailError', 'E-mail é obrigatório.');
+            }
+            if (!password) {
+                console.log('🔍 [Debug] Chamando showError para password...');
+                this.showError('loginPasswordError', 'Senha é obrigatória.');
+            }
             return;
         }
         
@@ -538,15 +553,23 @@ class GerirMe {
     }
     
     showError(elementId, message) {
+        console.log(`🔍 [Debug] Tentando exibir erro para elemento: ${elementId}, mensagem: ${message}`);
         const errorElement = document.getElementById(elementId);
+        
+        if (!errorElement) {
+            console.error(`❌ [Debug] Elemento não encontrado: ${elementId}`);
+            return;
+        }
+        
+        console.log(`✅ [Debug] Elemento encontrado, definindo texto: ${message}`);
         errorElement.textContent = message;
         
-        // Auto-remover mensagem de erro após 3 segundos
+        // Auto-remover mensagem de erro após 10 segundos (aumentado para facilitar testes)
         setTimeout(() => {
             if (errorElement.textContent === message) {
                 errorElement.textContent = '';
             }
-        }, 3000);
+        }, 10000);
     }
     
     // ==================== TEMA ====================
@@ -1182,5 +1205,9 @@ class GerirMe {
     }
 }
 
-// Inicializar aplicação
-const app = new GerirMe();
+// Inicializar aplicação quando o DOM estiver carregado
+document.addEventListener('DOMContentLoaded', () => {
+    const app = new GerirMe();
+    // Expor a aplicação globalmente para testes
+    window.app = app;
+});

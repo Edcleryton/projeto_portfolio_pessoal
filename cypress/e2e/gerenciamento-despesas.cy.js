@@ -1,8 +1,10 @@
 describe('Testes de Gerenciamento de Despesas', () => {
   beforeEach(() => {
     cy.visit('/');
-    cy.get('#loginEmail').type('joao@email.com');
-    cy.get('#loginPassword').type('MinhaSenh@123');
+    cy.fixture('credenciais').then(credenciais =>{
+      cy.get('#loginEmail').type(credenciais.validas.usuario);
+      cy.get('#loginPassword').type(credenciais.validas.senha);
+    });
     cy.get('#loginForm > .btn-primary').click();
     cy.get('[data-section="expenses"]').click();
   });

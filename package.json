@@ -55,7 +55,7 @@
   "devDependencies": {
     "cypress": "^14.5.4",
     "cypress-mochawesome-reporter": "^4.0.1",
-    "serve": "^14.2.1"
+    "serve": "^14.2.4"
   },
   "config": {
     "port": 8080,
