@@ -784,16 +784,8 @@ class GerirMe {
             if (!date) {
                 this.showError('expenseDateError', 'Data da despesa é obrigatória.');
                 hasErrors = true;
-            } else {
-                const selectedDate = new Date(date);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                
-                if (selectedDate < today) {
-                    this.showError('expenseDateError', 'Data não pode ser no passado.');
-                    hasErrors = true;
-                }
             }
+            // Removida a validação que impedia datas passadas para permitir registro de despesas históricas
         } else if (type === 'recurring') {
             cycle = document.getElementById('expenseCycle').value;
             nextPayment = document.getElementById('nextPayment').value;

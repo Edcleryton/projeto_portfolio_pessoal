@@ -48,9 +48,64 @@ Este documento apresenta uma análise detalhada dos defeitos identificados duran
 **Severidade:** Alta  
 **Informações sobre o Software:** Versão 1.2.4, Ambiente de Desenvolvimento  
 **Rastreabilidade:** Validação de Segurança  
-**Status:** ✅ Corrigido (23/01/2025)  
-**Correção Aplicada:** Implementado atributo maxlength no HTML e validações JavaScript com limites apropriados para cada campo.  
-**Método de Teste:** Validações testadas através de testes exploratórios e heurísticas de usabilidade.  
+**Status:** Aberto
+
+### Defeito 
+**ID:** DEF-004  
+**Título:** Validação inadequada de data no cadastro de despesas recorrentes  
+**Testador:** Usuário  
+**Data e Hora:** 23/01/2025 15:45  
+**Resultado Esperado:** O sistema deve validar datas inseridas no campo de data de vencimento, rejeitando datas inválidas ou fora do período aceitável (ex: anos muito distantes no futuro).  
+**Resultado Atual:** O sistema permite salvar despesas recorrentes com datas inválidas como 25/08/275760, que representa um ano muito distante no futuro e não faz sentido para um sistema de controle financeiro.  
+**Evidências:** Despesa recorrente foi cadastrada com sucesso usando a data 25/08/275760 no campo de vencimento.  
+**Prioridade:** Média  
+**Severidade:** Média  
+**Informações sobre o Software:** Versão atual, Ambiente de Produção  
+**Rastreabilidade:** Funcionalidade de Gerenciamento de Despesas  
+**Status:** Aberto
+
+### Defeito 
+**ID:** DEF-005  
+**Título:** Contas com vencimento no dia atual não são exibidas na lista de próximos pagamentos  
+**Testador:** Usuário  
+**Data e Hora:** 23/01/2025 16:00  
+**Resultado Esperado:** O sistema deve exibir todas as contas que vencem no dia atual na lista de próximos pagamentos, independentemente de serem despesas recorrentes ou únicas.  
+**Resultado Atual:** Contas com vencimento no dia atual não estão sendo exibidas corretamente na lista de próximos pagamentos, causando falha na visualização de obrigações financeiras do dia.  
+**Evidências:** Lista de próximos pagamentos não mostra despesas que vencem hoje, tanto para despesas recorrentes quanto únicas.  
+**Prioridade:** Alta  
+**Severidade:** Alta  
+**Informações sobre o Software:** Versão atual, Ambiente de Produção  
+**Rastreabilidade:** Funcionalidade de Lista de Próximos Pagamentos / Dashboard  
+**Status:** Aberto
+
+### Defeito 
+**ID:** DEF-006  
+**Título:** Contas recorrentes mensais não são exibidas no calendário de pagamentos  
+**Testador:** Usuário  
+**Data e Hora:** 23/01/2025 16:15  
+**Resultado Esperado:** O sistema deve exibir automaticamente as contas recorrentes mensais no calendário, marcando a data de pagamento no mês da cobrança cadastrada e em todos os meses subsequentes.  
+**Resultado Atual:** As marcações das datas de pagamento de contas recorrentes mensais não aparecem no calendário, nem no mês da cobrança cadastrada nem nos meses seguintes, impossibilitando a visualização adequada dos compromissos financeiros recorrentes.  
+**Evidências:** Conta recorrente mensal cadastrada não é exibida no calendário em nenhum mês, mesmo sendo configurada como cobrança mensal.  
+**Prioridade:** Alta  
+**Severidade:** Alta  
+**Informações sobre o Software:** Versão atual, Ambiente de Produção  
+**Rastreabilidade:** Funcionalidade de Calendário de Pagamentos / Despesas Recorrentes  
+**Status:** Aberto  
+
+### Defeito 
+**ID:** DEF-007  
+**Título:** Sistema impedia cadastro de despesas únicas em datas passadas  
+**Testador:** Usuário  
+**Data e Hora:** 23/01/2025 16:30  
+**Resultado Esperado:** O sistema deve permitir o cadastro de despesas únicas em datas passadas para manter a consistência e integridade dos dados históricos.  
+**Resultado Atual:** O sistema estava rejeitando o cadastro de despesas únicas com datas anteriores ao dia atual, exibindo a mensagem "Data não pode ser no passado", impedindo o registro de despesas históricas.  
+**Evidências:** Tentativa de cadastrar despesa única com data passada resultava em erro de validação.  
+**Prioridade:** Média  
+**Severidade:** Média  
+**Informações sobre o Software:** Versão atual, Ambiente de Produção  
+**Rastreabilidade:** Funcionalidade de Gerenciamento de Despesas  
+**Status:** Corrigido  
+**Correção Aplicada:** Removida a validação que impedia datas passadas no arquivo script.js, linhas 790-795, permitindo o registro de despesas históricas mantendo apenas a validação de campo obrigatório.
 
 ---
 
