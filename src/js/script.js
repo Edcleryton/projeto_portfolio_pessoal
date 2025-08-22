@@ -23,6 +23,7 @@ class GerirMe {
         await this.loadUserData();
         this.initTheme();
         this.setupEventListeners();
+        this.setupInitialRouting();
         await this.checkAuthentication();
         this.requestNotificationPermission();
         this.startNotificationCheck();
@@ -183,16 +184,22 @@ class GerirMe {
         });
     }
     
-    showRegisterForm() {
+    showRegisterForm(updateURL = true) {
         document.getElementById('login-form').classList.remove('active');
         document.getElementById('register-form').classList.add('active');
         this.clearFormErrors();
+        if (updateURL) {
+            window.history.pushState({ page: 'register' }, '', '/register');
+        }
     }
     
-    showLoginForm() {
+    showLoginForm(updateURL = true) {
         document.getElementById('register-form').classList.remove('active');
         document.getElementById('login-form').classList.add('active');
         this.clearFormErrors();
+        if (updateURL) {
+            window.history.pushState({ page: 'login' }, '', '/login');
+        }
     }
     
     togglePasswordVisibility(targetId) {
@@ -559,19 +566,28 @@ class GerirMe {
         // Atualizar nome do usuário
         document.getElementById('userName').textContent = this.currentUser.name;
         
+        // Configurar roteamento
+        this.setupRouting();
+        
         // Carregar dados
         await this.loadExpenses();
         await this.updateDashboard();
         this.renderCalendar();
+        
+        // Navegar para a seção correta baseada na URL
+        this.handleRouting();
     }
     
     showSection(sectionName) {
+        // Atualizar URL
+        this.updateURL(sectionName);
+        
         // Atualizar navegação
         document.querySelectorAll('.nav-item').forEach(item => {
             item.classList.remove('active');
         });
         document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
-        
+
         // Mostrar seção
         document.querySelectorAll('.content-section').forEach(section => {
             section.classList.remove('active');
@@ -588,7 +604,98 @@ class GerirMe {
         }
     }
     
-    toggleUserMenu() {
+    // Funções de Roteamento com URLs
+    updateURL(section) {
+        const routes = {
+            'overview': '/dashboard',
+            'expenses': '/expenses', 
+            'calendar': '/calendar'
+        };
+        
+        const newPath = routes[section] || '/dashboard';
+        window.history.pushState({ section }, '', newPath);
+    }
+    
+    handleRouting() {
+        const path = window.location.pathname;
+        const routes = {
+            '/': 'overview',
+            '/dashboard': 'overview',
+            '/expenses': 'expenses',
+            '/calendar': 'calendar'
+        };
+        
+        const section = routes[path] || 'overview';
+        
+        // Navegar para a seção sem atualizar a URL novamente
+        this.navigateToSection(section);
+    }
+    
+    navigateToSection(sectionName) {
+        // Atualizar navegação
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+
+        // Mostrar seção
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.remove('active');
+        });
+        document.getElementById(`${sectionName}-section`).classList.add('active');
+        
+        // Atualizar dados específicos da seção
+        if (sectionName === 'overview') {
+            this.updateDashboard();
+        } else if (sectionName === 'calendar') {
+            this.renderCalendar();
+        }
+    }
+    
+    setupRouting() {
+        // Listener para o botão voltar/avançar do navegador
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.section) {
+                this.navigateToSection(event.state.section);
+            } else {
+                this.handleRouting();
+            }
+        });
+        
+        // Configurar estado inicial
+        const currentPath = window.location.pathname;
+        if (currentPath === '/' || currentPath === '') {
+            window.history.replaceState({ section: 'overview' }, '', '/dashboard');
+        }
+     }
+     
+     setupInitialRouting() {
+         const path = window.location.pathname;
+         
+         // Listener para o botão voltar/avançar do navegador na tela de autenticação
+         window.addEventListener('popstate', (event) => {
+             if (!this.isAuthenticated) {
+                 this.handleAuthRouting();
+             }
+         });
+         
+         // Configurar URL inicial se estiver na raiz
+         if (path === '/' || path === '') {
+             window.history.replaceState({ page: 'login' }, '', '/login');
+         }
+     }
+     
+     handleAuthRouting() {
+          const path = window.location.pathname;
+          
+          if (path === '/register') {
+              this.showRegisterForm(false);
+          } else {
+              this.showLoginForm(false);
+          }
+      }
+     
+     toggleUserMenu() {
         const dropdown = document.getElementById('userDropdown');
         dropdown.classList.toggle('show');
         
