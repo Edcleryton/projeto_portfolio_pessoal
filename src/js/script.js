@@ -10,7 +10,7 @@ class GerirMe {
         this.init();
     }
 
-    init() {
+    async init() {
         console.log('🚀 [Gerir.me] Iniciando aplicação...');
         
         // Verificar localStorage
@@ -20,10 +20,10 @@ class GerirMe {
         this.ensureDefaultUser();
         this.verifyDefaultUser();
         
-        this.loadUserData();
+        await this.loadUserData();
         this.initTheme();
         this.setupEventListeners();
-        this.checkAuthentication();
+        await this.checkAuthentication();
         this.requestNotificationPermission();
         this.startNotificationCheck();
         
@@ -211,14 +211,13 @@ class GerirMe {
         }
     }
     
-    handleLogin(e) {
+    async handleLogin(e) {
         console.log('🔍 [Debug] handleLogin chamado');
         const formData = new FormData(e.target);
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
         
         console.log('🔐 [Gerir.me] Tentativa de login:', email);
-        console.log('🔍 [Debug] Email:', `"${email}"`, 'Password:', `"${password}"`);
         
         this.clearFormErrors();
         
@@ -230,20 +229,13 @@ class GerirMe {
         }
         
         // Validações básicas
-        console.log('🔍 [Debug] Verificando campos vazios...');
-        console.log('🔍 [Debug] Email length:', email.length, 'Password length:', password.length);
-        console.log('🔍 [Debug] Email truthy:', !!email, 'Password truthy:', !!password);
-        
         if (!email || !password) {
             console.log('❌ [Gerir.me] Campos obrigatórios não preenchidos');
-            console.log('🔍 [Debug] Email vazio:', !email, 'Password vazio:', !password);
             
             if (!email) {
-                console.log('🔍 [Debug] Chamando showError para email...');
                 this.showError('loginEmailError', 'E-mail é obrigatório.');
             }
             if (!password) {
-                console.log('🔍 [Debug] Chamando showError para password...');
                 this.showError('loginPasswordError', 'Senha é obrigatória.');
             }
             return;
@@ -268,27 +260,23 @@ class GerirMe {
             return;
         }
         
-        // Verificar credenciais
-        const users = this.getUsers();
-        console.log(`🔍 [Gerir.me] Buscando usuário entre ${users.length} usuários cadastrados`);
-        
-        const user = users.find(u => u.email === email && u.password === password);
-        
-        if (user) {
-            // Login bem-sucedido
-            console.log('✅ [Gerir.me] Login bem-sucedido para:', user.name);
-            this.currentUser = user;
-            this.saveUserSession();
-            this.resetLoginAttempts(email);
-            this.showDashboard();
-            this.showToast('success', 'Login realizado', 'Bem-vindo de volta!');
-        } else {
+        try {
+            // Fazer login via API
+            const response = await apiService.login({ email, password });
+            
+            if (response.token) {
+                // Login bem-sucedido
+                console.log('✅ [Gerir.me] Login bem-sucedido via API');
+                apiService.setToken(response.token);
+                this.currentUser = response.user;
+                this.saveUserSession();
+                this.resetLoginAttempts(email);
+                await this.showDashboard();
+                this.showToast('success', 'Login realizado', 'Bem-vindo de volta!');
+            }
+        } catch (error) {
             // Login falhou
-            console.log('❌ [Gerir.me] Credenciais inválidas para:', email);
-            console.log('📋 [Gerir.me] Usuários disponíveis:');
-            users.forEach(u => {
-                console.log(`  • ${u.email} (senha: ${u.password})`);
-            });
+            console.log('❌ [Gerir.me] Erro no login via API:', error.message);
             
             this.incrementLoginAttempts(email);
             const attempts = this.getLoginAttempts(email);
@@ -302,7 +290,7 @@ class GerirMe {
         }
     }
     
-    handleRegister(e) {
+    async handleRegister(e) {
         const name = document.getElementById('registerName').value.trim();
         const email = document.getElementById('registerEmail').value.trim();
         const password = document.getElementById('registerPassword').value;
@@ -331,9 +319,6 @@ class GerirMe {
         } else if (!this.isValidEmail(email)) {
             this.showError('registerEmailError', 'E-mail inválido.');
             hasErrors = true;
-        } else if (this.emailExists(email)) {
-            this.showError('registerEmailError', 'E-mail já cadastrado.');
-            hasErrors = true;
         }
         
         if (!password) {
@@ -360,20 +345,27 @@ class GerirMe {
         
         if (hasErrors) return;
         
-        // Criar usuário
-        const user = {
-            id: Date.now().toString(),
-            name,
-            email,
-            password,
-            createdAt: new Date().toISOString()
-        };
-        
-        this.saveUser(user);
-        this.currentUser = user;
-        this.saveUserSession();
-        this.showDashboard();
-        this.showToast('success', 'Conta criada com sucesso!', 'Bem-vindo ao Gerir.me!');
+        try {
+            // Registrar usuário via API
+            const response = await apiService.register({ name, email, password });
+            
+            if (response.token) {
+                console.log('✅ [Gerir.me] Registro bem-sucedido via API');
+                apiService.setToken(response.token);
+                this.currentUser = response.user;
+                this.saveUserSession();
+                await this.showDashboard();
+                this.showToast('success', 'Conta criada com sucesso!', 'Bem-vindo ao Gerir.me!');
+            }
+        } catch (error) {
+            console.log('❌ [Gerir.me] Erro no registro via API:', error.message);
+            
+            if (error.message.includes('já existe') || error.message.includes('already exists')) {
+                this.showError('registerEmailError', 'E-mail já cadastrado.');
+            } else {
+                this.showError('registerEmailError', 'Erro ao criar conta. Tente novamente.');
+            }
+        }
     }
     
     // ==================== VALIDAÇÕES ====================
@@ -523,28 +515,34 @@ class GerirMe {
         localStorage.setItem('gerirme_current_user', JSON.stringify(this.currentUser));
     }
     
-    loadUserData() {
+    async loadUserData() {
         const userData = localStorage.getItem('gerirme_current_user');
         if (userData) {
             this.currentUser = JSON.parse(userData);
-            this.loadExpenses();
+            await this.loadExpenses();
         }
     }
     
-    checkAuthentication() {
+    async checkAuthentication() {
         if (this.currentUser) {
-            this.showDashboard();
+            await this.showDashboard();
         } else {
             this.showAuth();
         }
     }
     
-    logout() {
-        this.currentUser = null;
-        this.expenses = [];
-        localStorage.removeItem('gerirme_current_user');
-        this.showAuth();
-        this.showToast('info', 'Logout realizado', 'Até logo!');
+    async logout() {
+        try {
+            await apiService.logout();
+        } catch (error) {
+            console.log('Erro no logout via API:', error.message);
+        } finally {
+            this.currentUser = null;
+            this.expenses = [];
+            localStorage.removeItem('gerirme_current_user');
+            this.showAuth();
+            this.showToast('info', 'Logout realizado', 'Até logo!');
+        }
     }
     
     // ==================== INTERFACE ====================
@@ -554,7 +552,7 @@ class GerirMe {
         document.getElementById('dashboard-container').classList.add('hidden');
     }
     
-    showDashboard() {
+    async showDashboard() {
         document.getElementById('auth-container').classList.add('hidden');
         document.getElementById('dashboard-container').classList.remove('hidden');
         
@@ -562,8 +560,8 @@ class GerirMe {
         document.getElementById('userName').textContent = this.currentUser.name;
         
         // Carregar dados
-        this.loadExpenses();
-        this.updateDashboard();
+        await this.loadExpenses();
+        await this.updateDashboard();
         this.renderCalendar();
     }
     
@@ -666,12 +664,16 @@ class GerirMe {
     
     // ==================== DESPESAS ====================
     
-    loadExpenses() {
+    async loadExpenses() {
         if (!this.currentUser) return;
         
-        const key = `gerirme_expenses_${this.currentUser.id}`;
-        const expenses = localStorage.getItem(key);
-        this.expenses = expenses ? JSON.parse(expenses) : [];
+        try {
+            const response = await apiService.getExpenses();
+            this.expenses = response.expenses || [];
+        } catch (error) {
+            console.log('Erro ao carregar despesas via API:', error.message);
+            this.expenses = [];
+        }
     }
     
     saveExpenses() {
@@ -739,7 +741,7 @@ class GerirMe {
         }
     }
     
-    handleExpenseSubmit(e) {
+    async handleExpenseSubmit(e) {
         const name = document.getElementById('expenseName').value.trim();
         const value = parseFloat(document.getElementById('expenseValue').value);
         const category = document.getElementById('expenseCategory').value;
@@ -820,26 +822,34 @@ class GerirMe {
             expense.nextPayment = nextPayment;
         }
         
-        if (this.currentExpenseId) {
-            // Atualizar despesa existente
-            const index = this.expenses.findIndex(e => e.id === this.currentExpenseId);
-            if (index !== -1) {
-                expense.createdAt = this.expenses[index].createdAt; // Manter data original
-                this.expenses[index] = expense;
+        try {
+            let response;
+            if (this.currentExpenseId) {
+                // Atualizar despesa existente
+                const existingExpense = this.expenses.find(e => e.id === this.currentExpenseId);
+                if (existingExpense) {
+                    expense.createdAt = existingExpense.createdAt; // Manter data original
+                }
+                response = await apiService.updateExpense(this.currentExpenseId, expense);
+            } else {
+                // Nova despesa
+                response = await apiService.createExpense(expense);
             }
-        } else {
-            // Nova despesa
-            this.expenses.push(expense);
+            
+            // Recarregar despesas da API
+            await this.loadExpenses();
+            
+            this.hideExpenseModal();
+            this.updateDashboard();
+            this.renderExpensesTable();
+            this.renderCalendar();
+            
+            const action = this.currentExpenseId ? 'atualizada' : 'adicionada';
+            this.showToast('success', 'Despesa salva', `Despesa ${action} com sucesso!`);
+        } catch (error) {
+            console.error('Erro ao salvar despesa:', error);
+            this.showToast('error', 'Erro', 'Erro ao salvar despesa. Tente novamente.');
         }
-        
-        this.saveExpenses();
-        this.hideExpenseModal();
-        this.updateDashboard();
-        this.renderExpensesTable();
-        this.renderCalendar();
-        
-        const action = this.currentExpenseId ? 'atualizada' : 'adicionada';
-        this.showToast('success', 'Despesa salva', `Despesa ${action} com sucesso!`);
     }
     
     editExpense(id) {
@@ -854,13 +864,21 @@ class GerirMe {
         if (expense) {
             this.showConfirmModal(
                 `Tem certeza que deseja excluir a despesa "${expense.name}"?`,
-                () => {
-                    this.expenses = this.expenses.filter(e => e.id !== id);
-                    this.saveExpenses();
-                    this.updateDashboard();
-                    this.renderExpensesTable();
-                    this.renderCalendar();
-                    this.showToast('success', 'Despesa excluída', 'Despesa removida com sucesso!');
+                async () => {
+                    try {
+                        await apiService.deleteExpense(id);
+                        
+                        // Recarregar despesas da API
+                        await this.loadExpenses();
+                        
+                        this.updateDashboard();
+                        this.renderExpensesTable();
+                        this.renderCalendar();
+                        this.showToast('success', 'Despesa excluída', 'Despesa removida com sucesso!');
+                    } catch (error) {
+                        console.error('Erro ao excluir despesa:', error);
+                        this.showToast('error', 'Erro', 'Erro ao excluir despesa. Tente novamente.');
+                    }
                 }
             );
         }
@@ -927,16 +945,28 @@ class GerirMe {
     
     // ==================== DASHBOARD ====================
     
-    updateDashboard() {
-        const calculations = this.calculateMonthlyTotals();
-        
-        // Atualizar cards de resumo
-        document.getElementById('monthlyTotal').textContent = this.formatCurrency(calculations.monthlyTotal);
-        document.getElementById('recurringTotal').textContent = this.formatCurrency(calculations.recurringTotal);
-        document.getElementById('uniqueTotal').textContent = this.formatCurrency(calculations.uniqueTotal);
-        
-        // Atualizar próximos pagamentos
-        this.renderUpcomingPayments();
+    async updateDashboard() {
+        try {
+            const dashboardData = await apiService.getDashboardOverview();
+            
+            // Atualizar cards de resumo
+            document.getElementById('monthlyTotal').textContent = this.formatCurrency(dashboardData.monthlyTotal || 0);
+            document.getElementById('recurringTotal').textContent = this.formatCurrency(dashboardData.recurringTotal || 0);
+            document.getElementById('uniqueTotal').textContent = this.formatCurrency(dashboardData.uniqueTotal || 0);
+            
+            // Atualizar próximos pagamentos
+            this.renderUpcomingPayments();
+        } catch (error) {
+            console.log('Erro ao carregar dados do dashboard via API:', error.message);
+            // Fallback para cálculo local
+            const calculations = this.calculateMonthlyTotals();
+            
+            document.getElementById('monthlyTotal').textContent = this.formatCurrency(calculations.monthlyTotal);
+            document.getElementById('recurringTotal').textContent = this.formatCurrency(calculations.recurringTotal);
+            document.getElementById('uniqueTotal').textContent = this.formatCurrency(calculations.uniqueTotal);
+            
+            this.renderUpcomingPayments();
+        }
     }
     
     calculateMonthlyTotals() {

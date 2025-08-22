@@ -94,11 +94,11 @@ O **Gerir.me** é um sistema web para gerenciamento de despesas recorrentes, per
 - Visualizar calendário de vencimentos
 
 ### 🏆 **Status do Projeto**
-- ✅ **Requisitos Funcionais**: 16/16 (100%)
-- ✅ **Regras de Negócio**: 12/12 implementadas
-- ✅ **Casos de Uso**: 13/13 (100%)
-- ✅ **User Stories**: 32 cenários de teste
-- ✅ **Cobertura de Testes**: 100%
+- ✅ **100%** dos requisitos funcionais implementados
+- ✅ **100%** das regras de negócio validadas
+- ✅ **100%** dos casos de uso testados
+- ✅ **84%** de aprovação em testes automatizados
+- ✅ **85%** de funcionalidade do sistema
 
 ### 🛠️ **Tecnologias**
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
@@ -119,7 +119,20 @@ O **Gerir.me** é um sistema web para gerenciamento de despesas recorrentes, per
 
 ---
 
-## 📈 **Métricas de Documentação**
+## 📊 **Métricas de Documentação**
+
+### Cobertura de Testes
+- **Testes Funcionais:** 15 casos de teste principais
+- **Testes Automatizados:** 25 testes executados
+- **Testes de Segurança:** 3 casos de teste
+- **Testes de Interface:** 8 casos de teste
+- **Cobertura Total:** 26 casos de teste manuais + 25 testes automatizados
+
+### Qualidade do Sistema
+- **Defeitos Ativos:** 9 (5 funcionais críticos + 4 testes automatizados)
+- **Taxa de Sucesso dos Testes:** 84% (21/25 testes automatizados aprovados)
+- **Funcionalidade do Sistema:** 85%
+- **Cobertura de Requisitos:** 100%
 
 - **📄 Total de Documentos**: 8
 - **📝 Páginas de Conteúdo**: ~2.000 linhas
@@ -147,6 +160,6 @@ Para dúvidas sobre a documentação ou o projeto:
 
 ---
 
-**📅 Última atualização**: Dezembro 2024  
+*Última atualização: 21/08/2025 21:19*  
 **📋 Versão da documentação**: 1.0  
 **✅ Status**: Completa e atualizada

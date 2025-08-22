@@ -28,7 +28,7 @@ Documento baseado na ISO-29119-3 contendo os casos de teste para validação das
 **Passo 3:** Preencher o campo "Nome" com um nome válido (ex: "Utilizador Teste").  
 **Resultado Esperado:** N/A
 
-**Passo 4:** Preencher o campo "E-mail" com um e-mail válido e único (ex: "<teste@gerir.me>").  
+**Passo 4:** Preencher o campo "E-mail" com um e-mail válido e único (ex: "teste@gerir.me").  
 **Resultado Esperado:** N/A
 
 **Passo 5:** Preencher o campo "Senha" com uma senha que atenda à política de segurança (ex: "Teste@123").  
@@ -115,14 +115,14 @@ Documento baseado na ISO-29119-3 contendo os casos de teste para validação das
 **Rastreabilidade:** HU02, RN-USU-003  
 **Pré-Condições:**
 
-- Existe um utilizador cadastrado com o e-mail "<bloqueio@gerir.me>".
+- Existe um utilizador cadastrado com o e-mail "bloqueio@gerir.me".
 
 **Passos Detalhados:**
 
 **Passo 1:** Aceder à página de login.  
 **Resultado Esperado:** A tela de login é apresentada.
 
-**Passo 2:** Inserir o e-mail "<bloqueio@gerir.me>" e uma senha incorreta. Clicar em "Entrar".  
+**Passo 2:** Inserir o e-mail "bloqueio@gerir.me" e uma senha incorreta. Clicar em "Entrar".  
 **Resultado Esperado:** O sistema exibe a mensagem "E-mail ou senha inválidos".
 
 **Passo 3:** Repetir o Passo 2 mais uma vez (segunda tentativa).  
@@ -136,7 +136,7 @@ Documento baseado na ISO-29119-3 contendo os casos de teste para validação das
 
 **Pós-Condições:**
 
-- A conta do utilizador "<bloqueio@gerir.me>" fica com o status "bloqueada" por 15 minutos.
+- A conta do utilizador "bloqueio@gerir.me" fica com o status "bloqueada" por 15 minutos.
 
 ---
 
@@ -542,5 +542,90 @@ Documento baseado na ISO-29119-3 contendo os casos de teste para validação das
 
 ---
 
-*Documento atualizado em: Agosto 2025*  
-*Versão: 2.1*
+### Caso de Teste 16: Validação de Caracteres Especiais no Nome
+
+**ID:** CT-DEF-001-01  
+**Título:** Validar rejeição de caracteres especiais, emojis e scripts no campo nome durante registro.  
+**Prioridade:** Alta  
+**Rastreabilidade:** DEF-001, HU01, RN-USU-001  
+**Pré-Condições:**
+
+- O utilizador não está autenticado no sistema.
+- Acesso ao formulário de cadastro.
+
+**Passos:**
+
+1. Aceder ao formulário de cadastro de novo utilizador.
+2. Preencher o campo "Nome" com emojis (ex: "😂🙌Usuario").
+3. Preencher os demais campos com dados válidos.
+4. Clicar no botão "Cadastrar".
+5. Repetir teste com caracteres orientais e scripts SQL.
+
+**Resultados Esperados:**
+
+- Passo 1: Formulário de cadastro é exibido.
+- Passo 2: N/A
+- Passo 3: N/A
+- Passo 4: Sistema deve exibir erro de validação e rejeitar o cadastro.
+- Passo 5: Sistema deve rejeitar todos os caracteres não convencionais.
+
+**Defeitos Relacionados:** DEF-001
+
+---
+
+### Caso de Teste 17: Validação de Caracteres Especiais na Senha
+
+**ID:** CT-DEF-002-01  
+**Título:** Validar rejeição de caracteres especiais inadequados no campo senha.  
+**Prioridade:** Crítica  
+**Rastreabilidade:** DEF-002, HU01, RN-USU-002  
+**Pré-Condições:**
+
+- Acesso ao formulário de cadastro.
+
+**Passos:**
+
+1. Aceder ao formulário de cadastro.
+2. Preencher o campo "Senha" com emojis (ex: "😂🙌😊👌😒@123Ed").
+3. Preencher os demais campos com dados válidos.
+4. Clicar no botão "Cadastrar".
+
+**Resultados Esperados:**
+
+- Passo 1: Formulário é exibido.
+- Passo 2: N/A
+- Passo 3: N/A
+- Passo 4: Sistema deve rejeitar senha com caracteres inadequados.
+
+**Defeitos Relacionados:** DEF-002
+
+---
+
+### Caso de Teste 18: Validação de Limite de Caracteres
+
+**ID:** CT-DEF-003-01  
+**Título:** Validar limite de caracteres nos campos de entrada.  
+**Prioridade:** Alta  
+**Rastreabilidade:** DEF-003  
+**Pré-Condições:**
+
+- Acesso aos formulários do sistema.
+
+**Passos:**
+
+1. Tentar inserir texto com mais de 255 caracteres no campo e-mail.
+2. Tentar inserir texto com mais de 128 caracteres no campo senha.
+3. Tentar inserir texto com mais de 100 caracteres no campo nome.
+4. Submeter os formulários.
+
+**Resultados Esperados:**
+
+- Passo 1-3: Sistema deve limitar ou validar o comprimento dos campos.
+- Passo 4: Sistema deve rejeitar entradas que excedam os limites.
+
+**Defeitos Relacionados:** DEF-003
+
+---
+
+*Documento atualizado em: 21/08/2025 21:19*  
+*Versão: 2.2*

@@ -167,14 +167,18 @@ npx cypress open
 - **Heurísticas Implementadas**: 35+ heurísticas diferentes
 - **Casos de Teste**: 80+ casos de teste automatizados
 - **Cenários de Ataque**: 50+ cenários de ataque de dados
+- **Testes Automatizados**: 25 testes executados (21 aprovados, 4 falhando)
+- **Defeitos Identificados**: 9 defeitos ativos em rastreamento (5 funcionais + 4 testes automatizados)
 
 ### Tipos de Defeitos Detectáveis
 - 🔍 **Validação de Entrada**: Campos que aceitam dados inválidos
-- 🛡️ **Vulnerabilidades**: XSS, SQL Injection, manipulação de URL
+- 🛡️ **Vulnerabilidades**: XSS, SQL Injection, manipulação de URL (DEF-001, DEF-002, DEF-003)
 - 🎨 **Problemas de UI**: Layout quebrado, elementos inacessíveis
 - ⚡ **Performance**: Lentidão e travamentos
 - 📱 **Responsividade**: Problemas em diferentes resoluções
 - ♿ **Acessibilidade**: Navegação por teclado, contraste, semântica
+- 🔄 **Testes Automatizados**: Falhas em comandos de scroll e interações (DEF-010 a DEF-013)
+- 📊 **Integridade de Dados**: Inconsistências e problemas de validação (DEF-004, DEF-008, DEF-009)
 
 ## Manutenção e Evolução
 
@@ -210,6 +214,7 @@ A manutenção contínua desta estratégia garante que o sistema permaneça robu
 ---
 
 **Documento criado em**: 16/01/2025  
-**Versão**: 1.0  
+**Versão**: 1.1  
 **Autor**: Sistema de Testes Automatizados  
+**Última atualização**: 21/08/2025 21:19  
 **Próxima Revisão**: 16/04/2025

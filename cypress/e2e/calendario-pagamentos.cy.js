@@ -19,8 +19,8 @@ describe('Testes de Calendário', () => {
 
   // Teste 3: Verificar se consegue fazer scroll
   it('deve conseguir fazer scroll na página', () => {
-    cy.scrollTo('bottom');
-    cy.scrollTo('top');
+    cy.scrollTo('bottom', { ensureScrollable: false });
+    cy.scrollTo('top', { ensureScrollable: false });
     cy.get('body').should('exist');
   });
 

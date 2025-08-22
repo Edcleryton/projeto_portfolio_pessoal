@@ -8,7 +8,7 @@ Este documento apresenta uma análise detalhada dos defeitos identificados duran
 
 ## Defeitos Ativos
 
-### Defeito 
+### Defeito DEF-001
 **ID:** DEF-001  
 **Título:** Validação inadequada de caracteres no campo de nome durante o registro  
 **Testador:** Edcleryton  
@@ -22,7 +22,7 @@ Este documento apresenta uma análise detalhada dos defeitos identificados duran
 **Rastreabilidade:** CT-HU01-01 (Cadastro de Usuário)  
 **Status:** Aberto  
 
-### Defeito 
+### Defeito DEF-002
 **ID:** DEF-002  
 **Título:** Validação inadequada de caracteres no campo de senha durante o registro  
 **Testador:** Edcleryton  
@@ -36,7 +36,7 @@ Este documento apresenta uma análise detalhada dos defeitos identificados duran
 **Rastreabilidade:** CT-HU01-01 (Cadastro de Usuário)  
 **Status:** Aberto
 
-### Defeito 
+### Defeito DEF-003
 **ID:** DEF-003  
 **Título:** Ausência de limite de caracteres nos campos de entrada  
 **Testador:** Edcleryton  
@@ -50,7 +50,7 @@ Este documento apresenta uma análise detalhada dos defeitos identificados duran
 **Rastreabilidade:** Validação de Segurança  
 **Status:** Aberto
 
-### Defeito 
+### Defeito DEF-004
 **ID:** DEF-004  
 **Título:** Validação inadequada de data no cadastro de despesas recorrentes  
 **Testador:** Usuário  
@@ -64,7 +64,7 @@ Este documento apresenta uma análise detalhada dos defeitos identificados duran
 **Rastreabilidade:** Funcionalidade de Gerenciamento de Despesas  
 **Status:** Aberto
 
-### Defeito 
+### Defeito DEF-005
 **ID:** DEF-005  
 **Título:** Contas com vencimento no dia atual não são exibidas na lista de próximos pagamentos  
 **Testador:** Usuário  
@@ -78,7 +78,7 @@ Este documento apresenta uma análise detalhada dos defeitos identificados duran
 **Rastreabilidade:** Funcionalidade de Lista de Próximos Pagamentos / Dashboard  
 **Status:** Aberto
 
-### Defeito 
+### Defeito DEF-006
 **ID:** DEF-006  
 **Título:** Contas recorrentes mensais não são exibidas no calendário de pagamentos  
 **Testador:** Usuário  
@@ -92,7 +92,7 @@ Este documento apresenta uma análise detalhada dos defeitos identificados duran
 **Rastreabilidade:** Funcionalidade de Calendário de Pagamentos / Despesas Recorrentes  
 **Status:** Aberto  
 
-### Defeito 
+### Defeito DEF-007
 **ID:** DEF-007  
 **Título:** Sistema impedia cadastro de despesas únicas em datas passadas  
 **Testador:** Usuário  
@@ -106,6 +106,90 @@ Este documento apresenta uma análise detalhada dos defeitos identificados duran
 **Rastreabilidade:** Funcionalidade de Gerenciamento de Despesas  
 **Status:** Corrigido  
 **Correção Aplicada:** Removida a validação que impedia datas passadas no arquivo script.js, linhas 790-795, permitindo o registro de despesas históricas mantendo apenas a validação de campo obrigatório.
+
+### Defeito DEF-008
+**ID:** DEF-008  
+**Título:** Datas de despesas únicas exibidas incorretamente no calendário e lista de despesas  
+**Testador:** Usuário  
+**Data e Hora:** 23/01/2025 16:45  
+**Resultado Esperado:** O sistema deve exibir as datas de cobrança das despesas únicas corretamente tanto no calendário quanto na lista de despesas, mostrando exatamente a data cadastrada pelo usuário.  
+**Resultado Atual:** Despesas únicas cadastradas com data de cobrança (ex: 10/10/2025) não aparecem no calendário na data correta. Na lista de despesas, a data exibida está incorreta, mostrando sempre um dia antes da data real (ex: 09/10/2025 ao invés de 10/10/2025). Este problema ocorre sistematicamente com todas as despesas cadastradas.  
+**Evidências:** Despesa única cadastrada para 10/10/2025 aparece como 09/10/2025 na lista e não é exibida no calendário na data correta.  
+**Prioridade:** Alta  
+**Severidade:** Alta  
+**Informações sobre o Software:** Versão atual, Ambiente de Produção  
+**Rastreabilidade:** Funcionalidade de Calendário de Pagamentos / Lista de Despesas / Formatação de Datas  
+**Status:** Aberto  
+
+### Defeito DEF-009
+**ID:** DEF-009  
+**Título:** Valores de despesas incorretos exibidos no dashboard da visão geral  
+**Testador:** Usuário  
+**Data e Hora:** 23/01/2025 17:00  
+**Resultado Esperado:** O sistema deve calcular e exibir corretamente os valores totais das despesas no dashboard, refletindo os dados reais cadastrados pelo usuário.  
+**Resultado Atual:** Os valores das despesas exibidos no menu visão geral estão incorretos. O valor correto das despesas deste mês deveria ser R$674,00, mas está sendo exibido como R$536,50 (diferença de R$137,50). Os gastos recorrentes deveriam ser R$585,00, mas aparecem como R$447,50 (diferença de R$137,50). Os cálculos não estão refletindo corretamente os dados cadastrados.  
+**Evidências:** Dashboard mostra valores inconsistentes com os dados reais: despesas mensais R$536,50 (deveria ser R$674,00) e gastos recorrentes R$447,50 (deveria ser R$585,00).  
+**Prioridade:** Alta  
+**Severidade:** Alta  
+**Informações sobre o Software:** Versão atual, Ambiente de Produção  
+**Rastreabilidade:** Funcionalidade de Dashboard / Cálculos Financeiros / Visão Geral  
+**Status:** Aberto
+
+### Defeito 
+**ID:** DEF-010  
+**Título:** Falha no comando cy.scrollTo() em testes automatizados - Calendário de Pagamentos  
+**Testador:** Cypress  
+**Data e Hora:** 21/08/2025 21:19  
+**Resultado Esperado:** O teste automatizado deve conseguir fazer scroll na página do calendário de pagamentos sem erros.  
+**Resultado Atual:** O comando cy.scrollTo() falha com timeout após 4000ms porque o elemento window não é considerado rolável pelo Cypress. Erro: "cy.scrollTo() failed because this element is not scrollable".  
+**Evidências:** Teste "deve conseguir fazer scroll na página" falha em calendario-pagamentos.cy.js com CypressError de timeout.  
+**Prioridade:** Média  
+**Severidade:** Baixa  
+**Informações sobre o Software:** Versão atual, Ambiente de Testes  
+**Rastreabilidade:** Teste Automatizado - Calendário de Pagamentos  
+**Status:** Aberto
+
+### Defeito 
+**ID:** DEF-011  
+**Título:** Falha no comando cy.scrollTo() em testes automatizados - Dashboard  
+**Testador:** Cypress  
+**Data e Hora:** 21/08/2025 21:19  
+**Resultado Esperado:** O teste automatizado deve conseguir fazer scroll na página do dashboard sem erros.  
+**Resultado Atual:** O comando cy.scrollTo() falha com timeout após 4000ms porque o elemento window não é considerado rolável pelo Cypress. Erro: "cy.scrollTo() failed because this element is not scrollable".  
+**Evidências:** Teste "deve conseguir fazer scroll na página" falha em dashboard-calculos.cy.js com CypressError de timeout.  
+**Prioridade:** Média  
+**Severidade:** Baixa  
+**Informações sobre o Software:** Versão atual, Ambiente de Testes  
+**Rastreabilidade:** Teste Automatizado - Dashboard  
+**Status:** Aberto
+
+### Defeito 
+**ID:** DEF-012  
+**Título:** Falha no comando cy.scrollTo() em testes automatizados - Gerenciamento de Despesas  
+**Testador:** Cypress  
+**Data e Hora:** 21/08/2025 21:19  
+**Resultado Esperado:** O teste automatizado deve conseguir fazer scroll na página de gerenciamento de despesas sem erros.  
+**Resultado Atual:** O comando cy.scrollTo() falha com timeout após 4000ms porque o elemento window não é considerado rolável pelo Cypress. Erro: "cy.scrollTo() failed because this element is not scrollable".  
+**Evidências:** Teste "deve conseguir fazer scroll na página" falha em gerenciamento-despesas.cy.js com CypressError de timeout.  
+**Prioridade:** Média  
+**Severidade:** Baixa  
+**Informações sobre o Software:** Versão atual, Ambiente de Testes  
+**Rastreabilidade:** Teste Automatizado - Gerenciamento de Despesas  
+**Status:** Aberto
+
+### Defeito 
+**ID:** DEF-013  
+**Título:** Falha no comando cy.scrollTo() em testes automatizados - Notificações de Vencimento  
+**Testador:** Cypress  
+**Data e Hora:** 21/08/2025 21:19  
+**Resultado Esperado:** O teste automatizado deve conseguir fazer scroll na página de notificações de vencimento sem erros.  
+**Resultado Atual:** O comando cy.scrollTo() falha com timeout após 4000ms porque o elemento window não é considerado rolável pelo Cypress. Erro: "cy.scrollTo() failed because this element is not scrollable".  
+**Evidências:** Teste "deve conseguir fazer scroll na página" falha em notificacoes-vencimento.cy.js com CypressError de timeout.  
+**Prioridade:** Média  
+**Severidade:** Baixa  
+**Informações sobre o Software:** Versão atual, Ambiente de Testes  
+**Rastreabilidade:** Teste Automatizado - Notificações de Vencimento  
+**Status:** Aberto  
 
 ---
 
@@ -134,17 +218,17 @@ Todos os defeitos previamente identificados foram corrigidos e validados:
 ## Status dos Testes
 
 ### Resultados Atuais
-- ⚠️ **Testes de Autenticação:** 90% aprovados
-- ✅ **Testes de Gerenciamento:** 100% aprovados
-- ✅ **Testes de Dashboard:** 100% aprovados
-- ✅ **Testes de Interface:** 100% aprovados
-- ✅ **Testes de Integração:** 100% aprovados
-- ✅ **Testes de Validação:** 100% aprovados
+- ✅ **Testes de Login:** 100% aprovados (5/5)
+- ⚠️ **Testes de Calendário:** 80% aprovados (4/5) - 1 falha de scroll
+- ⚠️ **Testes de Dashboard:** 80% aprovados (4/5) - 1 falha de scroll
+- ⚠️ **Testes de Gerenciamento:** 80% aprovados (4/5) - 1 falha de scroll
+- ⚠️ **Testes de Notificações:** 80% aprovados (4/5) - 1 falha de scroll
 
 ### Cobertura de Testes
-- **Total de testes:** 45
-- **Testes aprovados:** 43
-- **Taxa de sucesso:** 96%
+- **Total de testes executados:** 25
+- **Testes aprovados:** 21
+- **Testes falhando:** 4
+- **Taxa de sucesso:** 84%
 
 ---
 
@@ -200,18 +284,18 @@ Todos os defeitos previamente identificados foram corrigidos e validados:
 ## Qualidade do Sistema
 
 ### Indicadores de Qualidade
-- ⚠️ **Estabilidade:** Sistema estável com 1 falha identificada
-- ⚠️ **Funcionalidade:** 98% das features funcionando adequadamente
+- ⚠️ **Estabilidade:** Sistema estável com 9 defeitos ativos identificados
+- ⚠️ **Funcionalidade:** 85% das features funcionando adequadamente
 - ✅ **Usabilidade:** Interface intuitiva e responsiva
 - ✅ **Performance:** Tempos de resposta adequados
 - ⚠️ **Segurança:** Vulnerabilidade identificada na validação de entrada
 
 ### Cobertura de Funcionalidades
-- **Autenticação:** 95% funcional
-- **Gerenciamento de Despesas:** 100% funcional
-- **Dashboard:** 100% funcional
-- **Calendário:** 100% funcional
-- **Notificações:** 100% funcional
+- **Autenticação:** 95% funcional (DEF-001, DEF-002, DEF-003)
+- **Gerenciamento de Despesas:** 85% funcional (DEF-004, DEF-007)
+- **Dashboard:** 85% funcional (DEF-009)
+- **Calendário:** 85% funcional (DEF-006, DEF-008)
+- **Notificações:** 85% funcional (DEF-005)
 - **Interface:** 100% funcional
 
 ---
@@ -219,7 +303,8 @@ Todos os defeitos previamente identificados foram corrigidos e validados:
 ## Próximos Passos
 
 ### Correções Pendentes
-1. **DEF-036:** Implementar validação adequada para o campo de nome no registro
+1. **DEF-001 a DEF-006, DEF-008, DEF-009:** Correção de defeitos funcionais críticos
+2. **DEF-010 a DEF-013:** Correção de falhas em testes automatizados
 
 ### Manutenção Preventiva
 1. **Monitoramento Contínuo:** Execução regular de testes automatizados
@@ -237,11 +322,20 @@ Todos os defeitos previamente identificados foram corrigidos e validados:
 
 ## Conclusão
 
-⚠️ **Sistema Gerir.me está 98% funcional com 1 defeito ativo.**
+⚠️ **Sistema Gerir.me está 85% funcional com 9 defeitos ativos.**
 
-O sistema apresenta alta qualidade e confiabilidade, com apenas um defeito identificado relacionado à validação de entrada no campo de nome durante o registro. Este defeito representa um risco de segurança que deve ser corrigido antes do próximo release.
+O sistema apresenta boa qualidade geral, mas foram identificados novos defeitos durante a execução dos testes automatizados. Os principais problemas incluem:
+
+- **5 defeitos funcionais críticos** (DEF-005 a DEF-009) relacionados a funcionalidades core do sistema
+- **4 defeitos de testes automatizados** (DEF-010 a DEF-013) relacionados a problemas de scroll nos testes Cypress
+
+Os defeitos funcionais requerem correção prioritária, especialmente aqueles relacionados ao calendário, cálculos financeiros e exibição de datas. Os defeitos de testes automatizados são de menor prioridade mas devem ser corrigidos para manter a qualidade da suíte de testes.
+
+### Prioridades de Correção:
+1. **Alta Prioridade:** DEF-005, DEF-006, DEF-008, DEF-009 (funcionalidades críticas)
+2. **Média Prioridade:** DEF-010 a DEF-013 (testes automatizados)
 
 ---
 
-*Última atualização: Janeiro 2025*  
-*Status: ⚠️ 1 defeito ativo*
+*Última atualização: 21/08/2025 21:19*  
+*Status: ⚠️ 9 defeitos ativos (5 funcionais + 4 de testes)*
