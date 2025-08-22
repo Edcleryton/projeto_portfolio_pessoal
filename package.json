@@ -5,6 +5,7 @@
   "main": "index.html",
   "scripts": {
     "start": "npx serve -s -l 8080",
+    "start:all": "concurrently \"npm start\" \"cd api && npm start\"",
     "dev": "npx serve -s -l 8080",
     "serve": "npx serve -s -l 8080",
     "build": "echo 'No build process needed for vanilla HTML/CSS/JS'",
@@ -53,6 +54,7 @@
     "not ie 11"
   ],
   "devDependencies": {
+    "concurrently": "^9.2.0",
     "cypress": "^14.5.4",
     "cypress-mochawesome-reporter": "^4.0.1",
     "serve": "^14.2.4"

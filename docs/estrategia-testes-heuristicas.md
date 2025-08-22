@@ -121,7 +121,10 @@ Este documento descreve a estratégia de testes implementada para o projeto **Ge
 # Instalar dependências
 npm install
 
-# Iniciar servidor local
+# Iniciar aplicação completa (frontend + API)
+npm run start:all
+
+# OU iniciar apenas o frontend
 npm start
 ```
 

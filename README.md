@@ -138,15 +138,42 @@ npm install
 ```
 
 ### Execução
+
+#### 🚀 Execução Simultânea (Recomendado)
 ```bash
-# Inicie o servidor de desenvolvimento
+# Inicia frontend e API simultaneamente
+npm run start:all
+```
+
+**Serviços iniciados:**
+- **Frontend**: http://localhost:8080
+- **API**: http://localhost:3000
+- **Documentação**: http://localhost:3000/api-docs
+
+#### 📱 Execução Individual
+
+**Frontend apenas:**
+```bash
+# Inicie o servidor de desenvolvimento do frontend
 npm start
 
 # Ou use o comando direto
 npx serve -s -l 8080
 ```
 
-A aplicação estará disponível em: **http://localhost:8080**
+**API apenas:**
+```bash
+# Entre no diretório da API
+cd api
+
+# Inicie o servidor da API
+npm start
+```
+
+**URLs de acesso:**
+- **Aplicação Web**: http://localhost:8080
+- **API REST**: http://localhost:3000
+- **Documentação Swagger**: http://localhost:3000/api-docs
 
 ### Testes
 ```bash

@@ -34,8 +34,26 @@ npm install
 
 ## 🏃‍♂️ Executando a Aplicação
 
-### Modo de Desenvolvimento
+### 🚀 Execução Simultânea (Recomendado)
+
+Para executar a API junto com o frontend:
+
 ```bash
+# No diretório raiz do projeto
+cd ..
+npm run start:all
+```
+
+**Serviços iniciados:**
+- **Frontend**: http://localhost:8080
+- **API**: http://localhost:3000
+- **Documentação**: http://localhost:3000/api-docs
+
+### 📱 Execução Individual
+
+**Apenas a API:**
+```bash
+# No diretório da API
 npm start
 ```
 
